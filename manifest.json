@@ -1,0 +1,22 @@
+{
+	"name": "Minimal Bookmarks Tree",
+	"description": "Display a tree of bookmarks under a toolbar button, and search your bookmarks in the omnibox using the keyword 'bm'.",
+	"version": "0.2",
+	"omnibox": { "keyword" : "bm" },
+	"background_page": "background.html",
+	"permissions": [
+		"tabs",
+		"bookmarks",
+		"chrome://favicon/"
+	],
+	"browser_action": {
+    "default_title": "Bookmarks",
+    "default_popup": "popup.html",
+		"default_icon": "icons/bookmark48.png"
+  },
+	"icons": {
+		"16": "icons/bookmark16.png",
+		"48": "icons/bookmark48.png",
+		"128": "icons/bookmark48.png"
+	} 
+}

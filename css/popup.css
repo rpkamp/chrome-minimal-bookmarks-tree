@@ -1,0 +1,97 @@
+html, body {
+		width: 300px;
+		max-width: 300px;
+		margin: 0 0 0 4px;
+		padding: 0;
+		overflow: hidden;
+}
+
+body {
+		font: 75% verdana, tahoma, arial, sans-serif;
+		overflow-x: hidden;
+}
+
+#wrapper {
+		width: 296px;
+		min-height: 50px;
+		max-height: 500px;
+		max-width: 300px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		position: relative;
+}
+
+span {
+		display: block;
+		cursor: pointer;
+		color: #000;
+		white-space: nowrap;
+		text-decoration: none;
+		padding: 3px 3px 3px 21px;
+		color: #444;
+		overflow: hidden;
+		text-overflow: ellipsis;
+}
+
+.folder > span {
+		color: #000;
+}
+
+.folder.open > span:hover,
+.folder > span:hover,
+span:hover,
+.folder.selected > span {
+		background-color: #eee;
+		border-radius: 5px;
+}
+
+ul, li {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+}
+
+li {
+		display: block;
+}
+
+.folder > span {
+		color: #000;
+		background-image: url(/icons/folder_closed.png);
+		background-position: 0 3px;
+		background-repeat: no-repeat;
+}
+
+.folder.open > span {
+		background-image: url(/icons/folder_open.png);
+}
+
+.sub {
+		padding: 0px 0px 2px 20px;
+		display: none;
+}
+
+#context, #context li {
+		margin: 0;
+		padding: 0;
+}
+
+#context {
+		display: none;
+		position: absolute;
+		background: #eee;
+		border: #ccc;
+		border-radius: 5px;
+		z-index: 10;
+		padding: 5px;
+		cursor: pointer;
+}
+
+#context li {
+		border-radius: 5px;
+		padding: 3px 5px;
+}
+
+#context li:hover {
+		background: #aaa;
+}
