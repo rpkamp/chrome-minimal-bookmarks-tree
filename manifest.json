@@ -1,7 +1,7 @@
 {
 	"name": "Minimal Bookmarks Tree",
 	"description": "Display a tree of bookmarks under a toolbar button, and search your bookmarks in the omnibox using the keyword 'bm'.",
-	"version": "0.2",
+	"version": "0.3",
 	"omnibox": { "keyword" : "bm" },
 	"background_page": "background.html",
 	"permissions": [
