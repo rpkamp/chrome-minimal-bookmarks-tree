@@ -21,7 +21,7 @@ chrome.bookmarks.getTree(function(x) {
 				} else {
 						var url = $this.data('url');
 						if (e.button == 0) {
-								if (e.ctrlKey) {
+								if (e.ctrlKey || e.metaKey) {
 										chrome.tabs.create({url: url, active: false});
 								} else {
 										chrome.tabs.getSelected(null, function(tab) {
