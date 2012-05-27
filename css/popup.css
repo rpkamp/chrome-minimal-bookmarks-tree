@@ -95,3 +95,16 @@ li {
 #context li:hover {
 		background: #aaa;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+		background: rgba(0,0,0,0.1);
+}
+
+::-webkit-scrollbar-thumb {
+		background: rgba(0,0,0,0.1);
+		border: 1px solid rgba(0,0,0,0.2);
+}
