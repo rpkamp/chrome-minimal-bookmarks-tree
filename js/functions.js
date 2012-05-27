@@ -43,8 +43,15 @@ function buildTree(treeNode, level, visible) {
 				
 				if (child.url) { // url
 						d
-						.append($('<span>', {text: child.title, title: child.url}).css({'background-image': 'url("chrome://favicon/' + child.url + '")', 'background-repeat': 'no-repeat'}))
 						.data('url', child.url)
+						.append(
+								$('<span>', {
+										text: child.title,
+										title: child.title + ' [' + child.url + ']'
+								}).css({
+										'background-image': 'url("chrome://favicon/' + child.url + '")', 'background-repeat': 'no-repeat'
+								})
+						)
 				} else { // folder
 						d
 						.addClass('folder' + (isOpen ? ' open' : ''))	
