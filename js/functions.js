@@ -90,9 +90,16 @@ function toggleFolder(elem) {
 }
 
 function _openAllBookmarks(folder) {
-		$('li:not(.folder)', folder).each(function() {
-				chrome.tabs.create({url: $(this).data('url')});
-		});
+		if (Settings.get('open_all_sub')) {
+				$('li:not(.folder)', folder).each(function() {
+						chrome.tabs.create({url: $(this).data('url')});
+				});
+		} else {
+				console.log($(folder).children('li:not(.folder)'));
+				$(folder).children('ul').eq(0).children('li:not(.folder)').each(function() {
+						chrome.tabs.create({url: $(this).data('url')});
+				});
+		}
 }
 
 function openAllBookmarks(folder, e) {
