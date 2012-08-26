@@ -31,8 +31,6 @@ chrome.bookmarks.getTree(function(x) {
 								}
 						} else if (e.button == 1) {
 								chrome.tabs.create({url: url});
-						} else if (e.button == 2) {
-								showContextMenuBookmark($this, e);
 						}
 				}
 				e.preventDefault();

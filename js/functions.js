@@ -1,26 +1,29 @@
-var openFolders = localStorage.getItem('openfolders');
-if (openFolders) {
-		openFolders = JSON.parse(openFolders);
-} else {
-		openFolders = [];
-}
+var closeOldFolder = Settings.get('close_old_folder');
+if (!closeOldFolder) {
+		var openFolders = localStorage.getItem('openfolders');
+		if (openFolders) {
+				openFolders = JSON.parse(openFolders);
+		} else {
+				openFolders = [];
+		}
 
-function addOpenFolder(id) {
-		if ($.inArray(id, openFolders) == -1) {
-				openFolders.push(id);
+		function addOpenFolder(id) {
+				if ($.inArray(id, openFolders) == -1) {
+						openFolders.push(id);
+						saveOpenFolders();
+				}
+		}
+
+		function removeOpenFolder(id) {
+				while ((pos = $.inArray(id, openFolders)) != -1) {
+						openFolders.splice(pos, 1);
+				}
 				saveOpenFolders();
 		}
-}
 
-function removeOpenFolder(id) {
-		while ((pos = $.inArray(id, openFolders)) != -1) {
-				openFolders.splice(pos, 1);
+		function saveOpenFolders() {
+				localStorage.setItem('openfolders', JSON.stringify(openFolders));
 		}
-		saveOpenFolders();
-}
-
-function saveOpenFolders() {
-		localStorage.setItem('openfolders', JSON.stringify(openFolders));
 }
 
 function buildTree(treeNode, level, visible) {
@@ -49,7 +52,8 @@ function buildTree(treeNode, level, visible) {
 										text: child.title,
 										title: child.title + ' [' + child.url + ']'
 								}).css({
-										'background-image': 'url("chrome://favicon/' + child.url + '")', 'background-repeat': 'no-repeat'
+										'background-image': 'url("chrome://favicon/' + child.url + '")',
+										'background-repeat': 'no-repeat'
 								})
 						)
 				} else { // folder
@@ -69,22 +73,31 @@ function buildTree(treeNode, level, visible) {
 }
 
 function toggleFolder(elem) {
-		elem.toggleClass('open');
 		$('#wrapper').css('overflow-y', 'hidden');
+		if (closeOldFolder) {
+				if (elem.parents('.folder.open').length) {
+						$('.folder.open', elem.parent()).not(elem).removeClass('open').find('.sub').slideUp('fast');
+				} else {
+						$('.folder.open').not(elem).removeClass('open').find('.sub').slideUp('fast');
+				}
+		}
+		elem.toggleClass('open');
 		elem.children('.sub').eq(0).slideToggle('fast', function() {
 				$('#wrapper').css('overflow-y', 'auto');
-				$$this = $(this);
-				var id = $$this.parent().data('folder-id');
-				if (!$$this.is(':visible')) {
-						removeOpenFolder(id);
-						$$this.find('li').each( function () {
-								$$$this = $(this);
-								removeOpenFolder($$$this.data('folder-id'));
-								$$$this.removeClass('open');
-								$('.sub', this).hide();
-						});
-				} else {
-						addOpenFolder(id);
+				if (!closeOldFolder) {
+						$$this = $(this);
+						var id = $$this.parent().data('folder-id');
+						if (!$$this.is(':visible')) {
+								removeOpenFolder(id);
+								$$this.find('li').each( function () {
+										$$$this = $(this);
+										removeOpenFolder($$$this.data('folder-id'));
+										$$$this.removeClass('open');
+										$('.sub', this).hide();
+								});
+						} else {
+								addOpenFolder(id);
+						}
 				}
 		});
 }
@@ -95,7 +108,6 @@ function _openAllBookmarks(folder) {
 						chrome.tabs.create({url: $(this).data('url')});
 				});
 		} else {
-				console.log($(folder).children('li:not(.folder)'));
 				$(folder).children('ul').eq(0).children('li:not(.folder)').each(function() {
 						chrome.tabs.create({url: $(this).data('url')});
 				});
@@ -108,29 +120,16 @@ function openAllBookmarks(folder, e) {
 		e.preventDefault();
 		e.stopPropagation();
 		return false;
-		window.close();
-}
-
-function showContextMenu(elem, e) {
-		$(elem).addClass('selected');
-		$("#context").css({
-				'left': e.pageX,
-				'top': $('#wrapper').get(0).scrollTop + e.pageY
-		}).show();
 }
 
 function showContextMenuFolder(folder, e) {
 		$('#context > li').off('mousedown').hide();
-		$('#context [id^="folder_open_all"]').show();
-		$('#folder_open_all').one('mousedown', function(e) {
+		$('#folder_open_all').show().one('mousedown', function(e) {
 				openAllBookmarks(folder, e);
 		});
-		showContextMenu(folder, e);
-}
-
-function showContextMenuBookmark(bookmark, e) {
-		return;
-		$('#context > li').hide();
-		$('#context [id^="bookmark"]').show();
-		showContextMenu(bookmark, e);
+		$(folder).addClass('selected');
+		$("#context").css({
+				'left': e.pageX,
+				'top': $('#wrapper').get(0).scrollTop + e.pageY
+		}).show();
 }
