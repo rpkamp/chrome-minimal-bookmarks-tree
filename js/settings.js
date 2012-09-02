@@ -1,7 +1,8 @@
 var Settings = {
 		defaults: {
 			'close_old_folder': false,
-			'open_all_sub': true
+			'open_all_sub': true,
+            'animation_duration': 200
 		},
 		init: function() {
 			for (prop in Settings.defaults) {
