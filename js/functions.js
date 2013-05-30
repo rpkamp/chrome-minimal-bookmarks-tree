@@ -1,36 +1,34 @@
-var closeOldFolder = Settings.get('close_old_folder');
+function addOpenFolder(id) {
+    if ($.inArray(id, openFolders) == -1) {
+        openFolders.push(id);
+        saveOpenFolders();
+    }
+}
 
-if (!closeOldFolder) {
+function removeOpenFolder(id) {
+    while ((pos = $.inArray(id, openFolders)) != -1) {
+        openFolders.splice(pos, 1);
+    }
+    saveOpenFolders();
+}
+
+function saveOpenFolders() {
+    localStorage.setItem('openfolders', JSON.stringify(openFolders));
+}
+
+if (!Settings.get('close_old_folder')) {
     var openFolders = localStorage.getItem('openfolders');
     if (openFolders) {
         openFolders = JSON.parse(openFolders);
     } else {
         openFolders = [];
     }
-
-    function addOpenFolder(id) {
-        if ($.inArray(id, openFolders) == -1) {
-            openFolders.push(id);
-            saveOpenFolders();
-        }
-    }
-
-    function removeOpenFolder(id) {
-        while ((pos = $.inArray(id, openFolders)) != -1) {
-            openFolders.splice(pos, 1);
-        }
-        saveOpenFolders();
-    }
-
-    function saveOpenFolders() {
-        localStorage.setItem('openfolders', JSON.stringify(openFolders));
-    }
 }
 
 function buildTree(treeNode, level, visible) {
     level = level || 1;
     var wrapper;
-		
+
     wrapper = $('<ul>');
     if (level > 1) {
         wrapper.addClass('sub');
@@ -38,13 +36,13 @@ function buildTree(treeNode, level, visible) {
             wrapper.show();
         }
     }
-		
+
     var child, d, children, isOpen;
     for (var c in treeNode.children) {
         child = treeNode.children[c];
         isOpen = $.inArray(child.id, openFolders) != -1;
         d = $('<li>');
-				
+
         if (child.url) { // url
             d
             .data('url', child.url)
@@ -56,21 +54,25 @@ function buildTree(treeNode, level, visible) {
                     'background-image': 'url("chrome://favicon/' + child.url + '")',
                     'background-repeat': 'no-repeat'
                 })
-                )
+            );
         } else { // folder
             d
-            .addClass('folder' + (isOpen ? ' open' : ''))	
+            .addClass('folder' + (isOpen ? ' open' : ''))
             .append($('<span>', {
                 text: child.title
                 }))
             .data('folder-id', child.id);
-        }
-				
-        if (child.children) {
-            children = buildTree(child, level + 1, isOpen);
-            d.append(children);
+            if (child.children && child.children.length) {
+                children = buildTree(child, level + 1, isOpen);
+                d.append(children);
+            } else if (Settings.get('hide_empty_folders')) {
+                continue;
+            }
         }
         wrapper.append(d);
+    }
+    if ($('li', wrapper).length === 0) {
+        return;
     }
     return wrapper;
 }
@@ -78,7 +80,7 @@ function buildTree(treeNode, level, visible) {
 function toggleFolder(elem) {
     var animationDuration = parseInt(Settings.get('animation_duration'), 10);
     $('#wrapper').css('overflow-y', 'hidden');
-    if (closeOldFolder) {
+    if (Settings.get('close_old_folder')) {
         if (elem.parents('.folder.open').length) {
             $('.folder.open', elem.parent()).not(elem).removeClass('open').find('.sub').slideUp(animationDuration);
         } else {
@@ -88,7 +90,7 @@ function toggleFolder(elem) {
     elem.toggleClass('open');
     elem.children('.sub').eq(0).slideToggle(animationDuration, function() {
         $('#wrapper').css('overflow-y', 'auto');
-        if (!closeOldFolder) {
+        if (!Settings.get('close_old_folder')) {
             $$this = $(this);
             var id = $$this.parent().data('folder-id');
             if (!$$this.is(':visible')) {
