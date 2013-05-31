@@ -4,7 +4,10 @@ var Settings = {
 		'open_all_sub': true,
         'animation_duration': 200,
         'hide_empty_folders': false,
-        'remember_scroll_position': true
+        'remember_scroll_position': true,
+        'height': 500,
+        'width': 300,
+        'zoom': 100
 	},
 	init: function() {
 		for (var prop in Settings.defaults) {

@@ -2,31 +2,10 @@
 <html>
 <head>
     <title>Minimal Bookmarks Tree Options</title>
-	<style type="text/css">
-        body,html {
-            font: 82% Verdana, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #eee;
-        }
-        #wrap {
-            margin: 20px auto;
-            width: 800px;
-        }
-        #inner {
-            padding: 20px;
-            background: #fff;
-        }
-        h1 {
-            border-bottom: 1px solid #bbb;
-        }
-        em {
-            color: #888;
-        }
-	</style>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 	<script type="text/javascript" src="js/settings.js"></script>
 	<script type="text/javascript" src="js/options.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/options.css" />
 </head>
 <body>
 	<div id="wrap">
@@ -36,17 +15,34 @@
 			<input type="checkbox" id="open_all_sub" /> <label for="open_all_sub">When clicking "Open all", open all bookmarks in all subfolders as well.</label><br />
             <input type="checkbox" id="hide_empty_folders" /> <label for="hide_empty_folders">Hide empty folders.</label><br />
             <input type="checkbox" id="remember_scroll_position" /> <label for="remember_scroll_position">Remember scroll position when Minimal Bookmarks Tree window closes.</label><br />
-            Animation speed 
-            <select id="animation_duration">
-                <option value="0">No animation</option>
-                <option value="1000">Slug like</option>
-                <option value="600">Slow</option>
-                <option value="400">Medium</option>
-                <option value="200">Fast</option>
-                <option value="100">Super fast</option>
-            </select>
-			<br /><br />
-			<small><em>Settings are saved automatically when you click/select them.</em></small>
+            <br />
+            <div class="row">
+                <label for="animation_duration">Animation speed</label>
+                <select id="animation_duration">
+                    <option value="0">No animation</option>
+                    <option value="1000">Slug like</option>
+                    <option value="600">Slow</option>
+                    <option value="400">Medium</option>
+                    <option value="200">Fast</option>
+                    <option value="100">Super fast</option>
+                </select>
+            </div>
+            <div class="row">
+                 <label for="height">Zoom level</label> <input type="number" min="75" max="300" name="zoom" id="zoom" /> <small>(min: 75, max: 300, default: 100)</small><br />
+            </div>
+            <div class="row">
+			     <label for="height">Preferred height</label> <input type="number" min="50" max="600" name="height" id="height" /> <small>(min: 50, max: 600, default: 500)</small><br />
+            </div>
+            <div class="row">
+                <label for="width">Preferred width</label> <input type="number" min="50" max="800" name="width" id="width" /> <small>(min: 50, max: 800, default: 300)</small><br />
+            </div>
+            <br /><br />
+            <small><em>
+                Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree.<br />
+                Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above.
+            </em></small>
+            <br /><br />
+			<small><em>Settings are saved automatically when you click/select them.</em></small><br />
 		</div>
 	</div>
 </body>

@@ -16,6 +16,21 @@ function saveOpenFolders() {
     localStorage.setItem('openfolders', JSON.stringify(openFolders));
 }
 
+function setWidthHeight(win) {
+    var scale = 1 / (parseInt(Settings.get('zoom'), 10) / 100);
+
+    var max_w = scale * (win.width - 100);
+    var settings_w = scale * parseInt(Settings.get('width'), 10);
+    var final_w = Math.min(max_w, settings_w);
+
+    var max_h = scale * (win.height - 100);
+    var settings_h = scale * parseInt(Settings.get('height'), 10);
+    var final_h = Math.min(scale * 600, Math.min(max_h, settings_h));
+
+    $('#wrapper').css('max-width', final_w + 'px').css('min-width', final_w + 'px').width(final_w);
+    $('#wrapper').css('max-height', final_h + 'px');
+}
+
 if (!Settings.get('close_old_folder')) {
     var openFolders = localStorage.getItem('openfolders');
     if (openFolders) {
@@ -44,9 +59,8 @@ function buildTree(treeNode, level, visible) {
         d = $('<li>');
 
         if (child.url) { // url
-            d
-            .data('url', child.url)
-            .append(
+            d.data('url', child.url)
+             .append(
                 $('<span>', {
                     text: child.title,
                     title: child.title + ' [' + child.url + ']'
@@ -56,17 +70,16 @@ function buildTree(treeNode, level, visible) {
                 })
             );
         } else { // folder
-            d
-            .addClass('folder' + (isOpen ? ' open' : ''))
-            .append($('<span>', {
-                text: child.title
-                }))
-            .data('folder-id', child.id);
+            if (Settings.get('hide_empty_folders') && child.children && !child.children.length) {
+                continue;
+            }
+            d.addClass('folder' + (isOpen ? ' open' : ''))
+             .append($('<span>', { text: child.title }))
+             .data('folder-id', child.id);
+
             if (child.children && child.children.length) {
                 children = buildTree(child, level + 1, isOpen);
                 d.append(children);
-            } else if (Settings.get('hide_empty_folders')) {
-                continue;
             }
         }
         wrapper.append(d);
@@ -113,13 +126,13 @@ function _openAllBookmarks(folder) {
         $('li:not(.folder)', folder).each(function() {
             chrome.tabs.create({
                 url: $(this).data('url')
-                });
+            });
         });
     } else {
         $(folder).children('ul').eq(0).children('li:not(.folder)').each(function() {
             chrome.tabs.create({
                 url: $(this).data('url')
-                });
+            });
         });
     }
 }
@@ -140,6 +153,6 @@ function showContextMenuFolder(folder, e) {
     $(folder).addClass('selected');
     $("#context").css({
         'left': e.pageX,
-        'top': $('#wrapper').get(0).scrollTop + e.pageY
+        'top': $('#wrapper')[0].scrollTop + e.pageY
     }).show();
 }
