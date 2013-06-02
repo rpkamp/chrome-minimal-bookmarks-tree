@@ -2,22 +2,19 @@
  * Highlight search string in search results
  */
 function highlightSearch(needle, haystack) {
-	var
-		pos,
+	var	pos,
 		needleLower=needle.toLowerCase(),
 		haystackLower=haystack.toLowerCase().replace("'", '')
-	;
+		;
 
-	if (-1 == (pos=haystackLower.indexOf(needleLower))) {
+	if (-1 === (pos=haystackLower.indexOf(needleLower))) {
 		return haystack;
 	}
 
-
-	var
-		before = haystack.substr(0, pos),
+	var	before = haystack.substr(0, pos),
 		inner  = haystack.substr(pos, needle.length),
 		after  = haystack.substr(pos+needle.length)
-	;
+		;
 
 	return before + '<match>' + inner + '</match>' + after;
 }
@@ -46,10 +43,14 @@ function getSuggestions(data, text) {
 	for (var d in data) {
 		loc = data[d];
 		if (0 !== (score = loc.title.score(text) * 1.5 + loc.url.score(text))) {
+			var urlText = '';
+			if (String(loc.url).match(/^https?:\/\//)) {
+				urlText = ' <url>' + htmlEncode(highlightSearch(text, loc.url)) + '</url>';
+			}
 			suggestions.push({
 				score: score,
 				content: htmlEncode(loc.title),
-				description: htmlEncode(highlightSearch(text, loc.title)) + ' - <url>' + htmlEncode(highlightSearch(text, loc.url)) + '</url>',
+				description: htmlEncode(highlightSearch(text, loc.title)) + urlText,
 				url: loc.url
 			});
 		}
@@ -79,7 +80,10 @@ function getTopSuggestionUrl(data, text) {
  */
 chrome.omnibox.onInputChanged.addListener( function(text, suggest) {
 	if (text.length === 0) {
-		setDefaultSuggestion(_defaultDescription);
+		setDefaultSuggestion('Search for bookmarks using Minimal Bookmarks Tree');
+	}
+	if (!dataLoaded) {
+		loadData();
 	}
 
 	var suggestions = getSuggestions(data, text);
@@ -104,4 +108,41 @@ chrome.omnibox.onInputEntered.addListener( function(text) {
 			chrome.tabs.update(tab.id, {url: url});
 		}
 	});
+});
+
+/**
+ * Bookmark or folder added. If a bookmark was added, add it
+ * to our search information. If a folder was added, ignore.
+ */
+chrome.bookmarks.onCreated.addListener(function(id, node) {
+	if (dataLoaded && node.url) {
+		data.push(node);
+	}
+});
+
+/**
+ * Bookmark or folder removed - reload all bookmarks
+ * Not the most elegant way - but better than bloating the
+ * data structure that holds alls the bookmark info
+ */
+chrome.bookmarks.onRemoved.addListener(function(removeId, removeInfo) {
+	if (dataLoaded) {
+		loadData();
+	}
+});
+
+/**
+ * Bookmark or folder updated
+ */
+chrome.bookmarks.onChanged.addListener(function(id, changeInfo) {
+	if (!dataLoaded) {
+		return;
+	}
+	for (var d in data) {
+		var node = data[d];
+		if (node.id === id) {
+			node.title = changeInfo.title;
+			node.url = changeInfo.url;
+		}
+	}
 });

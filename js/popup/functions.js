@@ -42,14 +42,17 @@ if (!Settings.get('close_old_folder')) {
 
 function buildTree(treeNode, level, visible) {
     level = level || 1;
-    var wrapper;
+    var wrapper, fragmentWrapper = false;
 
-    wrapper = $('<ul>');
     if (level > 1) {
+        wrapper = $('<ul>');
         wrapper.addClass('sub');
         if (visible) {
             wrapper.show();
         }
+    } else {
+        wrapper = document.createDocumentFragment();
+        fragmentWrapper = true;
     }
 
     var child, d, children, isOpen;
@@ -60,10 +63,11 @@ function buildTree(treeNode, level, visible) {
 
         if (child.url) { // url
             d.data('url', child.url)
+             .data('item-id', child.id)
              .append(
                 $('<span>', {
                     text: child.title,
-                    title: child.title + ' [' + child.url + ']'
+                    title: child.title + ' (' + child.index + ')' + ' [' + child.url + ']'
                 }).css({
                     'background-image': 'url("chrome://favicon/' + child.url + '")',
                     'background-repeat': 'no-repeat'
@@ -75,17 +79,18 @@ function buildTree(treeNode, level, visible) {
             }
             d.addClass('folder' + (isOpen ? ' open' : ''))
              .append($('<span>', { text: child.title }))
-             .data('folder-id', child.id);
+             .data('item-id', child.id);
 
             if (child.children && child.children.length) {
                 children = buildTree(child, level + 1, isOpen);
                 d.append(children);
             }
         }
-        wrapper.append(d);
-    }
-    if ($('li', wrapper).length === 0) {
-        return;
+        if (fragmentWrapper) {
+            wrapper.appendChild(d[0]);
+        } else {
+            wrapper.append(d);
+        }
     }
     return wrapper;
 }
@@ -105,12 +110,12 @@ function toggleFolder(elem) {
         $('#wrapper').css('overflow-y', 'auto');
         if (!Settings.get('close_old_folder')) {
             $$this = $(this);
-            var id = $$this.parent().data('folder-id');
+            var id = $$this.parent().data('item-id');
             if (!$$this.is(':visible')) {
                 removeOpenFolder(id);
                 $$this.find('li').each( function () {
                     $$$this = $(this);
-                    removeOpenFolder($$$this.data('folder-id'));
+                    removeOpenFolder($$$this.data('item-id'));
                     $$$this.removeClass('open');
                     $('.sub', this).hide();
                 });
@@ -137,9 +142,9 @@ function _openAllBookmarks(folder) {
     }
 }
 
-function openAllBookmarks(folder, e) {
+function contextAction(e, callback) {
     $('#context').hide();
-    _openAllBookmarks(folder);
+    callback.call();
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -148,11 +153,46 @@ function openAllBookmarks(folder, e) {
 function showContextMenuFolder(folder, e) {
     $('#context > li').off('mousedown').hide();
     $('#folder_open_all').show().one('mousedown', function(e) {
-        openAllBookmarks(folder, e);
+        contextAction(e, function() { _openAllBookmarks(folder); });
+    });
+    $('#folder_delete').show().one('mousedown', function(e) {
+        contextAction(e, function() {
+            chrome.bookmarks.removeTree(folder.data('item-id'), function() {
+                folder.remove();
+            });
+        });
     });
     $(folder).addClass('selected');
+    showContextMenu(e);
+}
+
+function showContextMenuBookmark(bookmark, e) {
+    $('#context > li').off('mousedown').hide();
+    $('#bookmark_delete').show().one('mousedown', function(e) {
+        contextAction(e, function() {
+            chrome.bookmarks.remove(bookmark.data('item-id'), function() {
+                bookmark.remove();
+            });
+        });
+    });
+    $(bookmark).addClass('selected');
+    showContextMenu(e);
+}
+
+function showContextMenu(e) {
+    $("#context").css({
+        'left': -10000
+    }).show(); // draw offscreen for dimensions
+    var h = $('#context').height();
+
+    var wrap = $('#wrapper');
+    var top = wrap[0].scrollTop + e.pageY;
+    if (top + h > wrap.height()) {
+        top = wrap.height() - h - 15;
+    }
+
     $("#context").css({
         'left': e.pageX,
-        'top': $('#wrapper')[0].scrollTop + e.pageY
-    }).show();
+        'top': top
+    });
 }

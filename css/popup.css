@@ -2,6 +2,7 @@ html, body {
 	margin: 0 0 0 4px;
 	padding: 0;
 	overflow: hidden;
+	-webkit-user-select: none;
 }
 
 body {
@@ -14,6 +15,7 @@ body {
 	overflow-y: auto;
 	overflow-x: hidden;
 	position: relative;
+	width: 200px;
 }
 
 span {
@@ -29,6 +31,12 @@ span {
 
 .folder > span {
 	color: #000;
+}
+
+#loading {
+	font-size: 1.1em;
+	text-align: center;
+	padding-top: 10px;
 }
 
 .folder.open > span:hover,

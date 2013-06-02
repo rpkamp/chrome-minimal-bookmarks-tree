@@ -1,19 +1,23 @@
-var data = [];
+var data, dataLoaded = false;
 
 function walkTree(treeNode) {
+	var data = [];
 	for (var c in treeNode.children) {
-		child = treeNode.children[c];
+		var child = treeNode.children[c];
 
 		if (child.url) {
-			data.push({title: child.title, url: child.url});
+			data.push(child);
 		}
-
-		if (child.children) {
-			walkTree(child);
+		else if (child.children) {
+			data = data.concat(walkTree(child));
 		}
 	}
+	return data;
 }
 
-chrome.bookmarks.getTree(function(x) {
-	walkTree(x[0]);
-});
+function loadData() {
+	chrome.bookmarks.getTree(function(x) {
+		data = walkTree(x[0]);
+	});
+	dataLoaded = true;
+}
