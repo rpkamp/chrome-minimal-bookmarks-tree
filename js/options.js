@@ -35,3 +35,19 @@ $(document).ready(function() {
         });
     });
 });
+
+console.log('DEBUG INFO:');
+var Info = function(type, key, value) { this.type = type; this.key = key; this.value = value; };
+var infos = [];
+
+var settings = ['close_old_folder', 'open_all_sub', 'animation_duration', 'hide_empty_folders', 'remember_scroll_position', 'height', 'width', 'zoom'];
+for (var i in settings) {
+    infos.push(new Info('setting', settings[i], localStorage.getItem('setting_' + settings[i])));
+}
+
+var helpers = ['openfolders', 'scrolltop'];
+for (var i in helpers) {
+    infos.push(new Info('local cache', helpers[i], localStorage.getItem(helpers[i])));
+}
+
+console.table(infos, ['type', 'key', 'value']);

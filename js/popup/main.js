@@ -1,3 +1,5 @@
+var draggingIndex;
+
 function init() {
     chrome.bookmarks.getTree(function(bookmarksTree) {
         var bookmarksBarShown = false;
@@ -22,7 +24,12 @@ function init() {
             items: 'li',
             toleranceElement: '> span',
             listType: 'ul',
-            update: function(e, ui) {
+            start: function(e, ui) {
+                var item = $(e.srcElement).parent(),
+                    list = item.parent();
+                draggingIndex = list.children('li').index(item);
+            },
+            stop: function(e, ui) {
                 var item = $(e.srcElement).parent(),
                     itemId = item.data('item-id'),
                     list = item.parent(),
@@ -33,20 +40,25 @@ function init() {
                 if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
                     alert('You can not sort the bookmarks bar folder, or move anything above this folder.');
                     bm.sortable('cancel');
+                    return nothing(e);
+                }
+                if (draggingIndex < idx) {
+                    // not sure why we need this, but
+                    // it doesn't work if we leave it out
+                    idx++;
                 }
                 if (!parentId && bookmarksBarShown) {
                     idx--;
                 }
                 if (!parentId) {
-                    parentId = bookmarksTree[0].id;
+                    parentId = bookmarksTree[0].children[1].id;
                 }
                 console.log(itemId, {parentId: parentId, index: idx});
                 chrome.bookmarks.move(itemId, {parentId: parentId, index: idx});
-                chrome.bookmarks.getTree(function(tree2) { console.log(tree2); });
             }
         });
 
-        bm.on('click', 'li', function(e) {
+        bm.on('click contextmenu', 'li', function(e) {
             $('#context').hide();
             $('.selected').removeClass('selected');
             var $this = $(this);
@@ -59,7 +71,7 @@ function init() {
             } else { // bookmark
                 var url = $this.data('url');
                 if (e.button === 0) {
-                    if (e.metaKey || e.ctrlKey) {
+                    if (e.ctrlKey || e.keyCode == 91) {
                         chrome.tabs.create({url: url, active: false});
                     } else {
                         chrome.tabs.getSelected(null, function(tab) {
@@ -73,10 +85,9 @@ function init() {
                     showContextMenuBookmark($this, e);
                 }
             }
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
+            return nothing(e);
         });
+
         chrome.windows.getLastFocused({}, function(win) {
             setWidthHeight(win);
             if (Settings.get('remember_scroll_position')) {

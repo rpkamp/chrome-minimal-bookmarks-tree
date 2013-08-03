@@ -1,3 +1,11 @@
+function nothing(e) {
+    e = e || window.event;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    return false;
+}
+
 function addOpenFolder(id) {
     if ($.inArray(id, openFolders) == -1) {
         openFolders.push(id);
@@ -109,14 +117,12 @@ function toggleFolder(elem) {
     elem.children('.sub').eq(0).slideToggle(animationDuration, function() {
         $('#wrapper').css('overflow-y', 'auto');
         if (!Settings.get('close_old_folder')) {
-            $$this = $(this);
-            var id = $$this.parent().data('item-id');
-            if (!$$this.is(':visible')) {
+            var id = $(this).parent().data('item-id');
+            if (!$(this).is(':visible')) {
                 removeOpenFolder(id);
-                $$this.find('li').each( function () {
-                    $$$this = $(this);
-                    removeOpenFolder($$$this.data('item-id'));
-                    $$$this.removeClass('open');
+                $(this).find('li').each( function () {
+                    removeOpenFolder($(this).data('item-id'));
+                    $(this).removeClass('open');
                     $('.sub', this).hide();
                 });
             } else {
@@ -145,9 +151,7 @@ function _openAllBookmarks(folder) {
 function contextAction(e, callback) {
     $('#context').hide();
     callback.call();
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
+    return nothing(e);
 }
 
 function showContextMenuFolder(folder, e) {
