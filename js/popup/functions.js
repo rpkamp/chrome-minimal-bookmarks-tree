@@ -73,10 +73,12 @@ function buildTree(treeNode, level, visible) {
              .append(
                 $('<span>', {
                     text: child.title,
-                    title: child.title + ' (' + child.index + ')' + ' [' + child.url + ']'
+                    title: child.title + ' [' + child.url + ']'
                 }).css({
                     'background-image': 'url("chrome://favicon/' + child.url + '")',
                     'background-repeat': 'no-repeat'
+                }).data({
+                    url: child.url
                 })
             );
         } else { // folder
@@ -173,8 +175,29 @@ function showContextMenuFolder(folder, e) {
     });
     $('#folder_delete').show().one('mousedown', function(e) {
         contextAction(e, function() {
-            chrome.bookmarks.removeTree(folder.data('item-id'), function() {
-                folder.remove();
+            if (confirm('Are you sure you want to delete this folder?')) {
+                chrome.bookmarks.removeTree(folder.data('item-id'), function() {
+                    folder.remove();
+                });
+            }
+        });
+    });
+    $('#folder_edit').show().one('mousedown', function(e) {
+        var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+        var item_id = folder.data('item-id');
+        contextAction(e, function() {
+            $('#url_row').hide();
+            $('#edit_name').val($('> span', folder).text());
+            $('#overlay').slideDown(animationDuration, function() {
+                $('#edit_name').focus();
+            });
+            $('#edit_save').off('click').one('click', function() {
+                chrome.bookmarks.update(item_id, {
+                    title: $('#edit_name').val(),
+                });
+                $('> span', folder).text($('#edit_name').val());
+                $('.selected').removeClass('selected');
+                $('#overlay').slideUp(animationDuration);
             });
         });
     });
@@ -186,8 +209,31 @@ function showContextMenuBookmark(bookmark, e) {
     $('#context > li').off('mousedown').hide();
     $('#bookmark_delete').show().one('mousedown', function(e) {
         contextAction(e, function() {
-            chrome.bookmarks.remove(bookmark.data('item-id'), function() {
-                bookmark.remove();
+            if (confirm('Are you sure you want to delete this bookmark?')) {
+                chrome.bookmarks.remove(bookmark.data('item-id'), function() {
+                    bookmark.remove();
+                });
+            }
+        });
+    });
+    $('#bookmark_edit').show().one('mousedown', function(e) {
+        var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+        var item_id = bookmark.data('item-id');
+        contextAction(e, function() {
+            $('#url_row').show();
+            $('#edit_name').val($('> span', bookmark).text()).focus();
+            $('#edit_url').val($(bookmark).data('url'));
+            $('#overlay').slideDown(animationDuration, function() {
+                $('#edit_name').focus();
+            });
+            $('#edit_save').off('click').one('click', function() {
+                chrome.bookmarks.update(item_id, {
+                    title: $('#edit_name').val(),
+                    url: $('#edit_url').val(),
+                });
+                $('> span', bookmark).text($('#edit_name').val()).attr('title', $('#edit_name').val() + ' [' + $('#edit_url').val() + ']');
+                $('.selected').removeClass('selected');
+                $('#overlay').slideUp(animationDuration);
             });
         });
     });

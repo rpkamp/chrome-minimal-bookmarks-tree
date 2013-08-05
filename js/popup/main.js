@@ -107,6 +107,16 @@ function init() {
 
         bm.show();
         $('#loading').remove();
+        $('#edit_cancel').on('click', function() {
+            var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+            $('#overlay').slideUp(animationDuration);
+            $('.selected').removeClass('selected');
+        });
+        $('#edit_name, #edit_url').on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                $('#edit_save').click();
+            }
+        });
     });
 }
 
