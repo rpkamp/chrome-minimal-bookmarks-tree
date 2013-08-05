@@ -71,7 +71,7 @@ function init() {
             } else { // bookmark
                 var url = $this.data('url');
                 if (e.button === 0) {
-                    if (e.ctrlKey || e.keyCode == 91) {
+                    if (e.ctrlKey || e.metaKey) {
                         chrome.tabs.create({url: url, active: false});
                     } else {
                         chrome.tabs.getSelected(null, function(tab) {
