@@ -46,9 +46,13 @@ if (openFolders) {
     openFolders = [];
 }
 
-function buildTree(treeNode, level, visible) {
+function buildTree(treeNode, level, visible, forceRecursive) {
     level = level || 1;
     var wrapper, fragmentWrapper = false;
+
+    if (typeof forceRecursive === 'undefined') {
+        forceRecursive = false;
+    }
 
     if (level > 1) {
         wrapper = $('<ul>');
@@ -88,14 +92,17 @@ function buildTree(treeNode, level, visible) {
             d.addClass('folder' + (isOpen ? ' open' : ''))
              .append($('<span>', { text: child.title }))
              .data('item-id', child.id)
-             .data('level', level);
+             .data('level', level)
+             .attr('id', 'tree' + child.id);
 
             if (child.children && child.children.length) {
-                if (isOpen) {
+                var loaded = isOpen;
+                if (isOpen || forceRecursive) {
                     children = buildTree(child, level + 1, isOpen);
                     d.append(children);
+                    loaded = true;
                 }
-                d.data('loaded', isOpen);
+                d.data('loaded', loaded);
             }
         }
         if (fragmentWrapper) {
@@ -120,7 +127,6 @@ function toggleFolder(elem) {
 
     if (!elem.data('loaded')) {
         chrome.bookmarks.getSubTree(elem.data('item-id'), function(data) {
-            console.log('Loaded subtree ' + elem.data('item-id'));
             var t = buildTree(data[0], elem.data('level') + 1);
             elem.append(t);
             elem.data('loaded', true);
@@ -168,6 +174,15 @@ function _handleToggle(elem) {
 }
 
 function _openAllBookmarks(folder) {
+    chrome.bookmarks.getSubTree(folder.data('item-id'), function(data) {
+        var t = buildTree(data[0], folder.data('level'), true, true);
+        $('#tree' + folder.id).remove();
+        folder.append(t);
+        _handleOpenAllBookmarks(folder);
+    });
+}
+
+function _handleOpenAllBookmarks(folder) {
     if (Settings.get('open_all_sub')) {
         $('li:not(.folder)', folder).each(function() {
             chrome.tabs.create({

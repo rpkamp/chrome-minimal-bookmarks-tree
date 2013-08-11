@@ -53,7 +53,6 @@ function init() {
                 if (!parentId) {
                     parentId = bookmarksTree[0].children[1].id;
                 }
-                console.log(itemId, {parentId: parentId, index: idx});
                 chrome.bookmarks.move(itemId, {parentId: parentId, index: idx});
             }
         });
