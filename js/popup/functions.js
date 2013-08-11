@@ -87,11 +87,15 @@ function buildTree(treeNode, level, visible) {
             }
             d.addClass('folder' + (isOpen ? ' open' : ''))
              .append($('<span>', { text: child.title }))
-             .data('item-id', child.id);
+             .data('item-id', child.id)
+             .data('level', level);
 
             if (child.children && child.children.length) {
-                children = buildTree(child, level + 1, isOpen);
-                d.append(children);
+                if (isOpen) {
+                    children = buildTree(child, level + 1, isOpen);
+                    d.append(children);
+                }
+                d.data('loaded', isOpen);
             }
         }
         if (fragmentWrapper) {
@@ -113,6 +117,23 @@ function toggleFolder(elem) {
             $('.folder.open').not(elem).removeClass('open').find('.sub').slideUp(animationDuration);
         }
     }
+
+    if (!elem.data('loaded')) {
+        chrome.bookmarks.getSubTree(elem.data('item-id'), function(data) {
+            console.log('Loaded subtree ' + elem.data('item-id'));
+            var t = buildTree(data[0], elem.data('level') + 1);
+            elem.append(t);
+            elem.data('loaded', true);
+            _handleToggle(elem);
+        });
+    } else {
+        _handleToggle(elem);
+    }
+}
+
+function _handleToggle(elem) {
+    var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+
     elem.toggleClass('open');
     elem.children('.sub').eq(0).slideToggle(animationDuration, function() {
         $('#wrapper').css('overflow-y', 'auto');
