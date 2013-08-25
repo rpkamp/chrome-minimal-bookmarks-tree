@@ -3,7 +3,7 @@
 	"manifest_version": 2,
 	"content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'",
 	"description": "Display a tree of bookmarks under a toolbar button, and search your bookmarks in the omnibox using the keyword 'bm'.",
-	"version": "0.97",
+	"version": "0.98",
 	"omnibox": { "keyword" : "bm" },
 	"background": {
 		"page": "background.html"

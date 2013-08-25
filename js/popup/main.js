@@ -24,19 +24,22 @@ function init() {
             items: 'li',
             toleranceElement: '> span',
             listType: 'ul',
+            isTree: true,
+            expandOnHover: 700,
+            forcePlaceholderSize: true,
             start: function(e, ui) {
-                var item = $(e.srcElement).parent(),
+                var item = ui.item,
                     list = item.parent();
                 draggingIndex = list.children('li').index(item);
             },
             stop: function(e, ui) {
-                var item = $(e.srcElement).parent(),
+                var item = ui.item,
                     itemId = item.data('item-id'),
                     list = item.parent(),
                     parent = list.parent(),
                     parentId = parent.data('item-id'),
-                    idx = list.children('li').index(item)
-                    ;
+                    idx = list.children('li').index(item);
+
                 if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
                     alert('You can not sort the bookmarks bar folder, or move anything above this folder.');
                     bm.sortable('cancel');
@@ -53,7 +56,18 @@ function init() {
                 if (!parentId) {
                     parentId = bookmarksTree[0].children[1].id;
                 }
-                chrome.bookmarks.move(itemId, {parentId: parentId, index: idx});
+                chrome.bookmarks.move(itemId, {parentId: parentId, index: idx}, function (res) {
+                    if (typeof res === 'undefined') {
+                        // index out of bounds, try with index-1
+                        chrome.bookmarks.move(itemId, {parentId: parentId, index: idx - 1}, function (res) {
+                            if (typeof res === 'undefined') {
+                                // this isn't happening. bail out.
+                                alert('Unable to move bookmark or folder. Please try again.');
+                                window.close();
+                            }
+                        });
+                    }
+                });
             }
         });
 
@@ -78,13 +92,22 @@ function init() {
                             window.close();
                         });
                     }
-                } else if (e.button === 1) {
-                    chrome.tabs.create({url: url});
                 } else if (e.button === 2) {
                     showContextMenuBookmark($this, e);
                 }
             }
             return nothing(e);
+        });
+
+        bm.on('mousedown', 'li', function(e) {
+            $('#context').hide();
+            $('.selected').removeClass('selected');
+            var $this = $(this);
+            if (!$this.hasClass('folder') && e.button === 1) {
+                var url = $this.data('url');
+                chrome.tabs.create({url: url});
+                return nothing(e);
+            }
         });
 
         chrome.windows.getLastFocused({}, function(win) {
@@ -124,7 +147,7 @@ $(document)
     .ready(function() {
         $('#wrapper').on('scroll', function(e) {
             if (Settings.get('remember_scroll_position')) {
-                localStorage.setItem('scrolltop', e.srcElement.scrollTop);
+                localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
             }
             $('#context').hide();
         });
