@@ -175,26 +175,18 @@ function _handleToggle(elem) {
 
 function _openAllBookmarks(folder) {
     chrome.bookmarks.getSubTree(folder.data('item-id'), function(data) {
-        var t = buildTree(data[0], folder.data('level'), true, true);
-        $('#tree' + folder.id).remove();
-        folder.append(t);
-        _handleOpenAllBookmarks(folder);
+        _handleOpenAllBookmarks(data[0]);
     });
 }
 
-function _handleOpenAllBookmarks(folder) {
-    if (Settings.get('open_all_sub')) {
-        $('li:not(.folder)', folder).each(function() {
-            chrome.tabs.create({
-                url: $(this).data('url')
-            });
-        });
-    } else {
-        $(folder).children('ul').eq(0).children('li:not(.folder)').each(function() {
-            chrome.tabs.create({
-                url: $(this).data('url')
-            });
-        });
+function _handleOpenAllBookmarks(data) {
+    console.log(data);
+    if (data.url) {
+        chrome.tabs.create({url: data.url});
+    } else if (data.children) {
+        for (var j in data.children) {
+            _handleOpenAllBookmarks(data.children[j]);
+        }
     }
 }
 

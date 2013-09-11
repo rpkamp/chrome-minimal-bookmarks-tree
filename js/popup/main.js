@@ -103,10 +103,14 @@ function init() {
             $('#context').hide();
             $('.selected').removeClass('selected');
             var $this = $(this);
-            if (!$this.hasClass('folder') && e.button === 1) {
-                var url = $this.data('url');
-                chrome.tabs.create({url: url});
-                return nothing(e);
+            if (e.button === 1) {
+                if ($this.hasClass('folder')) {
+                    _openAllBookmarks($this);
+                } else {
+                    var url = $this.data('url');
+                    chrome.tabs.create({url: url});
+                    return nothing(e);
+                }
             }
         });
 
