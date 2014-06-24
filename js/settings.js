@@ -7,7 +7,8 @@ var Settings = {
         'remember_scroll_position': true,
         'height': 500,
         'width': 300,
-        'zoom': 100
+        'zoom': 100,
+        'icon': 'default'
 	},
 	init: function() {
 		for (var prop in Settings.defaults) {

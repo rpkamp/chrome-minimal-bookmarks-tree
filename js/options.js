@@ -13,6 +13,11 @@ $(document).ready(function() {
         $(this).val(Settings.get(id));
         $(this).on('change click keyup', function() {
             Settings.set(id, $(this).val());
+            console.log(id);
+            if (id === 'icon') {
+                console.log(chrome.extension.getBackgroundPage().setIcon);
+                chrome.extension.getBackgroundPage().setIcon($(this).val());
+            }
         });
     });
     $(':input[type="number"]').each(function() {
@@ -40,7 +45,7 @@ console.log('DEBUG INFO:');
 var Info = function(type, key, value) { this.type = type; this.key = key; this.value = value; };
 var infos = [];
 
-var settings = ['close_old_folder', 'open_all_sub', 'animation_duration', 'hide_empty_folders', 'remember_scroll_position', 'height', 'width', 'zoom'];
+var settings = ['close_old_folder', 'open_all_sub', 'animation_duration', 'hide_empty_folders', 'remember_scroll_position', 'height', 'width', 'zoom', 'icon'];
 for (var i in settings) {
     infos.push(new Info('setting', settings[i], localStorage.getItem('setting_' + settings[i])));
 }
