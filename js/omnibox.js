@@ -71,7 +71,9 @@ function getTopSuggestionUrl(data, text) {
 	if (suggestions.length) {
 		var topSuggestion = suggestions.reverse().pop();
 		return topSuggestion.url;
-	}
+	} else if (String(text).match(/^https?:\/\//)) {
+        return text;
+    }
 	return false;
 }
 
@@ -93,6 +95,13 @@ chrome.omnibox.onInputChanged.addListener( function(text, suggest) {
 		setDefaultSuggestion(topSuggestion.description);
 		if (suggestions.length) {
 			suggestions.reverse();
+            suggestions.forEach(function(a) {
+                if (a.content === "") {
+                    a.content = a.url;
+                }
+                delete(a.score);
+                delete(a.url);
+            });
 			suggest(suggestions);
 		}
 	}

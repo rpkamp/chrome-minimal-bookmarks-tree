@@ -176,13 +176,14 @@ function _handleToggle(elem) {
 function _openAllBookmarks(folder) {
     chrome.bookmarks.getSubTree(folder.data('item-id'), function(data) {
         _handleOpenAllBookmarks(data[0]);
+        window.close();
     });
 }
 
 function _handleOpenAllBookmarks(data) {
     console.log(data);
     if (data.url) {
-        chrome.tabs.create({url: data.url});
+        chrome.tabs.create({url: data.url, active: false});
     } else if (data.children) {
         for (var j in data.children) {
             _handleOpenAllBookmarks(data.children[j]);
