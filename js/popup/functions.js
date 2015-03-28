@@ -6,22 +6,27 @@ function nothing(e) {
     return false;
 }
 
+var openFoldersDirty = false;
+
 function addOpenFolder(id) {
     if ($.inArray(id, openFolders) == -1) {
         openFolders.push(id);
-        saveOpenFolders();
+        openFoldersDirty = true;
     }
 }
 
 function removeOpenFolder(id) {
     while ((pos = $.inArray(id, openFolders)) != -1) {
+        openFoldersDirty = true;
         openFolders.splice(pos, 1);
     }
-    saveOpenFolders();
 }
 
 function saveOpenFolders() {
-    localStorage.setItem('openfolders', JSON.stringify(openFolders));
+    if (openFoldersDirty) {
+        localStorage.setItem('openfolders', JSON.stringify(openFolders));
+        openFoldersDirty = false;
+    }
 }
 
 function setWidthHeight(win) {
@@ -86,23 +91,27 @@ function buildTree(treeNode, level, visible, forceRecursive) {
                 })
             );
         } else { // folder
-            if (Settings.get('hide_empty_folders') && child.children && !child.children.length) {
-                continue;
-            }
             d.addClass('folder' + (isOpen ? ' open' : ''))
-             .append($('<span>', { text: child.title }))
-             .data('item-id', child.id)
-             .data('level', level)
-             .attr('id', 'tree' + child.id);
+             .append($('<span>', { text: child.title }));
 
-            if (child.children && child.children.length) {
-                var loaded = isOpen;
-                if (isOpen || forceRecursive) {
-                    children = buildTree(child, level + 1, isOpen);
-                    d.append(children);
-                    loaded = true;
+            if (Settings.get('hide_empty_folders') && child.children && !child.children.length) {
+                // we need to add hidden nodes for these
+                // otherwise sorting doesn't work properly
+                d.addClass('hidden');
+            } else {
+                d.data('item-id', child.id)
+                 .data('level', level)
+                 .attr('id', 'tree' + child.id);
+
+                if (child.children && child.children.length) {
+                    var loaded = isOpen;
+                    if (isOpen || forceRecursive) {
+                        children = buildTree(child, level + 1, isOpen);
+                        d.append(children);
+                        loaded = true;
+                    }
+                    d.data('loaded', loaded);
                 }
-                d.data('loaded', loaded);
             }
         }
         if (fragmentWrapper) {
@@ -119,9 +128,9 @@ function toggleFolder(elem) {
     $('#wrapper').css('overflow-y', 'hidden');
     if (Settings.get('close_old_folder')) {
         if (elem.parents('.folder.open').length) {
-            $('.folder.open', elem.parent()).not(elem).removeClass('open').find('.sub').slideUp(animationDuration);
+            $('.folder.open', elem.parent()).not(elem).removeClass('open').find('.sub').stop().slideUp(animationDuration);
         } else {
-            $('.folder.open').not(elem).removeClass('open').find('.sub').slideUp(animationDuration);
+            $('.folder.open').not(elem).removeClass('open').find('.sub').stop().slideUp(animationDuration);
         }
     }
 
@@ -141,7 +150,7 @@ function _handleToggle(elem) {
     var animationDuration = parseInt(Settings.get('animation_duration'), 10);
 
     elem.toggleClass('open');
-    elem.children('.sub').eq(0).slideToggle(animationDuration, function() {
+    elem.children('.sub').eq(0).stop().slideToggle(animationDuration, function() {
         $('#wrapper').css('overflow-y', 'auto');
         var id = $(this).parent().data('item-id');
         if (!Settings.get('close_old_folder')) {
@@ -165,11 +174,11 @@ function _handleToggle(elem) {
             $(parents).each(function() {
                 addOpenFolder($(this).data('item-id'));
             });
-            saveOpenFolders();
         }
         if (Settings.get('remember_scroll_position')) {
             localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
         }
+        saveOpenFolders();
     });
 }
 

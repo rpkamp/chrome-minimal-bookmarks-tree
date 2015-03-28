@@ -26,6 +26,7 @@ function init() {
             listType: 'ul',
             isTree: true,
             expandOnHover: 700,
+            distance: 30,
             forcePlaceholderSize: true,
             start: function(e, ui) {
                 var item = ui.item,
@@ -146,12 +147,17 @@ function init() {
     });
 }
 
+var scrollTimeout;
+
 $(document)
     .on('contextmenu', function(e) { return false; })
     .ready(function() {
         $('#wrapper').on('scroll', function(e) {
             if (Settings.get('remember_scroll_position')) {
-                localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(function() {
+                   localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
+                });
             }
             $('#context').hide();
         });

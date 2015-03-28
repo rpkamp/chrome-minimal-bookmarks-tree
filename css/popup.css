@@ -57,6 +57,10 @@ li {
 	display: block;
 }
 
+.hidden {
+    display: none;
+}
+
 .folder > span {
 	color: #000;
 	background-image: url(/icons/folder_closed.png);

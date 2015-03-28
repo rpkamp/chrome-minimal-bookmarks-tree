@@ -2,7 +2,7 @@ Settings.init();
 var icon = Settings.get('icon');
 function setIcon(icon) {
     var paths = {
-        'default': 'icons/bookmark16.png',
+        'default': 'icons/bookmark48.png',
         'star': 'icons/star_fav.png',
         'star_empty': 'icons/star_fav_empty.png'
     };

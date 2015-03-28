@@ -10,21 +10,29 @@ var Settings = {
         'zoom': 100,
         'icon': 'default'
 	},
+    cache: {},
+    initialised: false,
 	init: function() {
+        if (Settings.initialised) {
+            return;
+        }
 		for (var prop in Settings.defaults) {
-			val = localStorage.getItem('setting_'+prop);
-			if (val === null) {
+			var value = localStorage.getItem('setting_'+prop);
+			if (value === null) {
+                Settings.cache[prop] = Settings.defaults[prop]
 				Settings.set(prop, Settings.defaults[prop]);
-			}
+			} else {
+                Settings.cache[prop] = JSON.parse(value)
+            }
 		}
+        Settings.initialised = true;
 	},
 	get: function(setting) {
-			Settings.init();
-			var value = localStorage.getItem('setting_'+setting);
-			value = JSON.parse(value);
-			return value;
+		Settings.init();
+		return Settings.cache[setting]
 	},
 	set: function(setting, value) {
-			localStorage.setItem('setting_'+setting, JSON.stringify(value));
+        Settings.cache[setting] = value;
+		localStorage.setItem('setting_'+setting, JSON.stringify(value));
 	}
 };
