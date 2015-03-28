@@ -39,7 +39,15 @@ $(document).ready(function() {
             setTimeout(function() { $(event.target).focus();}, 50);
         });
     });
+    $('.license-toggle').on('click', function(e) {
+        $('#license').show();
+        $(this).hide();
+        e.preventDefault();
+        return false;
+    });
 });
+
+
 
 console.log('DEBUG INFO:');
 var Info = function(type, key, value) { this.type = type; this.key = key; this.value = value; };

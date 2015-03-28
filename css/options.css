@@ -23,6 +23,10 @@ em {
     color: #888;
 }
 
+.row {
+    margin-bottom: 5px;
+}
+
 .row label {
     clear: left;
     float: left;
@@ -41,4 +45,19 @@ select {
 
 select {
     width: 108px;
+    background: #fff;
+}
+
+.license-toggle,
+#license {
+    display: block;
+    margin-top: 20px;
+}
+
+.license-toggle {
+    text-align: right;
+}
+
+#license {
+    display: none;
 }
