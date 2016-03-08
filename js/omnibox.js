@@ -82,7 +82,7 @@ function getTopSuggestionUrl(data, text) {
  */
 chrome.omnibox.onInputChanged.addListener( function(text, suggest) {
 	if (text.length === 0) {
-		setDefaultSuggestion('Search for bookmarks using Minimal Bookmarks Tree');
+		setDefaultSuggestion(chrome.i18n.getMessage("omnibarDefaultSuggestion"));
 	}
 	if (!dataLoaded) {
 		loadData();

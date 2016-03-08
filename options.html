@@ -3,57 +3,58 @@
 <head>
     <title>Minimal Bookmarks Tree Options</title>
 	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-	<script type="text/javascript" src="js/settings.js"></script>
-	<script type="text/javascript" src="js/options.js"></script>
+	<script src="js/settings.js"></script>
+    <script src="js/i18n-html.js"></script>
+    <script src="js/options.js"></script>
     <link rel="stylesheet" type="text/css" href="css/options.css" />
 </head>
 <body>
 	<div id="wrap">
-		<h1>Minimal Bookmarks Tree Options</h1>
+		<h1>__MSG_optionsHeader__</h1>
 		<div id="inner">
-			<input type="checkbox" id="close_old_folder" /> <label for="close_old_folder">Close currently opened folder when opening a new one.</label><br />
-			<input type="checkbox" id="open_all_sub" /> <label for="open_all_sub">When clicking "Open all", open all bookmarks in all subfolders as well.</label><br />
-            <input type="checkbox" id="hide_empty_folders" /> <label for="hide_empty_folders">Hide empty folders.</label><br />
-            <input type="checkbox" id="remember_scroll_position" /> <label for="remember_scroll_position">Remember scroll position when Minimal Bookmarks Tree window closes.</label><br />
+			<input type="checkbox" id="close_old_folder" /> <label for="close_old_folder">__MSG_optionCloseFolderOnOpenNew__</label><br />
+			<input type="checkbox" id="open_all_sub" /> <label for="open_all_sub">__MSG_optionOpenAllTraverseSubfolders__</label><br />
+            <input type="checkbox" id="hide_empty_folders" /> <label for="hide_empty_folders">__MSG_optionHideEmptyFolders__</label><br />
+            <input type="checkbox" id="remember_scroll_position" /> <label for="remember_scroll_position">__MSG_optionRememberScrollPosition__</label><br />
             <br />
             <div class="row">
-                <label for="icon">Icon</label>
+                <label for="icon">__MSG_optionIcon__</label>
                 <select id="icon">
-                    <option value="default">Default</option>
-                    <option value="star">Star</option>
-                    <option value="star_empty">Open star</option>
+                    <option value="default">__MSG_optionIconDefault__</option>
+                    <option value="star">__MSG_optionIconStar__</option>
+                    <option value="star_empty">__MSG_optionIconOpenStar__</option>
                 </select>
             </div>
             <div class="row">
-                <label for="animation_duration">Animation speed</label>
+                <label for="animation_duration">__MSG_optionAnimationSpeed__</label>
                 <select id="animation_duration">
-                    <option value="0">No animation</option>
-                    <option value="1000">Slug like</option>
-                    <option value="600">Slow</option>
-                    <option value="400">Medium</option>
-                    <option value="200">Fast</option>
-                    <option value="100">Super fast</option>
+                    <option value="0">__MSG_optionAnimationSpeedNoAnimation__</option>
+                    <option value="1000">__MSG_optionAnimationSpeedVerySlow__</option>
+                    <option value="600">__MSG_optionAnimationSpeedSlow__</option>
+                    <option value="400">__MSG_optionAnimationSpeedMedium__</option>
+                    <option value="200">__MSG_optionAnimationSpeedFast__</option>
+                    <option value="100">__MSG_optionAnimationSpeedVeryFast__</option>
                 </select>
             </div>
             <div class="row">
-                 <label for="height">Zoom level</label> <input type="number" min="75" max="300" name="zoom" id="zoom" /> <small>(min: 75, max: 300, default: 100)</small><br />
+                 <label for="height">__MSG_optionZoomLevel__</label> <input type="number" min="75" max="300" name="zoom" id="zoom" /> <small>(__MSG_optionMin__: 75, __MSG_optionMax__: 300, __MSG_optionDefault__: 100)</small><br />
             </div>
             <div class="row">
-			     <label for="height">Preferred height</label> <input type="number" min="50" max="600" name="height" id="height" /> <small>(min: 50, max: 600, default: 500)</small><br />
+			     <label for="height">__MSG_optionPreferredHeight__</label> <input type="number" min="50" max="600" name="height" id="height" /> <small>(__MSG_optionMin__: 50, __MSG_optionMax__: 600, __MSG_optionDefault__: 500)</small><br />
             </div>
             <div class="row">
-                <label for="width">Preferred width</label> <input type="number" min="50" max="800" name="width" id="width" /> <small>(min: 50, max: 800, default: 300)</small><br />
+                <label for="width">__MSG_optionPreferredWidth__</label> <input type="number" min="50" max="800" name="width" id="width" /> <small>(__MSG_optionMin__: 50, __MSG_optionMax__: 800, __MSG_optionDefault__: 300)</small><br />
             </div>
             <br /><br />
             <small><em>
-                Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree.<br />
-                Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above.
+                __MSG_optionWidthHeightEnforcedByBrowser__<br />
+                __MSG_optionWidthHeightOptimization__
             </em></small>
             <br /><br />
-			<small><em>Settings are saved automatically when you click/select them.</em></small><br />
+			<small><em>__MSG_optionSavedAutomatically__</em></small><br />
 		</div>
 
-        <a class="license-toggle" href="#">Show license</a>
+        <a class="license-toggle" href="#">__MSG_optionShowLicense__</a>
 
         <div id="license">
             <h2>License</h2>

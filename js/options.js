@@ -1,4 +1,4 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     $(':input[type="checkbox"]').each(function() {
         var id = $(this).attr('id');
         if (Settings.get(id)) {

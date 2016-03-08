@@ -1,0 +1,89 @@
+{
+    "omnibarDefaultSuggestion": {
+        "message": "Search for bookmarks using Minimal Bookmarks Tree"
+    },
+    "folderMoveFailed": {
+        "message": "Unable to move bookmark or folder. Please try again."
+    },
+    "sortNotAllowed": {
+        "message": "You can not sort the bookmarks bar folder, or move anything above this folder."
+    },
+    "optionsHeader": {
+        "message": "Minimal Bookmarks Tree Options"
+    },
+    "optionCloseFolderOnOpenNew": {
+        "message": "Close currently opened folder when opening a new one."
+    },
+    "optionOpenAllTraverseSubfolders": {
+        "message": "When clicking \"Open all\", open all bookmarks in all subfolders as well."
+    },
+    "optionHideEmptyFolders": {
+        "message": "Hide empty folders."
+    },
+    "optionRememberScrollPosition": {
+        "message": "Remember scroll position when Minimal Bookmarks Tree window closes."
+    },
+    "optionIcon": {
+        "message": "Icon"
+    },
+    "optionIconDefault": {
+        "message": "Default"
+    },
+    "optionIconStar": {
+        "message": "Star"
+    },
+    "optionIconOpenStar": {
+         "message": "Open star"
+    },
+    "optionAnimationSpeed": {
+        "message": "Animation speed"
+    },
+    "optionAnimationSpeedNoAnimation": {
+        "message": "No animation"
+    },
+    "optionAnimationSpeedVerySlow": {
+        "message": "Slug like"
+    },
+    "optionAnimationSpeedSlow": {
+        "message": "Slow"
+    },
+    "optionAnimationSpeedMedium": {
+        "message": "Medium"
+    },
+    "optionAnimationSpeedFast": {
+        "message": "Fast"
+    },
+    "optionAnimationSpeedVeryFast": {
+        "message": "Super fast"
+    },
+    "optionZoomLevel": {
+        "message": "Zoom level"
+    },
+    "optionPreferredHeight": {
+        "message": "Preferred height"
+    },
+    "optionPreferredWidth": {
+        "message": "Preferred width"
+    },
+    "optionMin": {
+        "message": "min"
+    },
+    "optionMax": {
+        "message": "max"
+    },
+    "optionDefault": {
+        "message": "default"
+    },
+    "optionWidthHeightEnforcedByBrowser": {
+        "message": "Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree."
+    },
+    "optionWidthHeightOptimization": {
+        "message": "Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above."
+    },
+    "optionSavedAutomatically": {
+        "message": "Settings are saved automatically when you click/select them."
+    },
+    "optionShowLicense": {
+        "message": "Show license"
+    }
+}

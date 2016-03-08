@@ -1,0 +1,89 @@
+{
+    "sortNotAllowed": {
+        "message": "De bladwijzerbar map kan niet verplaatst worden, en er kan ook niets boven deze map gezet worden."
+    },
+    "folderMoveFailed": {
+        "message": "De bladwijzer of map kon niet verplaatst worden. Probeert u het later nog eens."
+    },
+    "optionOpenAllTraverseSubfolders": {
+        "message": "Open alle bladwijzers in alle submappen als ik op \"Alles openen\" klik."
+    },
+    "optionIcon": {
+        "message": "Ikoon"
+    },
+    "optionRememberScrollPosition": {
+        "message": "Onthoudt scroll positie als het Minimal Bookmarks Tree venster sluit"
+    },
+    "optionIconDefault": {
+        "message": "Standaard"
+    },
+    "omnibarDefaultSuggestion": {
+        "message": "Zoek naar bladwijzers met Minimal Bookmarks Tree"
+    },
+    "optionHideEmptyFolders": {
+        "message": "Verberg lege mappen"
+    },
+    "optionCloseFolderOnOpenNew": {
+        "message": "Sluit huidige map als ik een nieuwe open"
+    },
+    "optionsHeader": {
+        "message": "Minimal Bookmarks Tree Opties"
+    },
+    "optionIconStar": {
+        "message": "Ster"
+    },
+    "optionAnimationSpeed": {
+        "message": "Animatiesnelheid"
+    },
+    "optionAnimationSpeedMedium": {
+        "message": "Gemiddeld"
+    },
+    "optionIconOpenStar": {
+        "message": "Open ster"
+    },
+    "optionAnimationSpeedNoAnimation": {
+        "message": "Geen animatie"
+    },
+    "optionAnimationSpeedSlow": {
+        "message": "Langzaam"
+    },
+    "optionAnimationSpeedVerySlow": {
+        "message": "Heel langzaam"
+    },
+    "optionAnimationSpeedFast": {
+        "message": "Snel"
+    },
+    "optionAnimationSpeedVeryFast": {
+        "message": "Heel snel"
+    },
+    "optionZoomLevel": {
+        "message": "Zoomniveau"
+    },
+    "optionPreferredHeight": {
+        "message": "Voorkeurshoogte"
+    },
+    "optionPreferredWidth": {
+        "message": "Voorkeursbreedte"
+    },
+    "optionDefault": {
+        "message": "standaard"
+    },
+    "optionWidthHeightEnforcedByBrowser": {
+        "message": "Maximale breedte en hoogte zijn beperkingen van Chrome, niet van Minimal Bookmark Tree"
+    },
+    "optionMax": {
+        "message": "max"
+    },
+    "optionMin": {
+        "message": "min"
+    },
+    "optionSavedAutomatically": {
+        "message": "Instellingen worden automatisch opgeslagen zodra u ze aanklikt."
+    },
+    "optionShowLicense": {
+        "message": "Toon licentie"
+    },
+    "optionWidthHeightOptimization": {
+        "message": "Minimal Bookmarks Tree zal proberen optimaal op het scherm getoond te worden, en krimpen als er te weinig ruimte is. Mocht het onverhoopt toch te groot worden, vul dan lagere waarden in in de voorkeursbreedte en voorkeurshoogte velden hier boven."
+    }
+}

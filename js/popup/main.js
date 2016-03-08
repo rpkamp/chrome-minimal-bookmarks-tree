@@ -42,7 +42,7 @@ function init() {
                     idx = list.children('li').index(item);
 
                 if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
-                    alert('You can not sort the bookmarks bar folder, or move anything above this folder.');
+                    alert(chrome.18n.getMessage("sortNotAllowed"));
                     bm.sortable('cancel');
                     return nothing(e);
                 }
@@ -63,7 +63,7 @@ function init() {
                         chrome.bookmarks.move(itemId, {parentId: parentId, index: idx - 1}, function (res) {
                             if (typeof res === 'undefined') {
                                 // this isn't happening. bail out.
-                                alert('Unable to move bookmark or folder. Please try again.');
+                                alert(chrome.i18n.getMessage("folderMoveFailed"));
                                 window.close();
                             }
                         });

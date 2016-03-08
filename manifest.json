@@ -23,5 +23,6 @@
 		"16": "icons/bookmark16.png",
 		"48": "icons/bookmark48.png",
 		"128": "icons/bookmark48.png"
-	} 
+	},
+    "default_locale": "nl"
 }
