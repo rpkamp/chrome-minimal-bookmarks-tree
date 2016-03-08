@@ -280,18 +280,21 @@ function showContextMenuBookmark(bookmark, e) {
 }
 
 function showContextMenu(e) {
-    $("#context").css({
+    var $context = $("#context");
+
+    $context.css({
         'left': -10000
     }).show(); // draw offscreen for dimensions
-    var h = $('#context').height();
-
-    var wrap = $('#wrapper');
-    var top = wrap[0].scrollTop + e.pageY;
-    if (top + h > wrap.height()) {
-        top = wrap.height() - h - 15;
+    
+    var windowHeight = $(window).height();
+    var contextHeight = $context.height();
+    var scrollTop = $('#wrapper').scrollTop();
+    var top = scrollTop + e.pageY;
+    if (top > scrollTop + windowHeight - contextHeight) {
+        top = scrollTop + windowHeight - contextHeight - 15;
     }
-
-    $("#context").css({
+    
+    $context.css({
         'left': e.pageX,
         'top': top
     });
