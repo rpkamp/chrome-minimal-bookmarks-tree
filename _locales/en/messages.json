@@ -85,5 +85,38 @@
     },
     "optionShowLicense": {
         "message": "Show license"
+    },
+    "popupTitle": {
+        "message": "Minimal Bookmarks Tree"
+    },
+    "popupLoading": {
+        "message": "Loading ..."
+    },
+    "popupEditBookmark": {
+        "message": "Edit ..."
+    },
+    "popupDeleteBookmark": {
+        "message": "Delete"
+    },
+    "popupOpenAll": {
+        "message": "Open all"
+    },
+    "popupEditFolder": {
+        "message": "Edit ..."
+    },
+    "popupDeleteFolder": {
+        "message": "Delete"
+    },
+    "bookmarkEditName": {
+        "message": "Name"
+    },
+    "bookmarkEditUrl": {
+        "message": "URL"
+    },
+    "bookmarkEditSave": {
+        "message": "Save"
+    },
+    "bookmarkEditCancel": {
+        "message": "Cancel"
     }
 }

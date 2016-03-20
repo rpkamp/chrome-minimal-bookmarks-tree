@@ -3,7 +3,7 @@
 	"manifest_version": 2,
 	"content_security_policy": "script-src 'self' https://code.jquery.com; object-src 'self'",
 	"description": "Display a tree of bookmarks under a toolbar button, and search your bookmarks in the omnibox using the keyword 'bm'.",
-	"version": "1.22",
+	"version": "1.3",
 	"omnibox": { "keyword" : "bm" },
 	"background": {
 		"page": "background.html"
@@ -24,5 +24,5 @@
 		"48": "icons/bookmark48.png",
 		"128": "icons/bookmark48.png"
 	},
-    "default_locale": "nl"
+    "default_locale": "en"
 }

@@ -1,54 +1,54 @@
 {
-    "sortNotAllowed": {
-        "message": "De bladwijzerbar map kan niet verplaatst worden, en er kan ook niets boven deze map gezet worden."
+    "omnibarDefaultSuggestion": {
+        "message": "Zoek naar bladwijzers met Minimal Bookmarks Tree"
     },
     "folderMoveFailed": {
         "message": "De bladwijzer of map kon niet verplaatst worden. Probeert u het later nog eens."
     },
-    "optionOpenAllTraverseSubfolders": {
-        "message": "Open alle bladwijzers in alle submappen als ik op \"Alles openen\" klik."
-    },
-    "optionIcon": {
-        "message": "Ikoon"
-    },
-    "optionRememberScrollPosition": {
-        "message": "Onthoudt scroll positie als het Minimal Bookmarks Tree venster sluit"
-    },
-    "optionIconDefault": {
-        "message": "Standaard"
-    },
-    "omnibarDefaultSuggestion": {
-        "message": "Zoek naar bladwijzers met Minimal Bookmarks Tree"
-    },
-    "optionHideEmptyFolders": {
-        "message": "Verberg lege mappen"
-    },
-    "optionCloseFolderOnOpenNew": {
-        "message": "Sluit huidige map als ik een nieuwe open"
+    "sortNotAllowed": {
+        "message": "De bladwijzerbar map kan niet verplaatst worden, en er kan ook niets boven deze map gezet worden."
     },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },
+    "optionCloseFolderOnOpenNew": {
+        "message": "Sluit huidige map als ik een nieuwe open"
+    },
+    "optionOpenAllTraverseSubfolders": {
+        "message": "Open alle bladwijzers in alle submappen als ik op \"Alles openen\" klik."
+    },
+    "optionHideEmptyFolders": {
+        "message": "Verberg lege mappen"
+    },
+    "optionRememberScrollPosition": {
+        "message": "Onthoudt scroll positie als het Minimal Bookmarks Tree venster sluit"
+    },
+    "optionIcon": {
+        "message": "Ikoon"
+    },
+    "optionIconDefault": {
+        "message": "Standaard"
+    },
     "optionIconStar": {
         "message": "Ster"
-    },
-    "optionAnimationSpeed": {
-        "message": "Animatiesnelheid"
-    },
-    "optionAnimationSpeedMedium": {
-        "message": "Gemiddeld"
     },
     "optionIconOpenStar": {
         "message": "Open ster"
     },
+    "optionAnimationSpeed": {
+        "message": "Animatiesnelheid"
+    },
     "optionAnimationSpeedNoAnimation": {
         "message": "Geen animatie"
+    },
+    "optionAnimationSpeedVerySlow": {
+        "message": "Heel langzaam"
     },
     "optionAnimationSpeedSlow": {
         "message": "Langzaam"
     },
-    "optionAnimationSpeedVerySlow": {
-        "message": "Heel langzaam"
+    "optionAnimationSpeedMedium": {
+        "message": "Gemiddeld"
     },
     "optionAnimationSpeedFast": {
         "message": "Snel"
@@ -65,17 +65,20 @@
     "optionPreferredWidth": {
         "message": "Voorkeursbreedte"
     },
+    "optionMin": {
+        "message": "min"
+    },
+    "optionMax": {
+        "message": "max"
+    },
     "optionDefault": {
         "message": "standaard"
     },
     "optionWidthHeightEnforcedByBrowser": {
         "message": "Maximale breedte en hoogte zijn beperkingen van Chrome, niet van Minimal Bookmark Tree"
     },
-    "optionMax": {
-        "message": "max"
-    },
-    "optionMin": {
-        "message": "min"
+    "optionWidthHeightOptimization": {
+        "message": "Minimal Bookmarks Tree zal proberen optimaal op het scherm getoond te worden, en krimpen als er te weinig ruimte is. Mocht het onverhoopt toch te groot worden, vul dan lagere waarden in in de voorkeursbreedte en voorkeurshoogte velden hier boven."
     },
     "optionSavedAutomatically": {
         "message": "Instellingen worden automatisch opgeslagen zodra u ze aanklikt."
@@ -83,7 +86,37 @@
     "optionShowLicense": {
         "message": "Toon licentie"
     },
-    "optionWidthHeightOptimization": {
-        "message": "Minimal Bookmarks Tree zal proberen optimaal op het scherm getoond te worden, en krimpen als er te weinig ruimte is. Mocht het onverhoopt toch te groot worden, vul dan lagere waarden in in de voorkeursbreedte en voorkeurshoogte velden hier boven."
+    "popupTitle": {
+        "message": "Minimal Bookmarks Tree"
+    },
+    "popupLoading": {
+        "message": "Bezig met laden ..."
+    },
+    "popupEditBookmark": {
+        "message": "Bewerken ..."
+    },
+    "popupDeleteBookmark": {
+        "message": "Verwijderen"
+    },
+    "popupOpenAll": {
+        "message": "Allemaal openen"
+    },
+    "popupEditFolder": {
+        "message": "Bewerken ..."
+    },
+    "popupDeleteFolder": {
+        "message": "Verwijderen"
+    },
+    "bookmarkEditName": {
+        "message": "Titel"
+    },
+    "bookmarkEditUrl": {
+        "message": "URL"
+    },
+    "bookmarkEditSave": {
+        "message": "Opslaan"
+    },
+    "bookmarkEditCancel": {
+        "message": "Annuleren"
     }
 }

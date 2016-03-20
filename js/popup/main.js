@@ -42,7 +42,7 @@ function init() {
                     idx = list.children('li').index(item);
 
                 if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
-                    alert(chrome.18n.getMessage("sortNotAllowed"));
+                    alert(chrome.i18n.getMessage("sortNotAllowed"));
                     bm.sortable('cancel');
                     return nothing(e);
                 }
