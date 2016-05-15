@@ -1,9 +1,11 @@
 language: node_js
+sudo: true
 node_js:
     - "0.10"
 script: node_modules/karma/bin/karma start mbt.conf.js --single-run
 before_install:
  - export DISPLAY=:99.0
  - sh -e /etc/init.d/xvfb start
+ - sudo apt-get install -y --force-yes google-chrome-stable
 before_script:
  - npm install
