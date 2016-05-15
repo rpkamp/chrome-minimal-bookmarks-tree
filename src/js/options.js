@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     $(':input[type="checkbox"]').each(function() {
         var id = $(this).attr('id');
-        if (Settings.get(id)) {
+        if (MBT_settings.get(id)) {
             $(this).prop('checked', true);
         }
         $(this).on('change click keyup', function() {
-            Settings.set(id, $(this).prop('checked'));
+            MBT_settings.set(id, $(this).prop('checked'));
         });
     });
     $('select').each( function() {
         var id = $(this).attr('id');
-        $(this).val(Settings.get(id));
+        $(this).val(MBT_settings.get(id));
         $(this).on('change click keyup', function() {
-            Settings.set(id, $(this).val());
+            MBT_settings.set(id, $(this).val());
             console.log(id);
             if (id === 'icon') {
                 console.log(chrome.extension.getBackgroundPage().setIcon);
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     $(':input[type="number"]').each(function() {
         var id = $(this).attr('id');
-        $(this).val(Settings.get(id));
+        $(this).val(MBT_settings.get(id));
         $(this).on('change click keyup', function() {
             var v = parseInt($(this).val(), 10);
             var minValue = parseInt($(this).attr('min'), 10);
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             $(this).css('border', '');
-            Settings.set(id, $(this).val());
+            MBT_settings.set(id, $(this).val());
         }).on('blur', function(event) {
             event.target.checkValidity();
         }).bind('invalid', function(event) {

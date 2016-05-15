@@ -117,13 +117,13 @@ function init() {
 
         chrome.windows.getLastFocused({}, function(win) {
             setWidthHeight(win);
-            if (Settings.get('remember_scroll_position')) {
+            if (MBT_settings.get('remember_scroll_position')) {
                 var scrolltop = localStorage.getItem('scrolltop');
                 if (scrolltop) {
                     $('#wrapper').scrollTop(parseInt(scrolltop, 10));
                 }
             }
-            var zoom = parseInt(Settings.get('zoom'), 10);
+            var zoom = parseInt(MBT_settings.get('zoom'), 10);
             if (zoom !== 100) {
                 $('html').css('zoom', zoom + '%');
             }
@@ -135,7 +135,7 @@ function init() {
         bm.show();
         $('#loading').remove();
         $('#edit_cancel').on('click', function() {
-            var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+            var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
             $('#overlay').slideUp(animationDuration);
             $('.selected').removeClass('selected');
         });
@@ -153,7 +153,7 @@ $(document)
     .on('contextmenu', function(e) { return false; })
     .ready(function() {
         $('#wrapper').on('scroll', function(e) {
-            if (Settings.get('remember_scroll_position')) {
+            if (MBT_settings.get('remember_scroll_position')) {
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(function() {
                    localStorage.setItem('scrolltop', $('#wrapper').scrollTop());

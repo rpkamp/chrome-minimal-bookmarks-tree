@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [ -f mbt.zip ]; then
+	echo "mbt.zip found. deleting."
 	rm -f mbt.zip
 fi
 
-zip -r mbt.zip css/ icons/ js/ _locales/ *.html *.json
+(cd src && zip -r ../mbt.zip *)

@@ -1,0 +1,29 @@
+{
+  "name": "chrome-minimal-bookmarks-tree",
+  "version": "1.0.0",
+  "description": "Chrome minimal bookmarks tree extension",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rpkamp/chrome-minimal-bookmarks-tree.git"
+  },
+  "author": "Remon van de Kamp (rpkamp@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rpkamp/chrome-minimal-bookmarks-tree/issues"
+  },
+  "devDependencies": {
+    "karma": "~0.13.22",
+    "qunitjs": "~1.23.1",
+    "karma-qunit": "~1.0.0",
+    "karma-chrome-launcher": "~1.0.1",
+    "phantomjs-prebuilt": "~2.1.7",
+    "karma-phantomjs-launcher": "~1.0.0"
+  }
+}
