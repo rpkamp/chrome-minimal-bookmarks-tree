@@ -29,15 +29,15 @@ function saveOpenFolders() {
     }
 }
 
-function setWidthHeight(win) {
-    var scale = 1 / (parseInt(MBT_settings.get('zoom'), 10) / 100);
+function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
+    var scale = 1 / (zoom / 100);
 
-    var max_w = scale * (win.width - 100);
-    var settings_w = scale * parseInt(MBT_settings.get('width'), 10);
+    var max_w = scale * (tab.width - 100);
+    var settings_w = scale * preferredWidth;
     var final_w = Math.min(max_w, settings_w);
 
-    var max_h = scale * (win.height - 100);
-    var settings_h = scale * parseInt(MBT_settings.get('height'), 10);
+    var max_h = scale * (tab.height - 100);
+    var settings_h = scale * preferredHeight;
     var final_h = Math.min(scale * 600, Math.min(max_h, settings_h));
 
     $('#wrapper').css('max-width', final_w + 'px').css('min-width', final_w + 'px').width(final_w);
