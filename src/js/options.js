@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     $(':input[type="checkbox"]').each(function() {
         var id = $(this).attr('id');
-        if (Settings.get(id)) {
+        if (MBT_settings.get(id)) {
             $(this).prop('checked', true);
         }
         $(this).on('change click keyup', function() {
-            Settings.set(id, $(this).prop('checked'));
+            MBT_settings.set(id, $(this).prop('checked'));
         });
     });
     $('select').each( function() {
         var id = $(this).attr('id');
-        $(this).val(Settings.get(id));
+        $(this).val(MBT_settings.get(id));
         $(this).on('change click keyup', function() {
-            Settings.set(id, $(this).val());
+            MBT_settings.set(id, $(this).val());
             console.log(id);
             if (id === 'icon') {
                 console.log(chrome.extension.getBackgroundPage().setIcon);
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     $(':input[type="number"]').each(function() {
         var id = $(this).attr('id');
-        $(this).val(Settings.get(id));
+        $(this).val(MBT_settings.get(id));
         $(this).on('change click keyup', function() {
             var v = parseInt($(this).val(), 10);
             var minValue = parseInt($(this).attr('min'), 10);
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             $(this).css('border', '');
-            Settings.set(id, $(this).val());
+            MBT_settings.set(id, $(this).val());
         }).on('blur', function(event) {
             event.target.checkValidity();
         }).bind('invalid', function(event) {
@@ -50,17 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 console.log('DEBUG INFO:');
-var Info = function(type, key, value) { this.type = type; this.key = key; this.value = value; };
-var infos = [];
-
 var settings = ['close_old_folder', 'open_all_sub', 'animation_duration', 'hide_empty_folders', 'remember_scroll_position', 'height', 'width', 'zoom', 'icon'];
 for (var i in settings) {
-    infos.push(new Info('setting', settings[i], localStorage.getItem('setting_' + settings[i])));
+    console.log(settings[i], MBT_settings.get(settings[i]));
 }
 
 var helpers = ['openfolders', 'scrolltop'];
 for (var i in helpers) {
-    infos.push(new Info('local cache', helpers[i], localStorage.getItem(helpers[i])));
+    console.log(helpers[i], localStorage.getItem(helpers[i]));
 }
-
-console.table(infos, ['type', 'key', 'value']);

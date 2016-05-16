@@ -1,0 +1,28 @@
+{
+  "name": "chrome-minimal-bookmarks-tree",
+  "version": "1.0.0",
+  "description": "Chrome minimal bookmarks tree extension",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rpkamp/chrome-minimal-bookmarks-tree.git"
+  },
+  "author": "Remon van de Kamp (rpkamp@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rpkamp/chrome-minimal-bookmarks-tree/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-cli": "~0.1.6",
+    "grunt-saucelabs": "~8.3.2",
+    "grunt-contrib-connect": "~0.1.2",
+    "grunt-contrib-watch": "~0.2.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  }
+}
