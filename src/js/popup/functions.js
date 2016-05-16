@@ -29,15 +29,15 @@ function saveOpenFolders() {
     }
 }
 
-function setWidthHeight(win) {
-    var scale = 1 / (parseInt(Settings.get('zoom'), 10) / 100);
+function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
+    var scale = 1 / (zoom / 100);
 
-    var max_w = scale * (win.width - 100);
-    var settings_w = scale * parseInt(Settings.get('width'), 10);
+    var max_w = scale * (tab.width - 100);
+    var settings_w = scale * preferredWidth;
     var final_w = Math.min(max_w, settings_w);
 
-    var max_h = scale * (win.height - 100);
-    var settings_h = scale * parseInt(Settings.get('height'), 10);
+    var max_h = scale * (tab.height - 100);
+    var settings_h = scale * preferredHeight;
     var final_h = Math.min(scale * 600, Math.min(max_h, settings_h));
 
     $('#wrapper').css('max-width', final_w + 'px').css('min-width', final_w + 'px').width(final_w);
@@ -94,7 +94,7 @@ function buildTree(treeNode, level, visible, forceRecursive) {
             d.addClass('folder' + (isOpen ? ' open' : ''))
              .append($('<span>', { text: child.title }));
 
-            if (Settings.get('hide_empty_folders') && child.children && !child.children.length) {
+            if (MBT_settings.get('hide_empty_folders') && child.children && !child.children.length) {
                 // we need to add hidden nodes for these
                 // otherwise sorting doesn't work properly
                 d.addClass('hidden');
@@ -124,9 +124,9 @@ function buildTree(treeNode, level, visible, forceRecursive) {
 }
 
 function toggleFolder(elem) {
-    var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+    var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
     $('#wrapper').css('overflow-y', 'hidden');
-    if (Settings.get('close_old_folder')) {
+    if (MBT_settings.get('close_old_folder')) {
         if (elem.parents('.folder.open').length) {
             $('.folder.open', elem.parent()).not(elem).removeClass('open').find('.sub').stop().slideUp(animationDuration);
         } else {
@@ -147,13 +147,13 @@ function toggleFolder(elem) {
 }
 
 function _handleToggle(elem) {
-    var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+    var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
 
     elem.toggleClass('open');
     elem.children('.sub').eq(0).stop().slideToggle(animationDuration, function() {
         $('#wrapper').css('overflow-y', 'auto');
         var id = $(this).parent().data('item-id');
-        if (!Settings.get('close_old_folder')) {
+        if (!MBT_settings.get('close_old_folder')) {
             if (!$(this).is(':visible')) {
                 removeOpenFolder(id);
                 $(this).find('li').each( function () {
@@ -175,7 +175,7 @@ function _handleToggle(elem) {
                 addOpenFolder($(this).data('item-id'));
             });
         }
-        if (Settings.get('remember_scroll_position')) {
+        if (MBT_settings.get('remember_scroll_position')) {
             localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
         }
         saveOpenFolders();
@@ -221,7 +221,7 @@ function showContextMenuFolder(folder, e) {
         });
     });
     $('#folder_edit').show().one('mousedown', function(e) {
-        var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+        var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
         var item_id = folder.data('item-id');
         contextAction(e, function() {
             $('#url_row').hide();
@@ -255,7 +255,7 @@ function showContextMenuBookmark(bookmark, e) {
         });
     });
     $('#bookmark_edit').show().one('mousedown', function(e) {
-        var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+        var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
         var item_id = bookmark.data('item-id');
         contextAction(e, function() {
             $('#url_row').show();

@@ -1,5 +1,20 @@
 var draggingIndex;
 
+(function() {
+    var zoom = parseInt(MBT_settings.get('zoom'), 10);
+    chrome.tabs.query({active: true}, function(tabs) {
+        setWidthHeight(
+            tabs[0],
+            parseInt(MBT_settings.get('width'), 10),
+            parseInt(MBT_settings.get('height'), 10),
+            zoom
+        );
+    });
+    if (zoom !== 100) {
+        $('html').css('zoom', zoom + '%');
+    }
+}());
+
 function init() {
     chrome.bookmarks.getTree(function(bookmarksTree) {
         var bookmarksBarShown = false;
@@ -88,7 +103,7 @@ function init() {
                     if (e.ctrlKey || e.metaKey) {
                         chrome.tabs.create({url: url, active: false});
                     } else {
-                        chrome.tabs.getSelected(null, function(tab) {
+                        chrome.tabs.query({active: true}, function(tab) {
                             chrome.tabs.update(tab.id, {url: url});
                             window.close();
                         });
@@ -115,27 +130,17 @@ function init() {
             }
         });
 
-        chrome.windows.getLastFocused({}, function(win) {
-            setWidthHeight(win);
-            if (Settings.get('remember_scroll_position')) {
-                var scrolltop = localStorage.getItem('scrolltop');
-                if (scrolltop) {
-                    $('#wrapper').scrollTop(parseInt(scrolltop, 10));
-                }
+        if (MBT_settings.get('remember_scroll_position')) {
+            var scrolltop = localStorage.getItem('scrolltop');
+            if (scrolltop) {
+                $('#wrapper').scrollTop(parseInt(scrolltop, 10));
             }
-            var zoom = parseInt(Settings.get('zoom'), 10);
-            if (zoom !== 100) {
-                $('html').css('zoom', zoom + '%');
-            }
-            $(win).on('resize', function() {
-                setWidthHeight(win);
-            });
-        });
+        }
 
         bm.show();
         $('#loading').remove();
         $('#edit_cancel').on('click', function() {
-            var animationDuration = parseInt(Settings.get('animation_duration'), 10);
+            var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
             $('#overlay').slideUp(animationDuration);
             $('.selected').removeClass('selected');
         });
@@ -153,7 +158,7 @@ $(document)
     .on('contextmenu', function(e) { return false; })
     .ready(function() {
         $('#wrapper').on('scroll', function(e) {
-            if (Settings.get('remember_scroll_position')) {
+            if (MBT_settings.get('remember_scroll_position')) {
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(function() {
                    localStorage.setItem('scrolltop', $('#wrapper').scrollTop());

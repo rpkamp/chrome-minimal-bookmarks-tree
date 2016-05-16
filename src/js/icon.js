@@ -1,5 +1,4 @@
-Settings.init();
-var icon = Settings.get('icon');
+var icon = MBT_settings.get('icon');
 function setIcon(icon) {
     var paths = {
         'default': 'icons/bookmark48.png',
