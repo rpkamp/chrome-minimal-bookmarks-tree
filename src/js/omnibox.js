@@ -40,8 +40,8 @@ function htmlEncode(text) {
  */
 function getSuggestions(data, text) {
   var suggestions = [], score, loc;
-  for (var d in data) {
-    loc = data[d];
+  let loc;
+  for (loc of data) {
     if (0 !== (score = loc.title.score(text) * 1.5 + loc.url.score(text))) {
       var urlText = '';
       if (String(loc.url).match(/^https?:\/\//)) {
@@ -147,8 +147,8 @@ chrome.bookmarks.onChanged.addListener(function (id, changeInfo) {
   if (!dataLoaded) {
     return;
   }
-  for (var d in data) {
-    var node = data[d];
+  let node;
+  for (node of data) {
     if (node.id === id) {
       node.title = changeInfo.title;
       node.url = changeInfo.url;

@@ -70,9 +70,8 @@ function buildTree(treeNode, level, visible, forceRecursive) {
     fragmentWrapper = true;
   }
 
-  var child, d, children, isOpen;
-  for (var c in treeNode.children) {
-    child = treeNode.children[c];
+  let child, d, children, isOpen;
+  for (child of treeNode.children) {
     isOpen = $.inArray(child.id, openFolders) != -1;
     d = $('<li>');
 
@@ -194,8 +193,9 @@ function _handleOpenAllBookmarks(data) {
   if (data.url) {
     chrome.tabs.create({ url: data.url, active: false });
   } else if (data.children) {
-    for (var j in data.children) {
-      _handleOpenAllBookmarks(data.children[j]);
+    let child;
+    for (child of data.children) {
+      _handleOpenAllBookmarks(child);
     }
   }
 }
