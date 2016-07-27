@@ -111,10 +111,10 @@ chrome.omnibox.onInputChanged.addListener( function(text, suggest) {
  * Handler that is fired when the user accepts a suggestion
  */
 chrome.omnibox.onInputEntered.addListener( function(text) {
-	chrome.tabs.getSelected(null, function(tab) {
+	chrome.tabs.query({active: true}, function(tabs) {
 		var url = getTopSuggestionUrl(data, text);
 		if (false !== url) {
-			chrome.tabs.update(tab.id, {url: url});
+			chrome.tabs.update(tabs[0].id, {url: url});
 		}
 	});
 });
