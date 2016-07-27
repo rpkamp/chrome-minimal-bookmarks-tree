@@ -1,3 +1,5 @@
+'use strict';
+
 class Settings {
   constructor(defaults) {
     this.cache = {};

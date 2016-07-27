@@ -47,12 +47,14 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     username: 'rpkamp',
-                    key: process.env.saucekey,
+                    key: function() {
+                      return process.env.saucekey;
+                    },
                     urls: ['http://127.0.0.1:9999/tests/index.html'],
                     build: process.env.TRAVIS_JOB_ID,
                     tunnelTimeout: 5,
                     browsers: browsers,
-                    testname: "MBT QUnit tests"
+                    tesstname: "MBT QUnit tests"
                 }
             },
         },
