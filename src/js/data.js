@@ -16,7 +16,7 @@ function extractDataFromBookmarks(treeNode) {
 }
 
 function loadData() {
-  chrome.bookmarks.getTree(function loadBookmarks(bookmarks) {
+  chrome.bookmarks.getTree((bookmarks) => {
     data = extractDataFromBookmarks(bookmarks[0]);
   });
   dataLoaded = true;
