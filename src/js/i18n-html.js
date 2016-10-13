@@ -1,5 +1,3 @@
-'use strict';
-
 (function translateHtml($, chrome) {
   document.addEventListener('DOMContentLoaded', () => {
     $('[data-i18n-key]').each((_, elem) => {

@@ -1,6 +1,4 @@
-'use strict';
-
-class Settings {
+export default class Settings {
   constructor(defaults) {
     this.cache = {};
     this.defaults = defaults || {};
@@ -19,6 +17,8 @@ class Settings {
     if (this.defaults.hasOwnProperty(setting)) {
       return this.defaults[setting];
     }
+
+    return null;
   }
 
   set(setting, value) {

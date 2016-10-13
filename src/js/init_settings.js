@@ -1,3 +1,5 @@
+import Settings from './settings';
+
 window.MBT_settings = new Settings({
   close_old_folder: false,
   open_all_sub: true,
@@ -7,5 +9,5 @@ window.MBT_settings = new Settings({
   height: 500,
   width: 300,
   zoom: 100,
-  icon: 'default'
+  icon: 'default',
 });
