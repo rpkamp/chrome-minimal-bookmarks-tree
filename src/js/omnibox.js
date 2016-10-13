@@ -39,7 +39,7 @@ function htmlEncode(text) {
  * Generate suggestions based on data and text
  */
 function getSuggestions(data, text) {
-  var suggestions = [], score, loc;
+  var suggestions = [], score;
   let loc;
   for (loc of data) {
     if (0 !== (score = loc.title.score(text) * 1.5 + loc.url.score(text))) {

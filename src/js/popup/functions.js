@@ -16,6 +16,7 @@ function addOpenFolder(id) {
 }
 
 function removeOpenFolder(id) {
+  let pos;
   while ((pos = $.inArray(id, openFolders)) != -1) {
     openFoldersDirty = true;
     openFolders.splice(pos, 1);
@@ -72,6 +73,9 @@ function buildTree(treeNode, level, visible, forceRecursive) {
 
   let child, d, children, isOpen;
   for (child of treeNode.children) {
+    if (typeof child === 'undefined') {
+      continue;
+    }
     isOpen = $.inArray(child.id, openFolders) != -1;
     d = $('<li>');
 

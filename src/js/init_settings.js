@@ -1,4 +1,4 @@
-const MBT_settings = new Settings({
+window.MBT_settings = new Settings({
   close_old_folder: false,
   open_all_sub: true,
   animation_duration: 200,

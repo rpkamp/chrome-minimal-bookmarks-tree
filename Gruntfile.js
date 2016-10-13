@@ -60,6 +60,51 @@ module.exports = function (grunt) {
         },
         eslint: {
             src: ['src/js/**/*.js']
+        },
+        babel: {
+            options: {
+                sourceMap: true,
+                presets: ['es2015']
+            },
+            dist: {
+                files: [
+                    { expand: true, src: 'js/components/*.js', dest: 'dist/', cwd: 'src/' },
+                    { expand: true, src: 'js/popup/*.js', dest: 'dist/', cwd: 'src/' },
+                    { expand: true, src: 'js/*.js', dest: 'dist/', cwd: 'src/' },
+                ]
+            }
+        },
+        copy: {
+            main: {
+                files: [
+                    { expand: true, cwd: 'src/', src: ['_locales/**'], dest: 'dist/' },
+                    { expand: true, cwd: 'src/', src: ['icons/**'], dest: 'dist/' },
+                    { expand: true, cwd: 'src/', src: ['js/vendor/**'], dest: 'dist/' },
+                    { expand: true, cwd: 'src/', src: ['manifest.json'], dest: 'dist/' },
+                ]
+            }
+        },
+        htmlmin: {
+            main: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    collapseBooleanAttributes: true,
+                    removeRedundantAttributes: true,
+                    removeScriptTypeAttributes: true
+                },
+                files: [
+                    { expand: true, cwd: 'src/', src: '*.html', dest: 'dist/' }
+                ]
+            }
+        },
+        cssmin: {
+            options: {},
+            main: {
+                files: [
+                    { expand: true, cwd: 'src/', src: 'css/*.css', dest: 'dist/' }
+                ]
+            }
         }
     });
 
@@ -67,7 +112,8 @@ module.exports = function (grunt) {
         if (key !== "grunt" && key.indexOf("grunt") === 0) grunt.loadNpmTasks(key);
     }
 
+    grunt.registerTask('build', ['babel', 'copy', 'htmlmin']);
     grunt.registerTask('test', ['connect', 'saucelabs-qunit']);
     grunt.registerTask('lint', ['eslint']);
-    grunt.registerTask('default', 'test');
+    grunt.registerTask('default', 'build');
 };
