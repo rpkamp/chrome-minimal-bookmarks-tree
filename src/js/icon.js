@@ -5,4 +5,4 @@
     star_empty: 'icons/star_fav_empty.png',
   };
   chrome.browserAction.setIcon({ path: paths[icon] });
-}(window.chrome, MBT_settings.get('icon')));
+}(window.chrome, window.MBT_settings.get('icon')));
