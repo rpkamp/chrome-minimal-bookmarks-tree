@@ -2,32 +2,27 @@
 <html>
 <head>
     <title data-i18n-key="optionsHeader">Minimal Bookmarks Tree Options</title>
-	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-	<script src="js/settings.js"></script>
-    <script src="js/init_settings.js"></script>
-    <script src="js/i18n-html.js"></script>
-    <script src="js/options.js"></script>
     <link rel="stylesheet" type="text/css" href="css/options.css" />
 </head>
 <body>
 	<div id="wrap">
 		<h1 data-i18n-key="optionsHeader">Minimal Bookmarks Tree Options</h1>
 		<div id="inner">
-			<input type="checkbox" id="close_old_folder" /> <label for="close_old_folder"data-i18n-key="optionCloseFolderOnOpenNew">Close currently opened folder when opening a new one.</label><br />
-			<input type="checkbox" id="open_all_sub" /> <label for="open_all_sub"data-i18n-key="optionOpenAllTraverseSubfolders">When clicking "Open all", open all bookmarks in all subfolders as well.</label><br />
-            <input type="checkbox" id="hide_empty_folders" /> <label for="hide_empty_folders"data-i18n-key="optionHideEmptyFolders">Hide empty folders.</label><br />
-            <input type="checkbox" id="remember_scroll_position" /> <label for="remember_scroll_position"data-i18n-key="optionRememberScrollPosition">Remember scroll position when Minimal Bookmarks Tree window closes.</label><br />
+			<input type="checkbox" id="close_old_folder" /> <label for="close_old_folder" data-i18n-key="optionCloseFolderOnOpenNew">Close currently opened folder when opening a new one.</label><br />
+			<input type="checkbox" id="open_all_sub" /> <label for="open_all_sub" data-i18n-key="optionOpenAllTraverseSubfolders">When clicking "Open all", open all bookmarks in all subfolders as well.</label><br />
+            <input type="checkbox" id="hide_empty_folders" /> <label for="hide_empty_folders" data-i18n-key="optionHideEmptyFolders">Hide empty folders.</label><br />
+            <input type="checkbox" id="remember_scroll_position" /> <label for="remember_scroll_position" data-i18n-key="optionRememberScrollPosition">Remember scroll position when Minimal Bookmarks Tree window closes.</label><br />
             <br />
             <div class="row">
-                <label for="icon"data-i18n-key="optionIcon">Icon</label>
+                <label for="icon" data-i18n-key="optionIcon">Icon</label>
                 <select id="icon">
-                    <option value="default"data-i18n-key="optionIconDefault">Default</option>
-                    <option value="star"data-i18n-key="optionIconStar">Star</option>
-                    <option value="star_empty"data-i18n-key="optionIconOpenStar">Open Star</option>
+                    <option value="default" data-i18n-key="optionIconDefault">Default</option>
+                    <option value="star" data-i18n-key="optionIconStar">Star</option>
+                    <option value="star_empty" data-i18n-key="optionIconOpenStar">Open Star</option>
                 </select>
             </div>
             <div class="row">
-                <label for="animation_duration"data-i18n-key="optionAnimationSpeed">Animation Speed</label>
+                <label for="animation_duration" data-i18n-key="optionAnimationSpeed">Animation Speed</label>
                 <select id="animation_duration">
                     <option value="0" data-i18n-key="optionAnimationSpeedNoAnimation">No Animation</option>
                     <option value="1000" data-i18n-key="optionAnimationSpeedVerySlow">Slug like</option>
@@ -38,7 +33,7 @@
                 </select>
             </div>
             <div class="row">
-                 <label for="zoom"data-i18n-key="optionZoomLevel">Zoom Level</label>
+                 <label for="zoom" data-i18n-key="optionZoomLevel">Zoom Level</label>
                  <input type="number" min="75" max="300" name="zoom" id="zoom" />
                  <small>
                     (<span data-i18n-key="optionMin">min</span>: 75,
@@ -47,7 +42,7 @@
                 </small><br />
             </div>
             <div class="row">
-                <label for="zoom"data-i18n-key="optionPreferredHeight">Preferred height</label>
+                 <label for="height" data-i18n-key="optionPreferredHeight">Preferred height</label>
                  <input type="number" min="50" max="600" name="height" id="height" />
                  <small>
                     (<span data-i18n-key="optionMin">min</span>: 50,
@@ -56,7 +51,7 @@
                 </small><br />
             </div>
             <div class="row">
-                 <label for="height"data-i18n-key="optionPreferredWidth">Preferred width</label>
+                 <label for="width" data-i18n-key="optionPreferredWidth">Preferred width</label>
                  <input type="number" min="50" max="600" name="width" id="width" />
                  <small>
                     (<span data-i18n-key="optionMin">min</span>: 50,
@@ -87,5 +82,6 @@
             <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
         </div>
 	</div>
+    <script src="js/options.js"></script>
 </body>
 </html>

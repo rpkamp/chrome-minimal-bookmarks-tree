@@ -30,6 +30,14 @@ module.exports = function (grunt) {
         version: "49.0"
     }];
 
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-saucelabs');
+    grunt.loadNpmTasks('grunt-webpack');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
+    grunt.loadNpmTasks('grunt-eslint');
+
     grunt.initConfig({
         pkg: '<json:package.json>',
         meta: {
@@ -61,17 +69,28 @@ module.exports = function (grunt) {
         eslint: {
             src: ['src/js/**/*.js']
         },
-        babel: {
-            options: {
-                sourceMap: true,
-                presets: ['es2015']
-            },
-            dist: {
-                files: [
-                    { expand: true, src: 'js/components/*.js', dest: 'dist/', cwd: 'src/' },
-                    { expand: true, src: 'js/popup/*.js', dest: 'dist/', cwd: 'src/' },
-                    { expand: true, src: 'js/*.js', dest: 'dist/', cwd: 'src/' },
-                ]
+        webpack: {
+            build: {
+                progress: true,
+                entry: {
+                    background: './src/js/background.js',
+                    options: './src/js/options.js',
+                    popup: './src/js/options.js'
+                },
+                output: {
+                    path: './dist/js',
+                    filename: '[name].js'
+                },
+                module: {
+                    loaders: [{
+                        test: /\.js$/,
+                        exclude: /node_modules/,
+                        loader: 'babel-loader'
+                    }]
+                },
+                resolve: {
+                    extensions: ['', '.js']
+                }
             }
         },
         copy: {
@@ -108,11 +127,7 @@ module.exports = function (grunt) {
         }
     });
 
-    for (var key in grunt.file.readJSON("package.json").devDependencies) {
-        if (key !== "grunt" && key.indexOf("grunt") === 0) grunt.loadNpmTasks(key);
-    }
-
-    grunt.registerTask('build', ['babel', 'copy', 'htmlmin']);
+    grunt.registerTask('build', ['webpack', 'copy', 'htmlmin']);
     grunt.registerTask('test', ['connect', 'saucelabs-qunit']);
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('default', 'build');
