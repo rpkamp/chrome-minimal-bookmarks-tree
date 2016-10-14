@@ -1,5 +1,5 @@
 body,html {
-    font: 82% Verdana, Arial, sans-serif;
+    font: 90% Verdana, Arial, sans-serif;
     margin: 0;
     padding: 0;
     background: #eee;
@@ -25,10 +25,10 @@ em {
 
 .row {
     margin-bottom: 5px;
+    clear: both;
 }
 
 .row label {
-    clear: left;
     float: left;
     width: 110px;
     padding-top: 7px;

@@ -127,7 +127,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('build', ['webpack', 'copy', 'htmlmin']);
+    grunt.registerTask('build', ['webpack', 'copy', 'htmlmin', 'cssmin']);
     grunt.registerTask('test', ['connect', 'saucelabs-qunit']);
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('default', 'build');
