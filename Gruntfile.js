@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                 entry: {
                     background: './src/js/background.js',
                     options: './src/js/options.js',
-                    popup: './src/js/options.js'
+                    popup: './src/js/popup.js'
                 },
                 output: {
                     path: './dist/js',

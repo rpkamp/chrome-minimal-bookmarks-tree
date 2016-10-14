@@ -1,35 +1,33 @@
-var draggingIndex;
+import { nothing, translateDocument } from './functions';
+import Settings from './settings';
+import {
+  buildTree,
+  setWidthHeight,
+  toggleFolder,
+  showContextMenuFolder,
+  showContextMenuBookmark,
+  openAllBookmarks,
+} from './popup/functions';
 
-(function ($) {
-  var zoom = parseInt(MBT_settings.get('zoom'), 10);
-  chrome.tabs.query({ active: true }, function (tabs) {
-    setWidthHeight(
-      tabs[0],
-      parseInt(MBT_settings.get('width'), 10),
-      parseInt(MBT_settings.get('height'), 10),
-      zoom
-    );
-  });
-  if (zoom !== 100) {
-    $('html').css('zoom', zoom + '%');
-  }
-}(window.jQuery));
+(function init($, settings, chrome) {
+  let draggingIndex;
+  let scrollTimeout;
+  const zoom = parseInt(settings.get('zoom'), 10);
 
-function init($) {
-  chrome.bookmarks.getTree(function (bookmarksTree) {
-    var bookmarksBarShown = false;
-    var bm = $('#bookmarks');
-    var y = jQuery.extend(true, {}, bookmarksTree[0]);
+  chrome.bookmarks.getTree((bookmarksTree) => {
+    let bookmarksBarShown = false;
+    const bm = $('#bookmarks');
+    let y = $.extend(true, {}, bookmarksTree[0]);
     delete y.children[1]; // "Other boookmarks"
 
-    var tree;
-    tree = buildTree(y);
+    let tree;
+    tree = buildTree(y, settings.get('hide_empty_folders'));
     if (tree) {
       bm[0].appendChild(tree);
       bm.children('li').addClass('nosort');
       bookmarksBarShown = true;
     }
-    tree = buildTree(bookmarksTree[0].children[1]);
+    tree = buildTree(bookmarksTree[0].children[1], settings.get('hide_empty_folders'));
     if (tree) {
       bm[0].appendChild(tree);
     }
@@ -43,21 +41,21 @@ function init($) {
       expandOnHover: 700,
       distance: 30,
       forcePlaceholderSize: true,
-      start: function (e, ui) {
-        var item = ui.item,
-          list = item.parent();
+      start: (e, ui) => {
+        const item = ui.item;
+        const list = item.parent();
         draggingIndex = list.children('li').index(item);
       },
-      stop: function (e, ui) {
-        var item = ui.item,
-          itemId = item.data('item-id'),
-          list = item.parent(),
-          parent = list.parent(),
-          parentId = parent.data('item-id'),
-          idx = list.children('li').index(item);
+      stop: (e, ui) => {
+        const item = ui.item;
+        const itemId = item.data('item-id');
+        const list = item.parent();
+        const parent = list.parent();
+        let parentId = parent.data('item-id');
+        let idx = list.children('li').index(item);
 
         if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
-          alert(chrome.i18n.getMessage("sortNotAllowed"));
+          alert(chrome.i18n.getMessage('sortNotAllowed'));
           bm.sortable('cancel');
           return nothing(e);
         }
@@ -72,13 +70,13 @@ function init($) {
         if (!parentId) {
           parentId = bookmarksTree[0].children[1].id;
         }
-        chrome.bookmarks.move(itemId, { parentId: parentId, index: idx }, function (res) {
+        chrome.bookmarks.move(itemId, { parentId: parentId, index: idx }, (res) => {
           if (typeof res === 'undefined') {
             // index out of bounds, try with index-1
-            chrome.bookmarks.move(itemId, { parentId: parentId, index: idx - 1 }, function (res) {
-              if (typeof res === 'undefined') {
+            chrome.bookmarks.move(itemId, { parentId: parentId, index: idx - 1 }, (res2) => {
+              if (typeof res2 === 'undefined') {
                 // this isn't happening. bail out.
-                alert(chrome.i18n.getMessage("folderMoveFailed"));
+                alert(chrome.i18n.getMessage('folderMoveFailed'));
                 window.close();
               }
             });
@@ -87,23 +85,23 @@ function init($) {
       }
     });
 
-    bm.on('click contextmenu', 'li', function (e) {
+    bm.on('click contextmenu', 'li', function contextMenuClicked(e) {
       $('#context').hide();
       $('.selected').removeClass('selected');
-      var $this = $(this);
+      const $this = $(this);
       if ($this.hasClass('folder')) {
         if (e.button === 0) {
           toggleFolder($this);
-        } else if (e.button == 2) {
+        } else if (e.button === 2) {
           showContextMenuFolder($this, e);
         }
       } else { // bookmark
-        var url = $this.data('url');
+        const url = $this.data('url');
         if (e.button === 0) {
           if (e.ctrlKey || e.metaKey) {
             chrome.tabs.create({ url: url, active: false });
           } else {
-            chrome.tabs.query({ active: true }, function (tab) {
+            chrome.tabs.query({ active: true }, (tab) => {
               chrome.tabs.update(tab.id, { url: url });
               window.close();
             });
@@ -115,23 +113,24 @@ function init($) {
       return nothing(e);
     });
 
-    bm.on('mousedown', 'li', function (e) {
+    bm.on('mousedown', 'li', function handleMouseDownOnMenuItem(e) {
       $('#context').hide();
       $('.selected').removeClass('selected');
-      var $this = $(this);
+      const $this = $(this);
       if (e.button === 1) {
         if ($this.hasClass('folder')) {
-          _openAllBookmarks($this);
+          openAllBookmarks($this);
         } else {
-          var url = $this.data('url');
+          const url = $this.data('url');
           chrome.tabs.create({ url: url });
           return nothing(e);
         }
       }
+      return null;
     });
 
-    if (MBT_settings.get('remember_scroll_position')) {
-      var scrolltop = localStorage.getItem('scrolltop');
+    if (settings.get('remember_scroll_position')) {
+      const scrolltop = localStorage.getItem('scrolltop');
       if (scrolltop) {
         $('#wrapper').scrollTop(parseInt(scrolltop, 10));
       }
@@ -139,37 +138,44 @@ function init($) {
 
     bm.show();
     $('#loading').remove();
-    $('#edit_cancel').on('click', function () {
-      var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
+    $('#edit_cancel').on('click', () => {
+      const animationDuration = parseInt(settings.get('animation_duration'), 10);
       $('#overlay').slideUp(animationDuration);
       $('.selected').removeClass('selected');
     });
-    $('#edit_name, #edit_url').on('keyup', function (e) {
+    $('#edit_name, #edit_url').on('keyup', (e) => {
       if (e.keyCode === 13) {
         $('#edit_save').click();
       }
     });
   });
-}
 
-var scrollTimeout;
-
-(function ($) {
   $(document)
-    .on('contextmenu', function () {
+    .on('contextmenu', () => {
       return false;
     })
     .ready(function () {
-      $('#wrapper').on('scroll', function () {
-        if (MBT_settings.get('remember_scroll_position')) {
+      $('#wrapper').on('scroll', () => {
+        if (settings.get('remember_scroll_position')) {
           clearTimeout(scrollTimeout);
-          scrollTimeout = setTimeout(function () {
+          scrollTimeout = setTimeout(() => {
             localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
           });
         }
         $('#context').hide();
       });
     });
-}(window.jQuery));
 
-init(window.jQuery);
+  chrome.tabs.query({ active: true }, (tabs) => {
+    setWidthHeight(
+      tabs[0],
+      parseInt(settings.get('width'), 10),
+      parseInt(settings.get('height'), 10),
+      zoom
+    );
+  });
+  if (zoom !== 100) {
+    $('html').css('zoom', `${zoom}%`);
+  }
+  translateDocument(window.document);
+}(window.jQuery, new Settings(), window.chrome));

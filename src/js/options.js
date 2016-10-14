@@ -1,5 +1,5 @@
 import Settings from './settings';
-import { nothing, addEventListenerMulti, setBrowserActionIcon } from './functions';
+import { nothing, addEventListenerMulti, setBrowserActionIcon, translateDocument } from './functions';
 
 (function init(settings, chrome) {
   const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
@@ -48,12 +48,5 @@ import { nothing, addEventListenerMulti, setBrowserActionIcon } from './function
     return nothing(e);
   });
 
-  const translatableElements = window.document.querySelectorAll('[data-i18n-key]');
-  for (const translatableElement of translatableElements) {
-    const key = translatableElement.getAttribute('data-i18n-key');
-    const translation = chrome.i18n.getMessage(key);
-    if (translation !== '') {
-      translatableElement.innerHTML = translation;
-    }
-  }
+  translateDocument(window.document);
 }(new Settings(), window.chrome));

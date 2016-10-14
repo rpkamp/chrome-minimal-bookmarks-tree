@@ -1,10 +1,7 @@
-function nothing(e) {
-  e = e || window.event;
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-  return false;
-}
+import Settings from '../settings';
+import { nothing } from '../functions';
+
+const MBT_settings = new Settings();
 
 var openFoldersDirty = false;
 
@@ -30,7 +27,7 @@ function saveOpenFolders() {
   }
 }
 
-function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
+export function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
   var scale = 1 / (zoom / 100);
 
   var max_w = scale * (tab.width - 100);
@@ -52,7 +49,7 @@ if (openFolders) {
   openFolders = [];
 }
 
-function buildTree(treeNode, level, visible, forceRecursive) {
+export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecursive) {
   level = level || 1;
   var wrapper, fragmentWrapper = false;
 
@@ -97,7 +94,7 @@ function buildTree(treeNode, level, visible, forceRecursive) {
       d.addClass('folder' + (isOpen ? ' open' : ''))
         .append($('<span>', { text: child.title }));
 
-      if (MBT_settings.get('hide_empty_folders') && child.children && !child.children.length) {
+      if (hideEmptyFolders && child.children && !child.children.length) {
         // we need to add hidden nodes for these
         // otherwise sorting doesn't work properly
         d.addClass('hidden');
@@ -109,7 +106,7 @@ function buildTree(treeNode, level, visible, forceRecursive) {
         if (child.children && child.children.length) {
           var loaded = isOpen;
           if (isOpen || forceRecursive) {
-            children = buildTree(child, level + 1, isOpen);
+            children = buildTree(child, hideEmptyFolders, level + 1, isOpen);
             d.append(children);
             loaded = true;
           }
@@ -126,7 +123,7 @@ function buildTree(treeNode, level, visible, forceRecursive) {
   return wrapper;
 }
 
-function toggleFolder(elem) {
+export function toggleFolder(elem) {
   var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
   $('#wrapper').css('overflow-y', 'hidden');
   if (MBT_settings.get('close_old_folder')) {
@@ -139,7 +136,7 @@ function toggleFolder(elem) {
 
   if (!elem.data('loaded')) {
     chrome.bookmarks.getSubTree(elem.data('item-id'), function (data) {
-      var t = buildTree(data[0], elem.data('level') + 1);
+      var t = buildTree(data[0], MBT_settings.get('hide_empty_folders'),  elem.data('level') + 1);
       elem.append(t);
       elem.data('loaded', true);
       _handleToggle(elem);
@@ -185,7 +182,7 @@ function _handleToggle(elem) {
   });
 }
 
-function _openAllBookmarks(folder) {
+export function openAllBookmarks(folder) {
   chrome.bookmarks.getSubTree(folder.data('item-id'), function (data) {
     _handleOpenAllBookmarks(data[0]);
     window.close();
@@ -210,7 +207,7 @@ function contextAction(e, callback) {
   return nothing(e);
 }
 
-function showContextMenuFolder(folder, e) {
+export function showContextMenuFolder(folder, e) {
   $('#context > li').off('mousedown').hide();
   $('#folder_open_all').show().one('mousedown', function (e) {
     contextAction(e, function () {
@@ -249,7 +246,7 @@ function showContextMenuFolder(folder, e) {
   showContextMenu(e);
 }
 
-function showContextMenuBookmark(bookmark, e) {
+export function showContextMenuBookmark(bookmark, e) {
   $('#context > li').off('mousedown').hide();
   $('#bookmark_delete').show().one('mousedown', function (e) {
     contextAction(e, function () {
