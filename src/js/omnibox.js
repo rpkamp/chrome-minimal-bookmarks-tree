@@ -2,29 +2,27 @@
  * Highlight search string in search results
  */
 function highlightSearch(needle, haystack) {
-  var pos,
-    needleLower = needle.toLowerCase(),
-    haystackLower = haystack.toLowerCase().replace("'", '')
-    ;
+  const needleLower = needle.toLowerCase();
+  const haystackLower = haystack.toLowerCase().replace("'", '');
 
-  if (-1 === (pos = haystackLower.indexOf(needleLower))) {
+  const pos = haystackLower.indexOf(needleLower);
+  if (pos === -1) {
     return haystack;
   }
 
-  var before = haystack.substr(0, pos),
-    inner = haystack.substr(pos, needle.length),
-    after = haystack.substr(pos + needle.length)
-    ;
-
-  return before + '<match>' + inner + '</match>' + after;
+  return `${haystack.substr(0, pos)}
+    <match>
+    ${haystack.substr(pos, needle.length)}
+    </match>
+    ${haystack.substr(pos + needle.length)}`;
 }
 
 /**
  * Show a default suggestion in the omnibox when a user types in 'spf'
  */
 function setDefaultSuggestion(description) {
-  chrome.omnibox.setDefaultSuggestion({
-    description: description
+  window.chrome.omnibox.setDefaultSuggestion({
+    description,
   });
 }
 
@@ -39,24 +37,26 @@ function htmlEncode(text) {
  * Generate suggestions based on data and text
  */
 function getSuggestions(data, text) {
-  var suggestions = [], score;
+  const suggestions = [];
   let loc;
   for (loc of data) {
-    if (0 !== (score = loc.title.score(text) * 1.5 + loc.url.score(text))) {
-      var urlText = '';
-      if (String(loc.url).match(/^https?:\/\//)) {
-        urlText = ' <url>' + htmlEncode(highlightSearch(text, loc.url)) + '</url>';
-      }
-      suggestions.push({
-        score: score,
-        content: htmlEncode(loc.title),
-        description: htmlEncode(highlightSearch(text, loc.title)) + urlText,
-        url: loc.url
-      });
+    const score = loc.title.score(text) * 1.5 + loc.url.score(text);
+    if (score <= 0) {
+      continue;
     }
+    let urlText = '';
+    if (String(loc.url).match(/^https?:\/\//)) {
+      urlText = `<url>${htmlEncode(highlightSearch(text, loc.url))}</url>`;
+    }
+    suggestions.push({
+      score,
+      content: htmlEncode(loc.title),
+      description: `${htmlEncode(highlightSearch(text, loc.title))} ${urlText}`,
+      url: loc.url,
+    });
   }
 
-  suggestions.sort(function (a, b) {
+  suggestions.sort((a, b) => {
     return b.score - a.score === 0 ? b.content.length - a.content.length : b.score - a.score;
   });
 
@@ -67,9 +67,9 @@ function getSuggestions(data, text) {
  * Get URL for the top suggestion
  */
 function getTopSuggestionUrl(data, text) {
-  var suggestions = getSuggestions(data, text);
+  const suggestions = getSuggestions(data, text);
   if (suggestions.length) {
-    var topSuggestion = suggestions.reverse().pop();
+    const topSuggestion = suggestions.reverse().pop();
     return topSuggestion.url;
   } else if (String(text).match(/^https?:\/\//)) {
     return text;
@@ -80,27 +80,27 @@ function getTopSuggestionUrl(data, text) {
 /**
  * Handler that is fired when the user changes the input
  */
-chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
+window.chrome.omnibox.onInputChanged.addListener((text, suggest) => {
   if (text.length === 0) {
-    setDefaultSuggestion(chrome.i18n.getMessage("omnibarDefaultSuggestion"));
+    setDefaultSuggestion(window.chrome.i18n.getMessage('omnibarDefaultSuggestion'));
   }
   if (!dataLoaded) {
     loadData();
   }
 
-  var suggestions = getSuggestions(data, text);
+  let suggestions = getSuggestions(data, text);
 
   if (suggestions.length) {
-    var topSuggestion = suggestions.reverse().pop();
+    const topSuggestion = suggestions.reverse().pop();
     setDefaultSuggestion(topSuggestion.description);
     if (suggestions.length) {
       suggestions.reverse();
-      suggestions.forEach(function (a) {
-        if (a.content === "") {
-          a.content = a.url;
+      suggestions.forEach((suggestion) => {
+        if (suggestion.content === '') {
+          suggestion.content = suggestion.url;
         }
-        delete(a.score);
-        delete(a.url);
+        delete(suggestion.score);
+        delete(suggestion.url);
       });
       suggest(suggestions);
     }
@@ -110,11 +110,11 @@ chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
 /**
  * Handler that is fired when the user accepts a suggestion
  */
-chrome.omnibox.onInputEntered.addListener(function (text) {
-  chrome.tabs.query({ active: true }, function (tabs) {
-    var url = getTopSuggestionUrl(data, text);
-    if (false !== url) {
-      chrome.tabs.update(tabs[0].id, { url: url });
+window.chrome.omnibox.onInputEntered.addListener((text) => {
+  window.chrome.tabs.query({ active: true }, (tabs) => {
+    const url = getTopSuggestionUrl(data, text);
+    if (url !== false) {
+      window.chrome.tabs.update(tabs[0].id, { url });
     }
   });
 });
@@ -123,7 +123,7 @@ chrome.omnibox.onInputEntered.addListener(function (text) {
  * Bookmark or folder added. If a bookmark was added, add it
  * to our search information. If a folder was added, ignore.
  */
-chrome.bookmarks.onCreated.addListener(function (id, node) {
+window.chrome.bookmarks.onCreated.addListener((id, node) => {
   if (dataLoaded && node.url) {
     data.push(node);
   }
@@ -134,7 +134,7 @@ chrome.bookmarks.onCreated.addListener(function (id, node) {
  * Not the most elegant way - but better than bloating the
  * data structure that holds alls the bookmark info
  */
-chrome.bookmarks.onRemoved.addListener(function (removeId, removeInfo) {
+window.chrome.bookmarks.onRemoved.addListener(() => {
   if (dataLoaded) {
     loadData();
   }
@@ -143,7 +143,7 @@ chrome.bookmarks.onRemoved.addListener(function (removeId, removeInfo) {
 /**
  * Bookmark or folder updated
  */
-chrome.bookmarks.onChanged.addListener(function (id, changeInfo) {
+window.chrome.bookmarks.onChanged.addListener((id, changeInfo) => {
   if (!dataLoaded) {
     return;
   }

@@ -25,7 +25,7 @@ export function translateDocument(document) {
   const translatableElements = document.querySelectorAll('[data-i18n-key]');
   for (const translatableElement of translatableElements) {
     const key = translatableElement.getAttribute('data-i18n-key');
-    const translation = chrome.i18n.getMessage(key);
+    const translation = window.chrome.i18n.getMessage(key);
     if (translation !== '') {
       translatableElement.innerHTML = translation;
     }

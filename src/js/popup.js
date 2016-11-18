@@ -8,8 +8,9 @@ import {
   showContextMenuBookmark,
   openAllBookmarks,
 } from './popup/functions';
+import $ from '../../node_modules/jquery/dist/jquery';
 
-(function init($, settings, chrome) {
+(function init(settings, chrome) {
   let draggingIndex;
   let scrollTimeout;
   const zoom = parseInt(settings.get('zoom'), 10);
@@ -32,63 +33,64 @@ import {
       bm[0].appendChild(tree);
     }
 
-    bm.nestedSortable({
-      handle: 'span',
-      items: 'li',
-      toleranceElement: '> span',
-      listType: 'ul',
-      isTree: true,
-      expandOnHover: 700,
-      distance: 30,
-      forcePlaceholderSize: true,
-      start: (e, ui) => {
-        const item = ui.item;
-        const list = item.parent();
-        draggingIndex = list.children('li').index(item);
-      },
-      stop: (e, ui) => {
-        const item = ui.item;
-        const itemId = item.data('item-id');
-        const list = item.parent();
-        const parent = list.parent();
-        let parentId = parent.data('item-id');
-        let idx = list.children('li').index(item);
+    // bm.nestedSortable({
+    //   handle: 'span',
+    //   items: 'li',
+    //   toleranceElement: '> span',
+    //   listType: 'ul',
+    //   isTree: true,
+    //   expandOnHover: 700,
+    //   distance: 30,
+    //   forcePlaceholderSize: true,
+    //   start: (e, ui) => {
+    //     const item = ui.item;
+    //     const list = item.parent();
+    //     draggingIndex = list.children('li').index(item);
+    //   },
+    //   stop: (e, ui) => {
+    //     const item = ui.item;
+    //     const itemId = item.data('item-id');
+    //     const list = item.parent();
+    //     const parent = list.parent();
+    //     let parentId = parent.data('item-id');
+    //     let idx = list.children('li').index(item);
+    //
+    //     if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
+    //       alert(chrome.i18n.getMessage('sortNotAllowed'));
+    //       bm.sortable('cancel');
+    //       return nothing(e);
+    //     }
+    //     if (draggingIndex < idx) {
+    //       // not sure why we need this, but
+    //       // it doesn't work if we leave it out
+    //       idx++;
+    //     }
+    //     if (!parentId && bookmarksBarShown) {
+    //       idx--;
+    //     }
+    //     if (!parentId) {
+    //       parentId = bookmarksTree[0].children[1].id;
+    //     }
+    //     chrome.bookmarks.move(itemId, { parentId, index: idx }, (res) => {
+    //       if (typeof res === 'undefined') {
+    //         // index out of bounds, try with index-1
+    //         chrome.bookmarks.move(itemId, { parentId, index: idx - 1 }, (res2) => {
+    //           if (typeof res2 === 'undefined') {
+    //             // this isn't happening. bail out.
+    //             alert(chrome.i18n.getMessage('folderMoveFailed'));
+    //             window.close();
+    //           }
+    //         });
+    //       }
+    //     });
+    //     return true;
+    //   }
+    // });
 
-        if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
-          alert(chrome.i18n.getMessage('sortNotAllowed'));
-          bm.sortable('cancel');
-          return nothing(e);
-        }
-        if (draggingIndex < idx) {
-          // not sure why we need this, but
-          // it doesn't work if we leave it out
-          idx++;
-        }
-        if (!parentId && bookmarksBarShown) {
-          idx--;
-        }
-        if (!parentId) {
-          parentId = bookmarksTree[0].children[1].id;
-        }
-        chrome.bookmarks.move(itemId, { parentId: parentId, index: idx }, (res) => {
-          if (typeof res === 'undefined') {
-            // index out of bounds, try with index-1
-            chrome.bookmarks.move(itemId, { parentId: parentId, index: idx - 1 }, (res2) => {
-              if (typeof res2 === 'undefined') {
-                // this isn't happening. bail out.
-                alert(chrome.i18n.getMessage('folderMoveFailed'));
-                window.close();
-              }
-            });
-          }
-        });
-      }
-    });
-
-    bm.on('click contextmenu', 'li', function contextMenuClicked(e) {
+    bm.on('click contextmenu', 'li', function clickHandler(e) {
       $('#context').hide();
       $('.selected').removeClass('selected');
-      const $this = $(this);
+      let $this = $(this);
       if ($this.hasClass('folder')) {
         if (e.button === 0) {
           toggleFolder($this);
@@ -99,10 +101,10 @@ import {
         const url = $this.data('url');
         if (e.button === 0) {
           if (e.ctrlKey || e.metaKey) {
-            chrome.tabs.create({ url: url, active: false });
+            chrome.tabs.create({ url, active: false });
           } else {
             chrome.tabs.query({ active: true }, (tab) => {
-              chrome.tabs.update(tab.id, { url: url });
+              chrome.tabs.update(tab.id, { url });
               window.close();
             });
           }
@@ -122,7 +124,7 @@ import {
           openAllBookmarks($this);
         } else {
           const url = $this.data('url');
-          chrome.tabs.create({ url: url });
+          chrome.tabs.create({ url });
           return nothing(e);
         }
       }
@@ -160,7 +162,7 @@ import {
           clearTimeout(scrollTimeout);
           scrollTimeout = setTimeout(() => {
             localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
-          });
+          }, 100);
         }
         $('#context').hide();
       });
@@ -178,4 +180,4 @@ import {
     $('html').css('zoom', `${zoom}%`);
   }
   translateDocument(window.document);
-}(window.jQuery, new Settings(), window.chrome));
+}(new Settings(), window.chrome));

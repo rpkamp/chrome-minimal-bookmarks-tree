@@ -1,7 +1,12 @@
 import Settings from './settings';
-import { nothing, addEventListenerMulti, setBrowserActionIcon, translateDocument } from './functions';
+import {
+  nothing,
+  addEventListenerMulti,
+  setBrowserActionIcon,
+  translateDocument,
+} from './functions';
 
-(function init(settings, chrome) {
+(function init(settings) {
   const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
   for (const checkbox of checkboxes) {
     const id = checkbox.getAttribute('id');
@@ -49,4 +54,4 @@ import { nothing, addEventListenerMulti, setBrowserActionIcon, translateDocument
   });
 
   translateDocument(window.document);
-}(new Settings(), window.chrome));
+}(new Settings()));

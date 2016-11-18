@@ -37,6 +37,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "constitute": "^1.6.2"
+    "constitute": "^1.6.2",
+    "jquery": "^3.1.1"
   }
 }

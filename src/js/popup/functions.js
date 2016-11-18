@@ -1,22 +1,30 @@
 import Settings from '../settings';
 import { nothing } from '../functions';
+import $ from '../../../node_modules/jquery/dist/jquery';
 
-const MBT_settings = new Settings();
+const mbtSettings = new Settings();
+let openFoldersDirty = false;
+let openFolders = localStorage.getItem('openfolders');
 
-var openFoldersDirty = false;
+if (openFolders) {
+  openFolders = JSON.parse(openFolders);
+} else {
+  openFolders = [];
+}
 
 function addOpenFolder(id) {
-  if ($.inArray(id, openFolders) == -1) {
+  if ($.inArray(id, openFolders) === -1) {
     openFolders.push(id);
     openFoldersDirty = true;
   }
 }
 
 function removeOpenFolder(id) {
-  let pos;
-  while ((pos = $.inArray(id, openFolders)) != -1) {
+  let pos = $.inArray(id, openFolders);
+  while (pos !== -1) {
     openFoldersDirty = true;
     openFolders.splice(pos, 1);
+    pos = $.inArray(id, openFolders);
   }
 }
 
@@ -28,34 +36,38 @@ function saveOpenFolders() {
 }
 
 export function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
-  var scale = 1 / (zoom / 100);
+  const scale = 1 / (zoom / 100);
 
-  var max_w = scale * (tab.width - 100);
-  var settings_w = scale * preferredWidth;
-  var final_w = Math.min(max_w, settings_w);
+  const width = scale * Math.min(
+    tab.width - 100,
+    preferredWidth
+  );
 
-  var max_h = scale * (tab.height - 100);
-  var settings_h = scale * preferredHeight;
-  var final_h = Math.min(scale * 600, Math.min(max_h, settings_h));
+  const height = scale * Math.min(
+    tab.height - 100,
+    preferredHeight
+  );
 
-  $('#wrapper').css('max-width', final_w + 'px').css('min-width', final_w + 'px').width(final_w);
-  $('#wrapper').css('max-height', final_h + 'px');
-}
-
-var openFolders = localStorage.getItem('openfolders');
-if (openFolders) {
-  openFolders = JSON.parse(openFolders);
-} else {
-  openFolders = [];
+  $('#wrapper')
+    .css('max-width', `${width}px`)
+    .css('min-width', `${width}px`)
+    .width(width)
+    .css('max-height', `${height}px`);
 }
 
 export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecursive) {
-  level = level || 1;
-  var wrapper, fragmentWrapper = false;
-
+  if (typeof level === 'undefined') {
+    level = 1;
+  }
   if (typeof forceRecursive === 'undefined') {
     forceRecursive = false;
   }
+  let wrapper;
+  let fragmentWrapper = false;
+  let d;
+  let children;
+  let isOpen;
+  let loaded;
 
   if (level > 1) {
     wrapper = $('<ul>');
@@ -68,12 +80,11 @@ export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecur
     fragmentWrapper = true;
   }
 
-  let child, d, children, isOpen;
-  for (child of treeNode.children) {
+  for (const child of treeNode.children) {
     if (typeof child === 'undefined') {
       continue;
     }
-    isOpen = $.inArray(child.id, openFolders) != -1;
+    isOpen = $.inArray(child.id, openFolders) !== -1;
     d = $('<li>');
 
     if (child.url) { // url
@@ -82,16 +93,16 @@ export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecur
         .append(
           $('<span>', {
             text: child.title,
-            title: child.title + ' [' + child.url + ']'
+            title: `${child.title} [${child.url}]`,
           }).css({
-            'background-image': 'url("chrome://favicon/' + child.url + '")',
-            'background-repeat': 'no-repeat'
+            'background-image': `url("chrome://favicon/${child.url}")`,
+            'background-repeat': 'no-repeat',
           }).data({
-            url: child.url
+            url: child.url,
           })
         );
     } else { // folder
-      d.addClass('folder' + (isOpen ? ' open' : ''))
+      d.addClass(`folder${isOpen ? ' open' : ''}`)
         .append($('<span>', { text: child.title }));
 
       if (hideEmptyFolders && child.children && !child.children.length) {
@@ -101,10 +112,10 @@ export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecur
       } else {
         d.data('item-id', child.id)
           .data('level', level)
-          .attr('id', 'tree' + child.id);
+          .attr('id', `tree${child.id}`);
 
         if (child.children && child.children.length) {
-          var loaded = isOpen;
+          loaded = isOpen;
           if (isOpen || forceRecursive) {
             children = buildTree(child, hideEmptyFolders, level + 1, isOpen);
             d.append(children);
@@ -123,82 +134,88 @@ export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecur
   return wrapper;
 }
 
-export function toggleFolder(elem) {
-  var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
-  $('#wrapper').css('overflow-y', 'hidden');
-  if (MBT_settings.get('close_old_folder')) {
-    if (elem.parents('.folder.open').length) {
-      $('.folder.open', elem.parent()).not(elem).removeClass('open').find('.sub').stop().slideUp(animationDuration);
-    } else {
-      $('.folder.open').not(elem).removeClass('open').find('.sub').stop().slideUp(animationDuration);
-    }
-  }
+function handleToggleFolder(elem) {
+  const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
 
-  if (!elem.data('loaded')) {
-    chrome.bookmarks.getSubTree(elem.data('item-id'), function (data) {
-      var t = buildTree(data[0], MBT_settings.get('hide_empty_folders'),  elem.data('level') + 1);
-      elem.append(t);
-      elem.data('loaded', true);
-      _handleToggle(elem);
-    });
-  } else {
-    _handleToggle(elem);
+  if (mbtSettings.get('close_old_folder')) {
+    $('.folder.open', elem.parent())
+      .not(elem)
+      .removeClass('open')
+      .find('.sub')
+      .stop()
+      .slideUp(animationDuration);
   }
-}
-
-function _handleToggle(elem) {
-  var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
 
   elem.toggleClass('open');
-  elem.children('.sub').eq(0).stop().slideToggle(animationDuration, function () {
-    $('#wrapper').css('overflow-y', 'auto');
-    var id = $(this).parent().data('item-id');
-    if (!MBT_settings.get('close_old_folder')) {
-      if (!$(this).is(':visible')) {
-        removeOpenFolder(id);
-        $(this).find('li').each(function () {
-          removeOpenFolder($(this).data('item-id'));
-          $(this).removeClass('open');
-          $('.sub', this).hide();
+  console.log(elem.children('.sub'));
+  elem.children('.sub')
+    .eq(0)
+    .stop()
+    .slideToggle(animationDuration, function handleToggleSlideCallback() {
+      const id = $(this).parent().data('item-id');
+      if (!mbtSettings.get('close_old_folder')) {
+        if (!$(this).is(':visible')) {
+          removeOpenFolder(id);
+          $(this).find('li').each(function closeFolder() {
+            removeOpenFolder($(this).data('item-id'));
+            $(this).removeClass('open');
+            $('.sub', this).hide();
+          });
+        } else {
+          addOpenFolder(id);
+        }
+      } else {
+        const parents = elem.parents('.folder.open');
+        if ($(this).is(':visible')) {
+          openFolders = [id];
+        } else {
+          openFolders = [];
+        }
+        $(parents).each(function openFolder() {
+          addOpenFolder($(this).data('item-id'));
         });
-      } else {
-        addOpenFolder(id);
       }
-    } else {
-      if ($(this).is(':visible')) {
-        openFolders = [id];
-      } else {
-        openFolders = [];
-      }
-      var parents = elem.parents('.folder.open');
-      $(parents).each(function () {
-        addOpenFolder($(this).data('item-id'));
-      });
+      saveOpenFolders();
+    });
+}
+
+export function toggleFolder(elem) {
+  if (!elem.data('loaded')) {
+    window.chrome.bookmarks.getSubTree(elem.data('item-id'), (data) => {
+      const t = buildTree(
+        data[0],
+        mbtSettings.get('hide_empty_folders'),
+        elem.data('level') + 1
+      );
+      elem.append(t);
+      elem.data('loaded', true);
+      handleToggleFolder(elem);
+    });
+
+    return;
+  }
+
+  handleToggleFolder(elem);
+}
+
+function handleOpenAllBookmarks(data) {
+  if (data.url) {
+    window.chrome.tabs.create({
+      url: data.url,
+      active: false,
+    });
+  } else if (data.children) {
+    for (const child of data.children) {
+      handleOpenAllBookmarks(child);
     }
-    if (MBT_settings.get('remember_scroll_position')) {
-      localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
-    }
-    saveOpenFolders();
-  });
+  }
 }
 
 export function openAllBookmarks(folder) {
-  chrome.bookmarks.getSubTree(folder.data('item-id'), function (data) {
-    _handleOpenAllBookmarks(data[0]);
+  window.chrome.bookmarks.getSubTree(folder.data('item-id'), (data) => {
+    handleOpenAllBookmarks(data[0]);
     window.close();
   });
-}
-
-function _handleOpenAllBookmarks(data) {
-  console.log(data);
-  if (data.url) {
-    chrome.tabs.create({ url: data.url, active: false });
-  } else if (data.children) {
-    let child;
-    for (child of data.children) {
-      _handleOpenAllBookmarks(child);
-    }
-  }
 }
 
 function contextAction(e, callback) {
@@ -207,33 +224,54 @@ function contextAction(e, callback) {
   return nothing(e);
 }
 
+function showContextMenu(e) {
+  const $context = $('#context');
+
+  $context.css({
+    left: -10000,
+  }).show(); // draw offscreen for dimensions
+
+  const windowHeight = $(window).height();
+  const contextHeight = $context.height();
+  const scrollTop = $('#wrapper').scrollTop();
+  let top = scrollTop + e.pageY;
+  if (top > scrollTop + windowHeight - contextHeight) {
+    top = scrollTop + windowHeight - contextHeight - 15;
+  }
+
+  $context.css({
+    left: e.pageX,
+    top,
+  });
+}
+
 export function showContextMenuFolder(folder, e) {
   $('#context > li').off('mousedown').hide();
-  $('#folder_open_all').show().one('mousedown', function (e) {
-    contextAction(e, function () {
-      _openAllBookmarks(folder);
+  $('#folder_open_all').show().one('mousedown', (subEvent) => {
+    contextAction(subEvent, () => {
+      openAllBookmarks(folder);
     });
   });
-  $('#folder_delete').show().one('mousedown', function (e) {
-    contextAction(e, function () {
+  $('#folder_delete').show().one('mousedown', (subEvent) => {
+    contextAction(subEvent, () => {
       if (confirm('Are you sure you want to delete this folder?')) {
-        chrome.bookmarks.removeTree(folder.data('item-id'), function () {
+        window.chrome.bookmarks.removeTree(folder.data('item-id'), () => {
           folder.remove();
         });
       }
     });
   });
-  $('#folder_edit').show().one('mousedown', function (e) {
-    var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
-    var item_id = folder.data('item-id');
-    contextAction(e, function () {
+  $('#folder_edit').show().one('mousedown', (subEvent) => {
+    const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
+    const itemId = folder.data('item-id');
+    contextAction(subEvent, () => {
       $('#url_row').hide();
       $('#edit_name').val($('> span', folder).text());
-      $('#overlay').slideDown(animationDuration, function () {
+      $('#overlay').slideDown(animationDuration, () => {
         $('#edit_name').focus();
       });
-      $('#edit_save').off('click').one('click', function () {
-        chrome.bookmarks.update(item_id, {
+      $('#edit_save').off('click').one('click', () => {
+        window.chrome.bookmarks.update(itemId, {
           title: $('#edit_name').val(),
         });
         $('> span', folder).text($('#edit_name').val());
@@ -248,31 +286,36 @@ export function showContextMenuFolder(folder, e) {
 
 export function showContextMenuBookmark(bookmark, e) {
   $('#context > li').off('mousedown').hide();
-  $('#bookmark_delete').show().one('mousedown', function (e) {
-    contextAction(e, function () {
+  $('#bookmark_delete').show().one('mousedown', (subEvent) => {
+    contextAction(subEvent, () => {
       if (confirm('Are you sure you want to delete this bookmark?')) {
-        chrome.bookmarks.remove(bookmark.data('item-id'), function () {
+        window.chrome.bookmarks.remove(bookmark.data('item-id'), () => {
           bookmark.remove();
         });
       }
     });
   });
-  $('#bookmark_edit').show().one('mousedown', function (e) {
-    var animationDuration = parseInt(MBT_settings.get('animation_duration'), 10);
-    var item_id = bookmark.data('item-id');
-    contextAction(e, function () {
+  $('#bookmark_edit').show().one('mousedown', (subEvent) => {
+    const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
+    const itemId = bookmark.data('item-id');
+    contextAction(subEvent, () => {
       $('#url_row').show();
       $('#edit_name').val($('> span', bookmark).text()).focus();
       $('#edit_url').val($(bookmark).data('url'));
-      $('#overlay').slideDown(animationDuration, function () {
+      $('#overlay').slideDown(animationDuration, () => {
         $('#edit_name').focus();
       });
-      $('#edit_save').off('click').one('click', function () {
-        chrome.bookmarks.update(item_id, {
+      $('#edit_save').off('click').one('click', () => {
+        window.chrome.bookmarks.update(itemId, {
           title: $('#edit_name').val(),
           url: $('#edit_url').val(),
         });
-        $('> span', bookmark).text($('#edit_name').val()).attr('title', $('#edit_name').val() + ' [' + $('#edit_url').val() + ']');
+        $('> span', bookmark)
+          .text($('#edit_name').val())
+          .attr(
+            'title',
+            `${$('#edit_name').val()} [${$('#edit_url').val()}]`
+          );
         $('.selected').removeClass('selected');
         $('#overlay').slideUp(animationDuration);
       });
@@ -280,25 +323,4 @@ export function showContextMenuBookmark(bookmark, e) {
   });
   $(bookmark).addClass('selected');
   showContextMenu(e);
-}
-
-function showContextMenu(e) {
-  var $context = $("#context");
-
-  $context.css({
-    'left': -10000
-  }).show(); // draw offscreen for dimensions
-
-  var windowHeight = $(window).height();
-  var contextHeight = $context.height();
-  var scrollTop = $('#wrapper').scrollTop();
-  var top = scrollTop + e.pageY;
-  if (top > scrollTop + windowHeight - contextHeight) {
-    top = scrollTop + windowHeight - contextHeight - 15;
-  }
-
-  $context.css({
-    'left': e.pageX,
-    'top': top
-  });
 }
