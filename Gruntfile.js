@@ -100,6 +100,7 @@ module.exports = function (grunt) {
                     { expand: true, cwd: 'src/', src: ['icons/**'], dest: 'dist/' },
                     { expand: true, cwd: 'src/', src: ['js/vendor/**'], dest: 'dist/' },
                     { expand: true, cwd: 'src/', src: ['manifest.json'], dest: 'dist/' },
+                    { src: 'node_modules/bootstrap/dist/css/bootstrap.min.css', dest: 'dist/css/bootstrap4.css' },
                 ]
             }
         },

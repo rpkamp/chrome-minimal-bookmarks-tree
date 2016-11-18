@@ -1,51 +1,17 @@
-body,html {
-    font: 90% Verdana, Arial, sans-serif;
+html,body {
     margin: 0;
     padding: 0;
-    background: #eee;
 }
 
-#wrap {
-    margin: 20px auto;
-    width: 800px;
+body {
+    margin: 2rem 0;
 }
 
-#inner {
-    padding: 20px;
-    background: #fff;
-}
-
-h1 {
-    border-bottom: 1px solid #bbb;
-}
-
-em {
-    color: #888;
-}
-
-.row {
-    margin-bottom: 5px;
-    clear: both;
-}
-
-.row label {
-    float: left;
-    width: 110px;
-    padding-top: 7px;
-    text-align: right;
-    padding-right: 10px;
-}
-
-input[type="number"],
-select {
-    padding: 3px;
-    width: 100px;
-    border: 1px solid #aaa;
-}
-
-select {
-    width: 108px;
-    background: #fff;
+.main {
+    background: #f7f7f9;
+    border: 1px solid #ccc;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
 }
 
 .license-toggle,

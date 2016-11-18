@@ -2,85 +2,134 @@
 <html>
 <head>
     <title data-i18n-key="optionsHeader">Minimal Bookmarks Tree Options</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap4.css" />
     <link rel="stylesheet" type="text/css" href="css/options.css" />
 </head>
 <body>
-	<div id="wrap">
-		<h1 data-i18n-key="optionsHeader">Minimal Bookmarks Tree Options</h1>
-		<div id="inner">
-			<input type="checkbox" id="close_old_folder" /> <label for="close_old_folder" data-i18n-key="optionCloseFolderOnOpenNew">Close currently opened folder when opening a new one.</label><br />
-			<input type="checkbox" id="open_all_sub" /> <label for="open_all_sub" data-i18n-key="optionOpenAllTraverseSubfolders">When clicking "Open all", open all bookmarks in all subfolders as well.</label><br />
-            <input type="checkbox" id="hide_empty_folders" /> <label for="hide_empty_folders" data-i18n-key="optionHideEmptyFolders">Hide empty folders.</label><br />
-            <input type="checkbox" id="remember_scroll_position" /> <label for="remember_scroll_position" data-i18n-key="optionRememberScrollPosition">Remember scroll position when Minimal Bookmarks Tree window closes.</label><br />
-            <br />
-            <div class="row">
-                <label for="icon" data-i18n-key="optionIcon">Icon</label>
-                <select id="icon">
-                    <option value="default" data-i18n-key="optionIconDefault">Default</option>
-                    <option value="star" data-i18n-key="optionIconStar">Star</option>
-                    <option value="star_empty" data-i18n-key="optionIconOpenStar">Open Star</option>
-                </select>
+	<div class="container">
+
+        <div class="card">
+            <div class="card-header">
+                <span data-i18n-key="optionsHeader">Minimal Bookmarks Tree Options</span>
             </div>
-            <div class="row">
-                <label for="animation_duration" data-i18n-key="optionAnimationSpeed">Animation Speed</label>
-                <select id="animation_duration">
-                    <option value="0" data-i18n-key="optionAnimationSpeedNoAnimation">No Animation</option>
-                    <option value="1000" data-i18n-key="optionAnimationSpeedVerySlow">Slug like</option>
-                    <option value="600" data-i18n-key="optionAnimationSpeedSlow">Slow</option>
-                    <option value="400" data-i18n-key="optionAnimationSpeedMedium">Medium</option>
-                    <option value="200" data-i18n-key="optionAnimationSpeedFast">Fast</option>
-                    <option value="100" data-i18n-key="optionAnimationSpeedVeryFast">Very Fast</option>
-                </select>
+            <div class="card-block">
+                <p>
+                    <label for="close_old_folder">
+                        <input type="checkbox" id="close_old_folder" />
+                        <span data-i18n-key="optionCloseFolderOnOpenNew">
+                            Close currently opened folder when opening a new one.
+                        </span>
+                    </label>
+                </p>
+                <p>
+                    <label for="open_all_sub">
+                        <input type="checkbox" id="open_all_sub" />
+                        <span data-i18n-key="optionOpenAllTraverseSubfolders">
+                            When clicking "Open all", open all bookmarks in all subfolders as well.
+                        </span>
+                    </label>
+                </p>
+                <p>
+                    <label for="hide_empty_folders">
+                        <input type="checkbox" id="hide_empty_folders" />
+                        <span data-i18n-key="optionHideEmptyFolders">
+                            Hide empty folders.
+                        </span>
+                    </label>
+                </p>
+                <p>
+                    <label for="remember_scroll_position">
+                        <input type="checkbox" id="remember_scroll_position" />
+                        <span data-i18n-key="optionRememberScrollPosition">
+                            Remember scroll position when Minimal Bookmarks Tree window closes.
+                        </span>
+                    </label>
+                </p>
+
+                <div class="row form-group">
+                    <label for="icon" data-i18n-key="optionIcon" class="col-sm-2 col-form-label">Icon</label>
+                    <div class="col-sm-4">
+                        <select id="icon" class="form-control">
+                            <option value="default" data-i18n-key="optionIconDefault">Default</option>
+                            <option value="star" data-i18n-key="optionIconStar">Star</option>
+                            <option value="star_empty" data-i18n-key="optionIconOpenStar">Open Star</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label for="animation_duration" data-i18n-key="optionAnimationSpeed" class="col-sm-2 col-form-label">Animation Speed</label>
+                    <div class="col-sm-4">
+                        <select id="animation_duration" class="form-control">
+                            <option value="0" data-i18n-key="optionAnimationSpeedNoAnimation">No Animation</option>
+                            <option value="1000" data-i18n-key="optionAnimationSpeedVerySlow">Slug like</option>
+                            <option value="600" data-i18n-key="optionAnimationSpeedSlow">Slow</option>
+                            <option value="400" data-i18n-key="optionAnimationSpeedMedium">Medium</option>
+                            <option value="200" data-i18n-key="optionAnimationSpeedFast">Fast</option>
+                            <option value="100" data-i18n-key="optionAnimationSpeedVeryFast">Very Fast</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label for="zoom" data-i18n-key="optionZoomLevel" class="col-sm-2 col-form-label">Zoom Level</label>
+                    <div class="col-sm-4">
+                        <input type="number" min="75" max="300" name="zoom" id="zoom" class="form-control col-sm-4" />
+                        <small class="form-text text-muted">
+                            <span data-i18n-key="optionMin">min</span>: 75,
+                            <span data-i18n-key="optionMax">max</span>: 300,
+                            <span data-i18n-key="optionDefault">default</span>: 100
+                        </small>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label for="height" data-i18n-key="optionPreferredHeight" class="col-sm-2 col-form-label">Preferred height</label>
+                    <div class="col-sm-4">
+                        <input type="number" min="50" max="600" name="height" id="height" class="form-control" />
+                        <small class="form-text text-muted">
+                            <span data-i18n-key="optionMin">min</span>: 50,
+                            <span data-i18n-key="optionMax">max</span>: 600,
+                            <span data-i18n-key="optionDefault">default</span>: 500
+                        </small>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label for="width" data-i18n-key="optionPreferredWidth" class="col-sm-2 col-form-label">Preferred width</label>
+                    <div class="col-sm-4">
+                        <input type="number" min="50" max="600" name="width" id="width" class="form-control" />
+                        <small class="form-text text-muted">
+                             <span data-i18n-key="optionMin">min</span>: 50,
+                             <span data-i18n-key="optionMax">max</span>: 800,
+                             <span data-i18n-key="optionDefault">default</span>: 300
+                        </small>
+                    </div>
+                </div>
+                <br />
+                <small class="text-muted"><em>
+                    <span data-i18n-key="optionWidthHeightOptimization">Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above.</span>
+                    <span data-i18n-key="optionWidthHeightEnforcedByBrowser">Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree.</span><br />
+                </em></small>
             </div>
-            <div class="row">
-                 <label for="zoom" data-i18n-key="optionZoomLevel">Zoom Level</label>
-                 <input type="number" min="75" max="300" name="zoom" id="zoom" />
-                 <small>
-                    (<span data-i18n-key="optionMin">min</span>: 75,
-                     <span data-i18n-key="optionMax">max</span>: 300,
-                     <span data-i18n-key="optionDefault">default</span>: 100)
-                </small><br />
-            </div>
-            <div class="row">
-                 <label for="height" data-i18n-key="optionPreferredHeight">Preferred height</label>
-                 <input type="number" min="50" max="600" name="height" id="height" />
-                 <small>
-                    (<span data-i18n-key="optionMin">min</span>: 50,
-                     <span data-i18n-key="optionMax">max</span>: 600,
-                     <span data-i18n-key="optionDefault">default</span>: 500)
-                </small><br />
-            </div>
-            <div class="row">
-                 <label for="width" data-i18n-key="optionPreferredWidth">Preferred width</label>
-                 <input type="number" min="50" max="600" name="width" id="width" />
-                 <small>
-                    (<span data-i18n-key="optionMin">min</span>: 50,
-                     <span data-i18n-key="optionMax">max</span>: 800,
-                     <span data-i18n-key="optionDefault">default</span>: 300)
-                </small><br />
-            </div>
-            <br /><br />
-            <small><em>
-                <span data-i18n-key="optionWidthHeightEnforcedByBrowser">Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree.</span><br />
-                <span data-i18n-key="optionWidthHeightOptimization">Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above.</span>
-            </em></small>
-            <br /><br />
-			<small><em data-i18n-key="optionSavedAutomatically">Settings are saved automatically when you click/select them.</em></small><br />
-		</div>
+        </div>
 
         <a class="license-toggle" href="#" data-i18n-key="optionShowLicense">Show license</a>
 
         <div id="license">
-            <h2>License</h2>
-            <p>Copyright (c) 2015, R&eacute;mon van de Kamp</p>
-            <p>All rights reserved.</p>
-            <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
-            <ol>
-                <li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
-                <li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
-            </ol>
-            <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+            <div class="card">
+                <div class="card-header">
+                    License
+                </div>
+                <div class="card-block">
+                    <p>Copyright (c) 2015, R&eacute;mon van de Kamp</p>
+                    <p>All rights reserved.</p>
+                    <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+                    <ol>
+                        <li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
+                        <li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
+                    </ol>
+                    <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+                </div>
+            </div>
         </div>
+
 	</div>
     <script src="js/options.js"></script>
 </body>

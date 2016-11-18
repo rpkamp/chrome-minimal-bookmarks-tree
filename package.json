@@ -37,6 +37,7 @@
     "test": "grunt test"
   },
   "dependencies": {
+    "bootstrap": "^4.0.0-alpha.5",
     "constitute": "^1.6.2",
     "jquery": "^3.1.1"
   }
