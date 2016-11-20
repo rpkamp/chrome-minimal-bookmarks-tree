@@ -13,38 +13,6 @@
                 <span data-i18n-key="optionsHeader">Minimal Bookmarks Tree Options</span>
             </div>
             <div class="card-block">
-                <p>
-                    <label for="close_old_folder">
-                        <input type="checkbox" id="close_old_folder" />
-                        <span data-i18n-key="optionCloseFolderOnOpenNew">
-                            Close currently opened folder when opening a new one.
-                        </span>
-                    </label>
-                </p>
-                <p>
-                    <label for="open_all_sub">
-                        <input type="checkbox" id="open_all_sub" />
-                        <span data-i18n-key="optionOpenAllTraverseSubfolders">
-                            When clicking "Open all", open all bookmarks in all subfolders as well.
-                        </span>
-                    </label>
-                </p>
-                <p>
-                    <label for="hide_empty_folders">
-                        <input type="checkbox" id="hide_empty_folders" />
-                        <span data-i18n-key="optionHideEmptyFolders">
-                            Hide empty folders.
-                        </span>
-                    </label>
-                </p>
-                <p>
-                    <label for="remember_scroll_position">
-                        <input type="checkbox" id="remember_scroll_position" />
-                        <span data-i18n-key="optionRememberScrollPosition">
-                            Remember scroll position when Minimal Bookmarks Tree window closes.
-                        </span>
-                    </label>
-                </p>
 
                 <div class="row form-group">
                     <label for="icon" data-i18n-key="optionIcon" class="col-sm-2 col-form-label">Icon</label>
@@ -71,7 +39,7 @@
                 </div>
                 <div class="row form-group">
                     <label for="zoom" data-i18n-key="optionZoomLevel" class="col-sm-2 col-form-label">Zoom Level</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <input type="number" min="75" max="300" name="zoom" id="zoom" class="form-control col-sm-4" />
                         <small class="form-text text-muted">
                             <span data-i18n-key="optionMin">min</span>: 75,
@@ -82,7 +50,7 @@
                 </div>
                 <div class="row form-group">
                     <label for="height" data-i18n-key="optionPreferredHeight" class="col-sm-2 col-form-label">Preferred height</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <input type="number" min="50" max="600" name="height" id="height" class="form-control" />
                         <small class="form-text text-muted">
                             <span data-i18n-key="optionMin">min</span>: 50,
@@ -93,7 +61,7 @@
                 </div>
                 <div class="row form-group">
                     <label for="width" data-i18n-key="optionPreferredWidth" class="col-sm-2 col-form-label">Preferred width</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <input type="number" min="50" max="600" name="width" id="width" class="form-control" />
                         <small class="form-text text-muted">
                              <span data-i18n-key="optionMin">min</span>: 50,
@@ -102,11 +70,56 @@
                         </small>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-5 push-sm-2">
+                        <p>
+                            <label for="hide_empty_folders">
+                                <input type="checkbox" id="hide_empty_folders" />
+                                <span data-i18n-key="optionHideEmptyFolders">
+                                Hide empty folders
+                            </span>
+                            </label>
+                        </p>
+                        <p>
+                            <label for="close_old_folder">
+                                <input type="checkbox" id="close_old_folder" />
+                                <span data-i18n-key="optionCloseFolderOnOpenNew">
+                                Close currently opened folder when opening a new one
+                            </span>
+                            </label>
+                        </p>
+                        <p>
+                            <label for="open_all_sub">
+                                <input type="checkbox" id="open_all_sub" />
+                                <span data-i18n-key="optionOpenAllTraverseSubfolders">
+                                "Open all" opens all bookmarks in all subfolders as well
+                            </span>
+                            </label>
+                        </p>
+                        <p>
+                            <label for="remember_scroll_position">
+                                <input type="checkbox" id="remember_scroll_position" />
+                                <span data-i18n-key="optionRememberScrollPosition">
+                                Remember scroll position
+                            </span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
                 <br />
                 <small class="text-muted"><em>
                     <span data-i18n-key="optionWidthHeightOptimization">Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above.</span>
                     <span data-i18n-key="optionWidthHeightEnforcedByBrowser">Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree.</span><br />
                 </em></small>
+
+                <div class="donate">
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+                        <input type="image" src="https://www.paypalobjects.com/nl_NL/NL/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal, de veilige en complete manier van online betalen.">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -118,7 +131,7 @@
                     License
                 </div>
                 <div class="card-block">
-                    <p>Copyright (c) 2015, R&eacute;mon van de Kamp</p>
+                    <p>Copyright (c) 2017, R&eacute;mon van de Kamp</p>
                     <p>All rights reserved.</p>
                     <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
                     <ol>
@@ -130,7 +143,7 @@
             </div>
         </div>
 
-	</div>
+    </div>
     <script src="js/options.js"></script>
 </body>
 </html>

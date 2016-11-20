@@ -5,25 +5,33 @@ html,body {
 
 body {
     margin: 2rem 0;
-}
-
-.main {
-    background: #f7f7f9;
-    border: 1px solid #ccc;
-    padding: 1rem 2rem;
-    margin-bottom: 2rem;
-}
-
-.license-toggle,
-#license {
-    display: block;
-    margin-top: 20px;
+    background: #e0eeee;
 }
 
 .license-toggle {
+    display: block;
     text-align: right;
+    margin-top: 20px;
 }
 
 #license {
     display: none;
+    margin-top: 2rem;
+}
+
+.card-block {
+    position: relative;
+}
+
+.donate {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+@media (max-width:600px) {
+    .donate {
+        position: static;
+        margin-left: 1rem;
+    }
 }
