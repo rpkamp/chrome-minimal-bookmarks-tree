@@ -1,39 +1,10 @@
 import Settings from '../settings';
+import PersistentSet from '../PersistentSet';
 import { nothing } from '../functions';
 import $ from '../../../node_modules/jquery/dist/jquery';
 
 const mbtSettings = new Settings();
-let openFoldersDirty = false;
-let openFolders = localStorage.getItem('openfolders');
-
-if (openFolders) {
-  openFolders = JSON.parse(openFolders);
-} else {
-  openFolders = [];
-}
-
-function addOpenFolder(id) {
-  if ($.inArray(id, openFolders) === -1) {
-    openFolders.push(id);
-    openFoldersDirty = true;
-  }
-}
-
-function removeOpenFolder(id) {
-  let pos = $.inArray(id, openFolders);
-  while (pos !== -1) {
-    openFoldersDirty = true;
-    openFolders.splice(pos, 1);
-    pos = $.inArray(id, openFolders);
-  }
-}
-
-function saveOpenFolders() {
-  if (openFoldersDirty) {
-    localStorage.setItem('openfolders', JSON.stringify(openFolders));
-    openFoldersDirty = false;
-  }
-}
+const openFolders = new PersistentSet('openfolders');
 
 export function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
   const scale = 1 / (zoom / 100);
@@ -84,7 +55,7 @@ export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecur
     if (typeof child === 'undefined') {
       continue;
     }
-    isOpen = $.inArray(child.id, openFolders) !== -1;
+    isOpen = openFolders.contains(child.id);
     d = $('<li>');
 
     if (child.url) { // url
@@ -147,7 +118,6 @@ function handleToggleFolder(elem) {
   }
 
   elem.toggleClass('open');
-  console.log(elem.children('.sub'));
   elem.children('.sub')
     .eq(0)
     .stop()
@@ -155,27 +125,25 @@ function handleToggleFolder(elem) {
       const id = $(this).parent().data('item-id');
       if (!mbtSettings.get('close_old_folder')) {
         if (!$(this).is(':visible')) {
-          removeOpenFolder(id);
+          openFolders.remove(id);
           $(this).find('li').each(function closeFolder() {
-            removeOpenFolder($(this).data('item-id'));
+            openFolders.remove($(this).data('item-id'));
             $(this).removeClass('open');
             $('.sub', this).hide();
           });
         } else {
-          addOpenFolder(id);
+          openFolders.add(id);
         }
       } else {
         const parents = elem.parents('.folder.open');
+        openFolders.clear();
         if ($(this).is(':visible')) {
-          openFolders = [id];
-        } else {
-          openFolders = [];
+          openFolders.add(id);
         }
         $(parents).each(function openFolder() {
-          addOpenFolder($(this).data('item-id'));
+          openFolders.add($(this).data('item-id'));
         });
       }
-      saveOpenFolders();
     });
 }
 
