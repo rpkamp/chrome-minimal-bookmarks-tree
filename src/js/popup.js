@@ -2,7 +2,7 @@ import { nothing, translateDocument } from './functions';
 import Settings from './settings';
 import {
   buildTree,
-  setWidthHeight,
+  setElementDimensions,
   toggleFolder,
   showContextMenuFolder,
   showContextMenuBookmark,
@@ -11,12 +11,10 @@ import {
 import $ from '../../node_modules/jquery/dist/jquery';
 
 (function init(settings, chrome) {
-  let draggingIndex;
   let scrollTimeout;
   const zoom = parseInt(settings.get('zoom'), 10);
 
   chrome.bookmarks.getTree((bookmarksTree) => {
-    let bookmarksBarShown = false;
     const bm = $('#bookmarks');
     let y = $.extend(true, {}, bookmarksTree[0]);
     delete y.children[1]; // "Other boookmarks"
@@ -26,66 +24,11 @@ import $ from '../../node_modules/jquery/dist/jquery';
     if (tree) {
       bm[0].appendChild(tree);
       bm.children('li').addClass('nosort');
-      bookmarksBarShown = true;
     }
     tree = buildTree(bookmarksTree[0].children[1], settings.get('hide_empty_folders'));
     if (tree) {
       bm[0].appendChild(tree);
     }
-
-    // bm.nestedSortable({
-    //   handle: 'span',
-    //   items: 'li',
-    //   toleranceElement: '> span',
-    //   listType: 'ul',
-    //   isTree: true,
-    //   expandOnHover: 700,
-    //   distance: 30,
-    //   forcePlaceholderSize: true,
-    //   start: (e, ui) => {
-    //     const item = ui.item;
-    //     const list = item.parent();
-    //     draggingIndex = list.children('li').index(item);
-    //   },
-    //   stop: (e, ui) => {
-    //     const item = ui.item;
-    //     const itemId = item.data('item-id');
-    //     const list = item.parent();
-    //     const parent = list.parent();
-    //     let parentId = parent.data('item-id');
-    //     let idx = list.children('li').index(item);
-    //
-    //     if (item.hasClass('nosort') || (!parentId && idx === 0 && bookmarksBarShown)) {
-    //       alert(chrome.i18n.getMessage('sortNotAllowed'));
-    //       bm.sortable('cancel');
-    //       return nothing(e);
-    //     }
-    //     if (draggingIndex < idx) {
-    //       // not sure why we need this, but
-    //       // it doesn't work if we leave it out
-    //       idx++;
-    //     }
-    //     if (!parentId && bookmarksBarShown) {
-    //       idx--;
-    //     }
-    //     if (!parentId) {
-    //       parentId = bookmarksTree[0].children[1].id;
-    //     }
-    //     chrome.bookmarks.move(itemId, { parentId, index: idx }, (res) => {
-    //       if (typeof res === 'undefined') {
-    //         // index out of bounds, try with index-1
-    //         chrome.bookmarks.move(itemId, { parentId, index: idx - 1 }, (res2) => {
-    //           if (typeof res2 === 'undefined') {
-    //             // this isn't happening. bail out.
-    //             alert(chrome.i18n.getMessage('folderMoveFailed'));
-    //             window.close();
-    //           }
-    //         });
-    //       }
-    //     });
-    //     return true;
-    //   }
-    // });
 
     bm.on('click contextmenu', 'li', function clickHandler(e) {
       $('#context').hide();
@@ -169,8 +112,9 @@ import $ from '../../node_modules/jquery/dist/jquery';
     });
 
   chrome.tabs.query({ active: true }, (tabs) => {
-    setWidthHeight(
+    setElementDimensions(
       tabs[0],
+      '#wrapper',
       parseInt(settings.get('width'), 10),
       parseInt(settings.get('height'), 10),
       zoom

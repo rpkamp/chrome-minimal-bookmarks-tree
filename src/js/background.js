@@ -3,7 +3,7 @@ import { setBrowserActionIcon } from './functions';
 
 const settings = new Settings();
 
-function setDefaultSetting(settings, key, value) {
+function setDefaultSetting(key, value) {
   if (settings.get(key) === null) {
     settings.set(key, value);
   }

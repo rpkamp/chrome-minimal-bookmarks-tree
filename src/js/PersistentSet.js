@@ -2,7 +2,7 @@ export default class PersistentSet {
   constructor(key) {
     this.key = key;
     this.elements = [];
-    this.load()
+    this.load();
   }
 
   add(id) {

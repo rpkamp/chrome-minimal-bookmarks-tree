@@ -6,7 +6,7 @@ import $ from '../../../node_modules/jquery/dist/jquery';
 const mbtSettings = new Settings();
 const openFolders = new PersistentSet('openfolders');
 
-export function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
+export function setElementDimensions(tab, selector, preferredWidth, preferredHeight, zoom) {
   const scale = 1 / (zoom / 100);
 
   const width = scale * Math.min(
@@ -19,11 +19,15 @@ export function setWidthHeight(tab, preferredWidth, preferredHeight, zoom) {
     preferredHeight
   );
 
-  $('#wrapper')
-    .css('max-width', `${width}px`)
-    .css('min-width', `${width}px`)
-    .width(width)
-    .css('max-height', `${height}px`);
+  const elem = document.querySelector(selector);
+  if (elem === null) {
+    return;
+  }
+
+  elem.style.width = `${width}px`;
+  elem.style.minWidth = `${width}px`;
+  elem.style.maxWidth = `${width}px`;
+  elem.style.maxHeight = `${height}px`;
 }
 
 export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecursive) {
