@@ -30,13 +30,13 @@ export function setElementDimensions(tab, selector, preferredWidth, preferredHei
   elem.style.maxHeight = `${height}px`;
 }
 
-export function buildTree(treeNode, hideEmptyFolders, level, visible, forceRecursive) {
-  if (typeof level === 'undefined') {
-    level = 1;
-  }
-  if (typeof forceRecursive === 'undefined') {
-    forceRecursive = false;
-  }
+export function buildTree(
+  treeNode,
+  hideEmptyFolders,
+  level = 1,
+  visible = true,
+  forceRecursive = false
+) {
   let wrapper;
   let fragmentWrapper = false;
   let d;

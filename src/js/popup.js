@@ -15,25 +15,30 @@ import $ from '../../node_modules/jquery/dist/jquery';
   const zoom = parseInt(settings.get('zoom'), 10);
 
   chrome.bookmarks.getTree((bookmarksTree) => {
-    const bm = $('#bookmarks');
-    let y = $.extend(true, {}, bookmarksTree[0]);
-    delete y.children[1]; // "Other boookmarks"
+    const otherBookmarks = buildTree(
+      bookmarksTree[0].children[1],
+      settings.get('hide_empty_folders')
+    );
 
-    let tree;
-    tree = buildTree(y, settings.get('hide_empty_folders'));
-    if (tree) {
-      bm[0].appendChild(tree);
+    delete bookmarksTree[0].children[1];
+    const bookmarksFolder = buildTree(
+      bookmarksTree[0],
+      settings.get('hide_empty_folders')
+    );
+
+    const bm = $('#bookmarks');
+    if (bookmarksFolder) {
+      bm[0].appendChild(bookmarksFolder);
       bm.children('li').addClass('nosort');
     }
-    tree = buildTree(bookmarksTree[0].children[1], settings.get('hide_empty_folders'));
-    if (tree) {
-      bm[0].appendChild(tree);
+    if (otherBookmarks) {
+      bm[0].appendChild(otherBookmarks);
     }
 
     bm.on('click contextmenu', 'li', function clickHandler(e) {
       $('#context').hide();
       $('.selected').removeClass('selected');
-      let $this = $(this);
+      const $this = $(this);
       if ($this.hasClass('folder')) {
         if (e.button === 0) {
           toggleFolder($this);
@@ -76,7 +81,7 @@ import $ from '../../node_modules/jquery/dist/jquery';
 
     if (settings.get('remember_scroll_position')) {
       const scrolltop = localStorage.getItem('scrolltop');
-      if (scrolltop) {
+      if (scrolltop !== null) {
         $('#wrapper').scrollTop(parseInt(scrolltop, 10));
       }
     }
@@ -96,10 +101,8 @@ import $ from '../../node_modules/jquery/dist/jquery';
   });
 
   $(document)
-    .on('contextmenu', () => {
-      return false;
-    })
-    .ready(function () {
+    .on('contextmenu', () => false)
+    .ready(() => {
       $('#wrapper').on('scroll', () => {
         if (settings.get('remember_scroll_position')) {
           clearTimeout(scrollTimeout);
