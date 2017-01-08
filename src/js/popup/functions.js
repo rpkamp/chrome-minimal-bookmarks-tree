@@ -34,21 +34,19 @@ export function buildTree(
   treeNode,
   hideEmptyFolders,
   level = 1,
-  visible = true,
-  forceRecursive = false
+  visible = true
 ) {
   let wrapper;
   let fragmentWrapper = false;
   let d;
   let children;
   let isOpen;
-  let loaded;
 
   if (level > 1) {
     wrapper = $('<ul>');
     wrapper.addClass('sub');
     if (visible) {
-      wrapper.show();
+      wrapper.css('display', 'block');
     }
   } else {
     wrapper = document.createDocumentFragment();
@@ -90,13 +88,11 @@ export function buildTree(
           .attr('id', `tree${child.id}`);
 
         if (child.children && child.children.length) {
-          loaded = isOpen;
-          if (isOpen || forceRecursive) {
+          if (isOpen) {
             children = buildTree(child, hideEmptyFolders, level + 1, isOpen);
             d.append(children);
-            loaded = true;
           }
-          d.data('loaded', loaded);
+          d.data('loaded', isOpen);
         }
       }
     }
@@ -110,6 +106,7 @@ export function buildTree(
 }
 
 function handleToggleFolder(elem) {
+  console.log('handleToggleFolder', elem);
   const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
 
   if (mbtSettings.get('close_old_folder')) {
@@ -127,18 +124,7 @@ function handleToggleFolder(elem) {
     .stop()
     .slideToggle(animationDuration, function handleToggleSlideCallback() {
       const id = $(this).parent().data('item-id');
-      if (!mbtSettings.get('close_old_folder')) {
-        if (!$(this).is(':visible')) {
-          openFolders.remove(id);
-          $(this).find('li').each(function closeFolder() {
-            openFolders.remove($(this).data('item-id'));
-            $(this).removeClass('open');
-            $('.sub', this).hide();
-          });
-        } else {
-          openFolders.add(id);
-        }
-      } else {
+      if (mbtSettings.get('close_old_folder')) {
         const parents = elem.parents('.folder.open');
         openFolders.clear();
         if ($(this).is(':visible')) {
@@ -147,27 +133,46 @@ function handleToggleFolder(elem) {
         $(parents).each(function openFolder() {
           openFolders.add($(this).data('item-id'));
         });
+
+        return;
       }
+
+      if ($(this).is(':visible')) {
+        console.log('Folder is visible!');
+        openFolders.add(id);
+
+        return;
+      }
+
+      console.log('Folder is not visible!');
+
+      openFolders.remove(id);
+      $(this).find('li').each(function closeFolder() {
+        openFolders.remove($(this).data('item-id'));
+        $(this).removeClass('open');
+        $('.sub', this).hide();
+      });
     });
 }
 
 export function toggleFolder(elem) {
-  if (!elem.data('loaded')) {
-    window.chrome.bookmarks.getSubTree(elem.data('item-id'), (data) => {
-      const t = buildTree(
-        data[0],
-        mbtSettings.get('hide_empty_folders'),
-        elem.data('level') + 1
-      );
-      elem.append(t);
-      elem.data('loaded', true);
-      handleToggleFolder(elem);
-    });
+  if (elem.data('loaded')) {
+    handleToggleFolder(elem);
 
     return;
   }
 
-  handleToggleFolder(elem);
+  window.chrome.bookmarks.getSubTree(elem.data('item-id'), (data) => {
+    const t = buildTree(
+      data[0],
+      mbtSettings.get('hide_empty_folders'),
+      elem.data('level') + 1,
+      false
+    );
+    elem.append(t);
+    elem.data('loaded', true);
+    handleToggleFolder(elem);
+  });
 }
 
 function handleOpenAllBookmarks(data) {
@@ -176,7 +181,11 @@ function handleOpenAllBookmarks(data) {
       url: data.url,
       active: false,
     });
-  } else if (data.children) {
+
+    return;
+  }
+
+  if (data.children) {
     for (const child of data.children) {
       handleOpenAllBookmarks(child);
     }

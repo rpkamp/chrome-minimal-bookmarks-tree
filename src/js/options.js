@@ -47,10 +47,10 @@ import {
     });
   }
 
-  document.querySelector('.license-toggle').addEventListener('click', (e) => {
+  document.querySelector('.license-toggle').addEventListener('click', event => {
     document.querySelector('#license').style.display = 'block';
     document.querySelector('.license-toggle').style.display = 'none';
-    return nothing(e);
+    return nothing(event);
   });
 
   translateDocument(window.document);

@@ -13,17 +13,18 @@ import $ from '../../node_modules/jquery/dist/jquery';
 (function init(settings, chrome) {
   let scrollTimeout;
   const zoom = parseInt(settings.get('zoom'), 10);
+  const hideEmptyFolders = settings.get('hide_empty_folders');
 
   chrome.bookmarks.getTree((bookmarksTree) => {
     const otherBookmarks = buildTree(
       bookmarksTree[0].children[1],
-      settings.get('hide_empty_folders')
+      hideEmptyFolders
     );
 
     delete bookmarksTree[0].children[1];
     const bookmarksFolder = buildTree(
       bookmarksTree[0],
-      settings.get('hide_empty_folders')
+      hideEmptyFolders
     );
 
     const bm = $('#bookmarks');
@@ -35,48 +36,66 @@ import $ from '../../node_modules/jquery/dist/jquery';
       bm[0].appendChild(otherBookmarks);
     }
 
-    bm.on('click contextmenu', 'li', function clickHandler(e) {
+    bm.on('click', 'li', (event) => {
       $('#context').hide();
       $('.selected').removeClass('selected');
-      const $this = $(this);
+      const $this = $(event.currentTarget);
       if ($this.hasClass('folder')) {
-        if (e.button === 0) {
-          toggleFolder($this);
-        } else if (e.button === 2) {
-          showContextMenuFolder($this, e);
-        }
-      } else { // bookmark
-        const url = $this.data('url');
-        if (e.button === 0) {
-          if (e.ctrlKey || e.metaKey) {
-            chrome.tabs.create({ url, active: false });
-          } else {
-            chrome.tabs.query({ active: true }, (tab) => {
-              chrome.tabs.update(tab.id, { url });
-              window.close();
-            });
-          }
-        } else if (e.button === 2) {
-          showContextMenuBookmark($this, e);
-        }
+        toggleFolder($this);
+
+        return nothing(event);
       }
-      return nothing(e);
+
+      const url = $this.data('url');
+      if (event.button === 0) {
+        if (event.ctrlKey || event.metaKey) {
+          chrome.tabs.create({ url, active: false });
+
+          return nothing(event);
+        }
+
+        chrome.tabs.query({ active: true }, (tab) => {
+          chrome.tabs.update(tab.id, { url });
+          window.close();
+        });
+      }
+
+      return nothing(event);
     });
 
-    bm.on('mousedown', 'li', function handleMouseDownOnMenuItem(e) {
+    bm.on('contextmenu', 'li', (event) => {
       $('#context').hide();
       $('.selected').removeClass('selected');
-      const $this = $(this);
-      if (e.button === 1) {
+      const $this = $(event.currentTarget);
+      if ($this.hasClass('folder')) {
+        showContextMenuFolder($this, event);
+
+        return nothing(event);
+      }
+
+      const url = $this.data('url');
+      showContextMenuBookmark($this, event);
+
+      return nothing(event);
+    });
+
+    bm.on('mousedown', 'li', (event) => {
+      $('#context').hide();
+      $('.selected').removeClass('selected');
+      const $this = $(event.currentTarget);
+      if (event.button === 1) {
         if ($this.hasClass('folder')) {
           openAllBookmarks($this);
-        } else {
-          const url = $this.data('url');
-          chrome.tabs.create({ url });
-          return nothing(e);
+
+          return nothing(event);
         }
+        const url = $this.data('url');
+        chrome.tabs.create({ url });
+
+        return nothing(event);
       }
-      return null;
+
+      return nothing(event);
     });
 
     if (settings.get('remember_scroll_position')) {
@@ -88,6 +107,7 @@ import $ from '../../node_modules/jquery/dist/jquery';
 
     bm.show();
     $('#loading').remove();
+
     $('#edit_cancel').on('click', () => {
       const animationDuration = parseInt(settings.get('animation_duration'), 10);
       $('#overlay').slideUp(animationDuration);
@@ -112,6 +132,7 @@ import $ from '../../node_modules/jquery/dist/jquery';
         }
         $('#context').hide();
       });
+      translateDocument(window.document);
     });
 
   chrome.tabs.query({ active: true }, (tabs) => {
@@ -126,5 +147,4 @@ import $ from '../../node_modules/jquery/dist/jquery';
   if (zoom !== 100) {
     $('html').css('zoom', `${zoom}%`);
   }
-  translateDocument(window.document);
 }(new Settings(), window.chrome));

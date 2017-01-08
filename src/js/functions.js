@@ -5,8 +5,8 @@ export function nothing(e) {
   return false;
 }
 
-export function addEventListenerMulti(el, s, fn) {
-  s.split(' ').forEach(e => el.addEventListener(e, fn, false));
+export function addEventListenerMulti(element, events, callback) {
+  events.split(' ').forEach(event => element.addEventListener(event, callback, false));
 }
 
 export function setBrowserActionIcon(icon) {
