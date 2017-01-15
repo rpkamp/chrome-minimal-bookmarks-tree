@@ -79,15 +79,19 @@ import $ from '../../node_modules/jquery/dist/jquery';
       }
       document.querySelector('#context').style.display = 'none';
       removeClass(document.querySelectorAll('.selected'), 'selected');
-      const $this = $(event.target.parentNode);
       if (/( |^)folder( |$)/.test(event.target.parentNode.className)) {
-        showContextMenuFolder($this, event);
+        showContextMenuFolder(event.target.parentNode, {
+          x: event.pageX,
+          y: event.pageY,
+        });
 
         return nothing(event);
       }
 
-      const url = $this.data('url');
-      showContextMenuBookmark($this, event);
+      showContextMenuBookmark(event.target.parentNode, {
+        x: event.pageX,
+        y: event.pageY,
+      });
 
       return nothing(event);
     });
@@ -106,8 +110,6 @@ import $ from '../../node_modules/jquery/dist/jquery';
         }
         const url = getElementData(event.target.parentNode, 'url');
         chrome.tabs.create({ url });
-
-        return nothing(event);
       }
 
       return nothing(event);

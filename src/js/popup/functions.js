@@ -199,7 +199,7 @@ function contextAction(e, callback) {
   return nothing(e);
 }
 
-function showContextMenu(e) {
+function showContextMenu(offset) {
   const $context = $('#context');
 
   $context.css({
@@ -209,39 +209,39 @@ function showContextMenu(e) {
   const windowHeight = $(window).height();
   const contextHeight = $context.height();
   const scrollTop = $('#wrapper').scrollTop();
-  let top = scrollTop + e.pageY;
+  let top = scrollTop + offset.y;
   if (top > scrollTop + windowHeight - contextHeight) {
     top = scrollTop + windowHeight - contextHeight - 15;
   }
 
   $context.css({
-    left: e.pageX,
+    left: offset.x,
     top,
   });
 }
 
-export function showContextMenuFolder(folder, e) {
+export function showContextMenuFolder(folder, offset) {
   $('#context > li').off('mousedown').hide();
   $('#folder_open_all').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
-      openAllBookmarks(folder[0]);
+      openAllBookmarks(folder);
     });
   });
   $('#folder_delete').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
       if (confirm('Are you sure you want to delete this folder?')) {
         window.chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
-          folder.remove();
+          folder.parentNode.removeChild(folder);
         });
       }
     });
   });
   $('#folder_edit').show().one('mousedown', (subEvent) => {
     const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
-    const itemId = getElementData(folder, data('item-id'));
+    const itemId = getElementData(folder, 'item-id');
     contextAction(subEvent, () => {
       $('#url_row').hide();
-      $('#edit_name').val($('> span', folder).text());
+      $('#edit_name').val($('> span', $(folder)).text());
       $('#overlay').slideDown(animationDuration, () => {
         $('#edit_name').focus();
       });
@@ -249,17 +249,17 @@ export function showContextMenuFolder(folder, e) {
         window.chrome.bookmarks.update(itemId, {
           title: $('#edit_name').val(),
         });
-        $('> span', folder).text($('#edit_name').val());
+        $('> span', $(folder)).text($('#edit_name').val());
         $('.selected').removeClass('selected');
         $('#overlay').slideUp(animationDuration);
       });
     });
   });
-  $(folder).addClass('selected');
-  showContextMenu(e);
+  folder.className += ' selected';
+  showContextMenu(offset);
 }
 
-export function showContextMenuBookmark(bookmark, e) {
+export function showContextMenuBookmark(bookmark, offset) {
   $('#context > li').off('mousedown').hide();
   $('#bookmark_delete').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
@@ -272,11 +272,11 @@ export function showContextMenuBookmark(bookmark, e) {
   });
   $('#bookmark_edit').show().one('mousedown', (subEvent) => {
     const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
-    const itemId = getElementData(bookmark, data('item-id'));
+    const itemId = getElementData(bookmark, 'item-id');
     contextAction(subEvent, () => {
       $('#url_row').show();
-      $('#edit_name').val($('> span', bookmark).text()).focus();
-      $('#edit_url').val(getElementData(bookmark, data('url')));
+      $('#edit_name').val($('> span', $(bookmark)).text()).focus();
+      $('#edit_url').val(getElementData(bookmark, 'url'));
       $('#overlay').slideDown(animationDuration, () => {
         $('#edit_name').focus();
       });
@@ -285,7 +285,7 @@ export function showContextMenuBookmark(bookmark, e) {
           title: $('#edit_name').val(),
           url: $('#edit_url').val(),
         });
-        $('> span', bookmark)
+        $('> span', $(bookmark))
           .text($('#edit_name').val())
           .attr(
             'title',
@@ -296,6 +296,6 @@ export function showContextMenuBookmark(bookmark, e) {
       });
     });
   });
-  $(bookmark).addClass('selected');
-  showContextMenu(e);
+  bookmark.className += ' selected';
+  showContextMenu(offset);
 }
