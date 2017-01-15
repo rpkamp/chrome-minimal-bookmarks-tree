@@ -1,6 +1,12 @@
 import Settings from '../settings';
 import PersistentSet from '../PersistentSet';
-import { nothing, getElementData, setElementData, toggleClass, getAncestorsWithClass } from '../functions';
+import {
+  nothing,
+  getElementData,
+  setElementData,
+  toggleClass,
+  getAncestorsWithClass,
+} from '../functions';
 import $ from '../../../node_modules/jquery/dist/jquery';
 
 const mbtSettings = new Settings();
@@ -117,36 +123,36 @@ function handleToggleFolder(elem) {
   // @TODO: slide
   const elementToToggle = elem.querySelectorAll('.sub')[0];
   elementToToggle.style.display =
-    elementToToggle.style.display == 'block' ? 'none' : 'block';
+    elementToToggle.style.display === 'block' ? 'none' : 'block';
 
-    const id = getElementData(elementToToggle.parentNode, 'item-id');
-    if (mbtSettings.get('close_old_folder')) {
-      const parents = getAncestorsWithClass(elem, 'open');
-      openFolders.clear();
-      if (elementToToggle.style.display === 'block') {
-        openFolders.add(id);
-      }
-      parents.forEach((parent) => {
-        openFolders.add(getElementData(parent, 'item-id'));
-      });
-
-      return;
-    }
-
+  const id = getElementData(elementToToggle.parentNode, 'item-id');
+  if (mbtSettings.get('close_old_folder')) {
+    const parents = getAncestorsWithClass(elem, 'open');
+    openFolders.clear();
     if (elementToToggle.style.display === 'block') {
       openFolders.add(id);
-
-      return;
     }
-
-    openFolders.remove(id);
-    elementToToggle.querySelectorAll('li').forEach((element) => {
-      openFolders.remove(getElementData(element, 'item-id'));
-      element.className = element.className.replace(/(^| )open( |$)/, '');
-      element.querySelectorAll('.sub').forEach((sub) => {
-        sub.style.display = 'none';
-      })
+    parents.forEach((parent) => {
+      openFolders.add(getElementData(parent, 'item-id'));
     });
+
+    return;
+  }
+
+  if (elementToToggle.style.display === 'block') {
+    openFolders.add(id);
+
+    return;
+  }
+
+  openFolders.remove(id);
+  elementToToggle.querySelectorAll('li').forEach((element) => {
+    openFolders.remove(getElementData(element, 'item-id'));
+    element.className = element.className.replace(/(^| )open( |$)/, '');
+    element.querySelectorAll('.sub').forEach((sub) => {
+      sub.style.display = 'none';
+    });
+  });
 }
 
 export function toggleFolder(elem) {
@@ -264,7 +270,7 @@ export function showContextMenuBookmark(bookmark, offset) {
   $('#bookmark_delete').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
       if (confirm('Are you sure you want to delete this bookmark?')) {
-        window.chrome.bookmarks.remove(getElementData(bookmark, data('item-id')), () => {
+        window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
           bookmark.remove();
         });
       }

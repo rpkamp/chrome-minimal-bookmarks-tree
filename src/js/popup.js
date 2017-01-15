@@ -1,4 +1,4 @@
-import { nothing, translateDocument, removeClass, getElementData} from './functions';
+import { nothing, translateDocument, removeClass, getElementData } from './functions';
 import Settings from './settings';
 import {
   buildTree,
@@ -45,7 +45,7 @@ import {
 
     bm.addEventListener('click', (event) => {
       if (!event.target || event.target.nodeName !== 'SPAN') {
-        return;
+        return nothing(event);
       }
       document.querySelector('#context').style.display = 'none';
       removeClass(document.querySelectorAll('.selected'), 'selected');
@@ -74,7 +74,7 @@ import {
 
     bm.addEventListener('contextmenu', (event) => {
       if (!event.target || event.target.nodeName !== 'SPAN') {
-        return;
+        return nothing(event);
       }
       document.querySelector('#context').style.display = 'none';
       removeClass(document.querySelectorAll('.selected'), 'selected');
@@ -97,7 +97,7 @@ import {
 
     bm.addEventListener('mousedown', (event) => {
       if (!event.target || event.target.nodeName !== 'SPAN') {
-        return;
+        return nothing(event);
       }
       document.querySelector('#context').style.display = 'none';
       removeClass(document.querySelectorAll('.selected'), 'selected');
