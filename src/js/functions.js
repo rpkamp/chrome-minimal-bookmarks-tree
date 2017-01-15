@@ -31,3 +31,10 @@ export function translateDocument(document) {
     }
   }
 }
+
+export function removeClass(elements, className) {
+  const regex = new RegExp(`(^| )${className}( |$)`);
+  elements.forEach((element) => {
+    element.className = element.className.replace(regex, '');
+  });
+}

@@ -1,4 +1,4 @@
-import { nothing, translateDocument } from './functions';
+import { nothing, translateDocument, removeClass } from './functions';
 import Settings from './settings';
 import {
   buildTree,
@@ -43,14 +43,13 @@ import $ from '../../node_modules/jquery/dist/jquery';
     }
 
     bm.addEventListener('click', (event) => {
-      console.log(event);
       if (!event.target || event.target.nodeName !== 'SPAN') {
         return;
       }
       document.querySelector('#context').style.display = 'none';
-      $('.selected').removeClass('selected');
+      removeClass(document.querySelectorAll('.selected'), 'selected');
       const $this = $(event.target.parentNode);
-      if ($this.hasClass('folder')) {
+      if (/( |^)folder( |$)/.test(event.target.parentNode.className)) {
         toggleFolder($this);
 
         return nothing(event);
@@ -74,14 +73,13 @@ import $ from '../../node_modules/jquery/dist/jquery';
     });
 
     bm.addEventListener('contextmenu', (event) => {
-      console.log(event);
       if (!event.target || event.target.nodeName !== 'SPAN') {
         return;
       }
       document.querySelector('#context').style.display = 'none';
-      $('.selected').removeClass('selected');
+      removeClass(document.querySelectorAll('.selected'), 'selected');
       const $this = $(event.target.parentNode);
-      if ($this.hasClass('folder')) {
+      if (/( |^)folder( |$)/.test(event.target.parentNode.className)) {
         showContextMenuFolder($this, event);
 
         return nothing(event);
@@ -94,15 +92,14 @@ import $ from '../../node_modules/jquery/dist/jquery';
     });
 
     bm.addEventListener('mousedown', (event) => {
-      console.log(event);
       if (!event.target || event.target.nodeName !== 'SPAN') {
         return;
       }
       document.querySelector('#context').style.display = 'none';
-      $('.selected').removeClass('selected');
+      removeClass(document.querySelectorAll('.selected'), 'selected');
       const $this = $(event.target.parentNode);
       if (event.button === 1) {
-        if ($this.hasClass('folder')) {
+        if (/( |^)folder( |$)/.test(event.target.parentNode)) {
           openAllBookmarks($this);
 
           return nothing(event);
@@ -116,24 +113,32 @@ import $ from '../../node_modules/jquery/dist/jquery';
       return nothing(event);
     });
 
-    if (settings.get('remember_scroll_position')) {
-      const scrolltop = localStorage.getItem('scrolltop');
-      if (scrolltop !== null) {
-        document.querySelector('#wrapper').style.scrollTop = parseInt(scrolltop, 10);
-      }
-    }
-
     bm.style.display = 'block';
     loading.parentNode.removeChild(loading);
 
-    $('#edit_cancel').on('click', () => {
-      const animationDuration = parseInt(settings.get('animation_duration'), 10);
-      $('#overlay').slideUp(animationDuration);
-      $('.selected').removeClass('selected');
+    if (settings.get('remember_scroll_position')) {
+      const scrolltop = localStorage.getItem('scrolltop');
+      if (scrolltop !== null) {
+        setTimeout(() => {
+          document.querySelector('#wrapper').scrollTop = parseInt(scrolltop, 10);
+        }, 100);
+      }
+    }
+
+    document.querySelector('#edit_cancel').addEventListener('click', () => {
+      // $('#overlay').slideUp(animationDuration);
+      document.querySelector('#overlay').style.display = 'none';
+      removeClass(document.querySelectorAll('.selected'), 'selected');
     });
-    $('#edit_name, #edit_url').on('keyup', (e) => {
-      if (e.keyCode === 13) {
-        $('#edit_save').click();
+
+    document.querySelector('#edit_name').addEventListener('keyup', (event) => {
+      if (event.keyCode === 13) {
+        document.querySelector('#edit_save').click();
+      }
+    });
+    document.querySelector('#edit_url').addEventListener('keyup', (event) => {
+      if (event.keyCode === 13) {
+        document.querySelector('#edit_save').click();
       }
     });
   });
@@ -144,7 +149,7 @@ import $ from '../../node_modules/jquery/dist/jquery';
     if (settings.get('remember_scroll_position')) {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
-        localStorage.setItem('scrolltop', document.querySelector('#wrapper').style.scrollTop);
+        localStorage.setItem('scrolltop', document.querySelector('#wrapper').scrollTop);
       }, 100);
     }
     document.querySelector('#context').style.display = 'none';
