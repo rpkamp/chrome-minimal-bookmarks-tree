@@ -1,4 +1,4 @@
-import { nothing, translateDocument, removeClass } from './functions';
+import { nothing, translateDocument, removeClass, getElementData} from './functions';
 import Settings from './settings';
 import {
   buildTree,
@@ -20,13 +20,15 @@ import $ from '../../node_modules/jquery/dist/jquery';
   chrome.bookmarks.getTree((bookmarksTree) => {
     const otherBookmarks = buildTree(
       bookmarksTree[0].children[1],
-      hideEmptyFolders
+      hideEmptyFolders,
+      true
     );
 
     delete bookmarksTree[0].children[1];
     const bookmarksFolder = buildTree(
       bookmarksTree[0],
-      hideEmptyFolders
+      hideEmptyFolders,
+      true
     );
 
     if (bookmarksFolder) {
@@ -48,14 +50,13 @@ import $ from '../../node_modules/jquery/dist/jquery';
       }
       document.querySelector('#context').style.display = 'none';
       removeClass(document.querySelectorAll('.selected'), 'selected');
-      const $this = $(event.target.parentNode);
-      if (/( |^)folder( |$)/.test(event.target.parentNode.className)) {
-        toggleFolder($this);
+      if (/(^| )folder( |$)/.test(event.target.parentNode.className)) {
+        toggleFolder(event.target.parentNode);
 
         return nothing(event);
       }
 
-      const url = $this.data('url');
+      const url = getElementData(event.target.parentNode, 'url');
       if (event.button === 0) {
         if (event.ctrlKey || event.metaKey) {
           chrome.tabs.create({ url, active: false });
@@ -97,14 +98,13 @@ import $ from '../../node_modules/jquery/dist/jquery';
       }
       document.querySelector('#context').style.display = 'none';
       removeClass(document.querySelectorAll('.selected'), 'selected');
-      const $this = $(event.target.parentNode);
       if (event.button === 1) {
         if (/( |^)folder( |$)/.test(event.target.parentNode)) {
-          openAllBookmarks($this);
+          openAllBookmarks(event.target.parentNode);
 
           return nothing(event);
         }
-        const url = $this.data('url');
+        const url = getElementData(event.target.parentNode, 'url');
         chrome.tabs.create({ url });
 
         return nothing(event);

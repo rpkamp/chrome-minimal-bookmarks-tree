@@ -1,6 +1,6 @@
 import Settings from '../settings';
 import PersistentSet from '../PersistentSet';
-import { nothing } from '../functions';
+import { nothing, getElementData, setElementData, toggleClass, getAncestorsWithClass } from '../functions';
 import $ from '../../../node_modules/jquery/dist/jquery';
 
 const mbtSettings = new Settings();
@@ -33,24 +33,22 @@ export function setElementDimensions(tab, selector, preferredWidth, preferredHei
 export function buildTree(
   treeNode,
   hideEmptyFolders,
-  level = 1,
+  topLevel = false,
   visible = true
 ) {
   let wrapper;
-  let fragmentWrapper = false;
   let d;
   let children;
   let isOpen;
 
-  if (level > 1) {
-    wrapper = $('<ul>');
-    wrapper.addClass('sub');
-    if (visible) {
-      wrapper.css('display', 'block');
-    }
-  } else {
+  if (topLevel) {
     wrapper = document.createDocumentFragment();
-    fragmentWrapper = true;
+  } else {
+    wrapper = document.createElement('ul');
+    wrapper.className = 'sub';
+    if (visible) {
+      wrapper.style.display = 'block';
+    }
   }
 
   for (const child of treeNode.children) {
@@ -58,119 +56,115 @@ export function buildTree(
       continue;
     }
     isOpen = openFolders.contains(child.id);
-    d = $('<li>');
+    d = document.createElement('li');
 
     if (child.url) { // url
-      d.data('url', child.url)
-        .data('item-id', child.id)
-        .append(
-          $('<span>', {
-            text: child.title,
-            title: `${child.title} [${child.url}]`,
-          }).css({
-            'background-image': `url("chrome://favicon/${child.url}")`,
-            'background-repeat': 'no-repeat',
-          }).data({
-            url: child.url,
-          })
-        );
+      setElementData(d, 'url', child.url);
+      setElementData(d, 'item-id', child.id);
+
+      const bookmark = document.createElement('span');
+      bookmark.innerText = child.title;
+      bookmark.title = `${child.title} [${child.url}]`;
+      bookmark.style.backgroundImage = `url("chrome://favicon/${child.url}")`;
+      bookmark.style.backgroundRepeat = 'no-repeat';
+      d.appendChild(bookmark);
     } else { // folder
-      d.addClass(`folder${isOpen ? ' open' : ''}`)
-        .append($('<span>', { text: child.title }));
+      d.className += ` folder${isOpen ? ' open' : ''}`;
+
+      const folder = document.createElement('span');
+      folder.innerText = child.title;
+      d.appendChild(folder);
 
       if (hideEmptyFolders && child.children && !child.children.length) {
         // we need to add hidden nodes for these
         // otherwise sorting doesn't work properly
-        d.addClass('hidden');
+        d.className += ' hidden';
       } else {
-        d.data('item-id', child.id)
-          .data('level', level)
-          .attr('id', `tree${child.id}`);
+        setElementData(d, 'item-id', child.id);
+        d.setAttribute('id', `tree${child.id}`);
 
         if (child.children && child.children.length) {
           if (isOpen) {
-            children = buildTree(child, hideEmptyFolders, level + 1, isOpen);
-            d.append(children);
+            children = buildTree(child, hideEmptyFolders, false, isOpen);
+            d.appendChild(children);
           }
-          d.data('loaded', isOpen);
+          setElementData(d, 'loaded', isOpen ? '1' : '0');
         }
       }
     }
-    if (fragmentWrapper) {
-      wrapper.appendChild(d[0]);
-    } else {
-      wrapper.append(d);
-    }
+
+    wrapper.appendChild(d);
   }
   return wrapper;
 }
 
 function handleToggleFolder(elem) {
-  console.log('handleToggleFolder', elem);
   const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
 
   if (mbtSettings.get('close_old_folder')) {
-    $('.folder.open', elem.parent())
-      .not(elem)
-      .removeClass('open')
-      .find('.sub')
-      .stop()
-      .slideUp(animationDuration);
+    elem.parentNode.querySelectorAll('.folder.open').forEach((element) => {
+      if (element !== elem) {
+        element.className = element.className.replace(/(^| )open($| )/, '');
+        element.querySelectorAll('.sub').forEach((elementToHide) => {
+          // @TODO: slide
+          elementToHide.style.display = 'none';
+        });
+      }
+    });
   }
 
-  elem.toggleClass('open');
-  elem.children('.sub')
-    .eq(0)
-    .stop()
-    .slideToggle(animationDuration, function handleToggleSlideCallback() {
-      const id = $(this).parent().data('item-id');
-      if (mbtSettings.get('close_old_folder')) {
-        const parents = elem.parents('.folder.open');
-        openFolders.clear();
-        if ($(this).is(':visible')) {
-          openFolders.add(id);
-        }
-        $(parents).each(function openFolder() {
-          openFolders.add($(this).data('item-id'));
-        });
+  toggleClass(elem, 'open');
+  // @TODO: slide
+  const elementToToggle = elem.querySelectorAll('.sub')[0];
+  elementToToggle.style.display =
+    elementToToggle.style.display == 'block' ? 'none' : 'block';
 
-        return;
-      }
-
-      if ($(this).is(':visible')) {
-        console.log('Folder is visible!');
+    const id = getElementData(elementToToggle.parentNode, 'item-id');
+    if (mbtSettings.get('close_old_folder')) {
+      const parents = getAncestorsWithClass(elem, 'open');
+      openFolders.clear();
+      if (elementToToggle.style.display === 'block') {
         openFolders.add(id);
-
-        return;
       }
-
-      console.log('Folder is not visible!');
-
-      openFolders.remove(id);
-      $(this).find('li').each(function closeFolder() {
-        openFolders.remove($(this).data('item-id'));
-        $(this).removeClass('open');
-        $('.sub', this).hide();
+      parents.forEach((parent) => {
+        openFolders.add(getElementData(parent, 'item-id'));
       });
+
+      return;
+    }
+
+    if (elementToToggle.style.display === 'block') {
+      openFolders.add(id);
+
+      return;
+    }
+
+    openFolders.remove(id);
+    elementToToggle.querySelectorAll('li').forEach((element) => {
+      openFolders.remove(getElementData(element, 'item-id'));
+      element.className = element.className.replace(/(^| )open( |$)/, '');
+      element.querySelectorAll('.sub').forEach((sub) => {
+        sub.style.display = 'none';
+      })
     });
 }
 
 export function toggleFolder(elem) {
-  if (elem.data('loaded')) {
+  if (getElementData(elem, 'loaded') === '1') {
     handleToggleFolder(elem);
 
     return;
   }
 
-  window.chrome.bookmarks.getSubTree(elem.data('item-id'), (data) => {
+  window.chrome.bookmarks.getSubTree(getElementData(elem, 'item-id'), (data) => {
     const t = buildTree(
       data[0],
       mbtSettings.get('hide_empty_folders'),
-      elem.data('level') + 1,
+      false,
       false
     );
-    elem.append(t);
-    elem.data('loaded', true);
+    elem.appendChild(t);
+    setElementData(elem, 'loaded', '1');
     handleToggleFolder(elem);
   });
 }
@@ -193,14 +187,14 @@ function handleOpenAllBookmarks(data) {
 }
 
 export function openAllBookmarks(folder) {
-  window.chrome.bookmarks.getSubTree(folder.data('item-id'), (data) => {
+  window.chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data) => {
     handleOpenAllBookmarks(data[0]);
     window.close();
   });
 }
 
 function contextAction(e, callback) {
-  $('#context').hide();
+  document.querySelector('#context').style.display = 'none';
   callback.call();
   return nothing(e);
 }
@@ -230,13 +224,13 @@ export function showContextMenuFolder(folder, e) {
   $('#context > li').off('mousedown').hide();
   $('#folder_open_all').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
-      openAllBookmarks(folder);
+      openAllBookmarks(folder[0]);
     });
   });
   $('#folder_delete').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
       if (confirm('Are you sure you want to delete this folder?')) {
-        window.chrome.bookmarks.removeTree(folder.data('item-id'), () => {
+        window.chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
           folder.remove();
         });
       }
@@ -244,7 +238,7 @@ export function showContextMenuFolder(folder, e) {
   });
   $('#folder_edit').show().one('mousedown', (subEvent) => {
     const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
-    const itemId = folder.data('item-id');
+    const itemId = getElementData(folder, data('item-id'));
     contextAction(subEvent, () => {
       $('#url_row').hide();
       $('#edit_name').val($('> span', folder).text());
@@ -270,7 +264,7 @@ export function showContextMenuBookmark(bookmark, e) {
   $('#bookmark_delete').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
       if (confirm('Are you sure you want to delete this bookmark?')) {
-        window.chrome.bookmarks.remove(bookmark.data('item-id'), () => {
+        window.chrome.bookmarks.remove(getElementData(bookmark, data('item-id')), () => {
           bookmark.remove();
         });
       }
@@ -278,11 +272,11 @@ export function showContextMenuBookmark(bookmark, e) {
   });
   $('#bookmark_edit').show().one('mousedown', (subEvent) => {
     const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
-    const itemId = bookmark.data('item-id');
+    const itemId = getElementData(bookmark, data('item-id'));
     contextAction(subEvent, () => {
       $('#url_row').show();
       $('#edit_name').val($('> span', bookmark).text()).focus();
-      $('#edit_url').val($(bookmark).data('url'));
+      $('#edit_url').val(getElementData(bookmark, data('url')));
       $('#overlay').slideDown(animationDuration, () => {
         $('#edit_name').focus();
       });

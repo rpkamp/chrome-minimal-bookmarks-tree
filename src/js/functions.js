@@ -33,8 +33,38 @@ export function translateDocument(document) {
 }
 
 export function removeClass(elements, className) {
-  const regex = new RegExp(`(^| )${className}( |$)`);
+  const regex = new RegExp(`(^| )${className}( |$)`, 'g');
   elements.forEach((element) => {
     element.className = element.className.replace(regex, '');
   });
+}
+
+export function toggleClass(element, className) {
+  const regex = new RegExp(`(^| )${className}( |$)`, 'g');
+  if (regex.test(element.className)) {
+    element.className = element.className.replace(regex, '');
+  } else {
+    element.className += ` ${className}`;
+  }
+}
+
+export function getElementData(element, key) {
+  return element.getAttribute(`data-${key}`);
+}
+
+export function setElementData(element, key, value) {
+  element.setAttribute(`data-${key}`, value);
+}
+
+export function getAncestorsWithClass(elem, className) {
+  const parents = [];
+  if (!elem.parentNode) {
+    return parents;
+  }
+  const regex = new RegExp(`(^| )${className}( |$)`, 'g');
+  if (regex.test(elem.parentNode.className)) {
+    parents.push(parent);
+  }
+
+  return parents.concat(getAncestorsWithClass(elem.parentNode));
 }
