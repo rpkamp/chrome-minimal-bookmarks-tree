@@ -14,6 +14,8 @@ import $ from '../../node_modules/jquery/dist/jquery';
   let scrollTimeout;
   const zoom = parseInt(settings.get('zoom'), 10);
   const hideEmptyFolders = settings.get('hide_empty_folders');
+  const loading = document.querySelector('#loading');
+  const bm = document.querySelector('#bookmarks');
 
   chrome.bookmarks.getTree((bookmarksTree) => {
     const otherBookmarks = buildTree(
@@ -27,19 +29,27 @@ import $ from '../../node_modules/jquery/dist/jquery';
       hideEmptyFolders
     );
 
-    const bm = $('#bookmarks');
     if (bookmarksFolder) {
-      bm[0].appendChild(bookmarksFolder);
-      bm.children('li').addClass('nosort');
+      bm.appendChild(bookmarksFolder);
+      bm.childNodes.forEach((item) => {
+        if (item.nodeName !== 'LI') {
+          return;
+        }
+        item.className += ' nosort';
+      });
     }
     if (otherBookmarks) {
-      bm[0].appendChild(otherBookmarks);
+      bm.appendChild(otherBookmarks);
     }
 
-    bm.on('click', 'li', (event) => {
-      $('#context').hide();
+    bm.addEventListener('click', (event) => {
+      console.log(event);
+      if (!event.target || event.target.nodeName !== 'SPAN') {
+        return;
+      }
+      document.querySelector('#context').style.display = 'none';
       $('.selected').removeClass('selected');
-      const $this = $(event.currentTarget);
+      const $this = $(event.target.parentNode);
       if ($this.hasClass('folder')) {
         toggleFolder($this);
 
@@ -63,10 +73,14 @@ import $ from '../../node_modules/jquery/dist/jquery';
       return nothing(event);
     });
 
-    bm.on('contextmenu', 'li', (event) => {
-      $('#context').hide();
+    bm.addEventListener('contextmenu', (event) => {
+      console.log(event);
+      if (!event.target || event.target.nodeName !== 'SPAN') {
+        return;
+      }
+      document.querySelector('#context').style.display = 'none';
       $('.selected').removeClass('selected');
-      const $this = $(event.currentTarget);
+      const $this = $(event.target.parentNode);
       if ($this.hasClass('folder')) {
         showContextMenuFolder($this, event);
 
@@ -79,10 +93,14 @@ import $ from '../../node_modules/jquery/dist/jquery';
       return nothing(event);
     });
 
-    bm.on('mousedown', 'li', (event) => {
-      $('#context').hide();
+    bm.addEventListener('mousedown', (event) => {
+      console.log(event);
+      if (!event.target || event.target.nodeName !== 'SPAN') {
+        return;
+      }
+      document.querySelector('#context').style.display = 'none';
       $('.selected').removeClass('selected');
-      const $this = $(event.currentTarget);
+      const $this = $(event.target.parentNode);
       if (event.button === 1) {
         if ($this.hasClass('folder')) {
           openAllBookmarks($this);
@@ -101,12 +119,12 @@ import $ from '../../node_modules/jquery/dist/jquery';
     if (settings.get('remember_scroll_position')) {
       const scrolltop = localStorage.getItem('scrolltop');
       if (scrolltop !== null) {
-        $('#wrapper').scrollTop(parseInt(scrolltop, 10));
+        document.querySelector('#wrapper').style.scrollTop = parseInt(scrolltop, 10);
       }
     }
 
-    bm.show();
-    $('#loading').remove();
+    bm.style.display = 'block';
+    loading.parentNode.removeChild(loading);
 
     $('#edit_cancel').on('click', () => {
       const animationDuration = parseInt(settings.get('animation_duration'), 10);
@@ -120,20 +138,18 @@ import $ from '../../node_modules/jquery/dist/jquery';
     });
   });
 
-  $(document)
-    .on('contextmenu', () => false)
-    .ready(() => {
-      $('#wrapper').on('scroll', () => {
-        if (settings.get('remember_scroll_position')) {
-          clearTimeout(scrollTimeout);
-          scrollTimeout = setTimeout(() => {
-            localStorage.setItem('scrolltop', $('#wrapper').scrollTop());
-          }, 100);
-        }
-        $('#context').hide();
-      });
-      translateDocument(window.document);
-    });
+  document.addEventListener('contextmenu', () => false);
+
+  document.querySelector('#wrapper').addEventListener('scroll', () => {
+    if (settings.get('remember_scroll_position')) {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        localStorage.setItem('scrolltop', document.querySelector('#wrapper').style.scrollTop);
+      }, 100);
+    }
+    document.querySelector('#context').style.display = 'none';
+  });
+  translateDocument(window.document);
 
   chrome.tabs.query({ active: true }, (tabs) => {
     setElementDimensions(
@@ -145,6 +161,6 @@ import $ from '../../node_modules/jquery/dist/jquery';
     );
   });
   if (zoom !== 100) {
-    $('html').css('zoom', `${zoom}%`);
+    window.querySelector('html').style.zoom = `${zoom}%`;
   }
 }(new Settings(), window.chrome));
