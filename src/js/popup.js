@@ -8,7 +8,6 @@ import {
   showContextMenuBookmark,
   openAllBookmarks,
 } from './popup/functions';
-import $ from '../../node_modules/jquery/dist/jquery';
 
 (function init(settings, chrome) {
   let scrollTimeout;
