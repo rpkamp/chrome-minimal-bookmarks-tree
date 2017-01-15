@@ -166,6 +166,6 @@ import $ from '../../node_modules/jquery/dist/jquery';
     );
   });
   if (zoom !== 100) {
-    window.querySelector('html').style.zoom = `${zoom}%`;
+    document.querySelector('html').style.zoom = `${zoom}%`;
   }
 }(new Settings(), window.chrome));
