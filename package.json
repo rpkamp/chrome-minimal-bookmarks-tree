@@ -31,7 +31,9 @@
     "grunt-contrib-htmlmin": "^2.0.0",
     "grunt-eslint": "^19.0.0",
     "grunt-saucelabs": "^9.0.0",
-    "jquery": "^3.1.1"
+    "grunt-webpack": "^1.0.18",
+    "jquery": "^3.1.1",
+    "webpack": "^1.14.0"
   },
   "scripts": {
     "test": "grunt test"
