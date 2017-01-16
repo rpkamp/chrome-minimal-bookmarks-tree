@@ -22,6 +22,8 @@
     "babel-preset-es2015": "^6.16.0",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^5.2.2",
     "grunt": "^1.0.1",
     "grunt-babel": "^6.0.0",
@@ -32,6 +34,7 @@
     "grunt-eslint": "^19.0.0",
     "grunt-saucelabs": "^9.0.0",
     "grunt-webpack": "^1.0.18",
+    "htmlmin": "0.0.7",
     "jquery": "^3.1.1",
     "webpack": "^1.14.0"
   },
