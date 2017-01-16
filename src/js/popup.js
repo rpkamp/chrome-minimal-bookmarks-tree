@@ -1,4 +1,11 @@
-import { nothing, translateDocument, removeClass, getElementData } from './functions';
+import {
+  nothing,
+  translateDocument,
+  hasClass,
+  addClass,
+  removeClass,
+  getElementData,
+} from './functions';
 import Settings from './settings';
 import {
   buildTree,
@@ -36,7 +43,7 @@ import {
         if (item.nodeName !== 'LI') {
           return;
         }
-        item.className += ' nosort';
+        addClass(item, 'nosort');
       });
     }
     if (otherBookmarks) {
@@ -48,8 +55,10 @@ import {
         return nothing(event);
       }
       document.querySelector('#context').style.display = 'none';
-      removeClass(document.querySelectorAll('.selected'), 'selected');
-      if (/(^| )folder( |$)/.test(event.target.parentNode.className)) {
+      document.querySelectorAll('.selected').forEach((element) => {
+        removeClass(element, 'selected');
+      });
+      if (hasClass(event.target.parentNode, 'folder')) {
         toggleFolder(event.target.parentNode);
 
         return nothing(event);
@@ -77,8 +86,10 @@ import {
         return nothing(event);
       }
       document.querySelector('#context').style.display = 'none';
-      removeClass(document.querySelectorAll('.selected'), 'selected');
-      if (/( |^)folder( |$)/.test(event.target.parentNode.className)) {
+      document.querySelectorAll('.selected').forEach((element) => {
+        removeClass(element, 'selected');
+      });
+      if (hasClass(event.target.parentNode, 'folder')) {
         showContextMenuFolder(event.target.parentNode, {
           x: event.pageX,
           y: event.pageY,
@@ -100,9 +111,11 @@ import {
         return nothing(event);
       }
       document.querySelector('#context').style.display = 'none';
-      removeClass(document.querySelectorAll('.selected'), 'selected');
+      document.querySelectorAll('.selected').forEach((element) => {
+        removeClass(element, 'selected');
+      });
       if (event.button === 1) {
-        if (/( |^)folder( |$)/.test(event.target.parentNode)) {
+        if (hasClass(event.target.parentNode, 'folder')) {
           openAllBookmarks(event.target.parentNode);
 
           return nothing(event);
@@ -129,7 +142,9 @@ import {
     document.querySelector('#edit_cancel').addEventListener('click', () => {
       // $('#overlay').slideUp(animationDuration);
       document.querySelector('#overlay').style.display = 'none';
-      removeClass(document.querySelectorAll('.selected'), 'selected');
+      document.querySelectorAll('.selected').forEach((element) => {
+        removeClass(element, 'selected');
+      });
     });
 
     document.querySelector('#edit_name').addEventListener('keyup', (event) => {

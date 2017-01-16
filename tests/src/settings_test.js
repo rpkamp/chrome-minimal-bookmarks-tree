@@ -1,11 +1,13 @@
+import Settings from '../../src/js/settings';
+
 QUnit.test("Simple set and get", function (assert) {
-  var settings = new Settings();
+  const settings = new Settings();
   settings.set("test", 1);
   assert.equal(settings.get("test"), 1)
 });
 
 QUnit.test("Set multiple", function (assert) {
-  var settings = new Settings();
+  const settings = new Settings();
   settings.set("foo", 1);
   settings.set("bar", 2);
   settings.set("baz", 3);
@@ -16,18 +18,18 @@ QUnit.test("Set multiple", function (assert) {
 
 localStorage.clear();
 QUnit.test("Set in localStorage", function (assert) {
-  var settings = new Settings();
+  const settings = new Settings();
   settings.set("foo", 1);
   settings.cache = {};
   assert.equal(settings.get("foo"), 1);
 });
 
 QUnit.test("Get from default", function (assert) {
-  var settings = new Settings({ "foo": 1 });
+  const settings = new Settings({ "foo": 1 });
   assert.equal(settings.get("foo"), 1);
 });
 
 QUnit.test("Get null if not set", function (assert) {
-  var settings = new Settings();
+  const settings = new Settings();
   assert.equal(settings.get("not-set"), null);
 });

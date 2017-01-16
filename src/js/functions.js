@@ -32,19 +32,29 @@ export function translateDocument(document) {
   }
 }
 
-export function removeClass(elements, className) {
-  const regex = new RegExp(`(^| )${className}( |$)`, 'g');
-  elements.forEach((element) => {
-    element.className = element.className.replace(regex, '');
-  });
+export function hasClass(element, className) {
+  const regex = new RegExp(`(^| )${className}( |$)`);
+  return regex.test(element.className);
+}
+
+export function addClass(element, className) {
+  if (element.className === '') {
+    element.className = className;
+  } else {
+    element.className += ` ${className}`;
+  }
+}
+
+export function removeClass(element, className) {
+  const regex = new RegExp(`\\b${className}( |$)`, 'g');
+  element.className = element.className.replace(regex, '').trimRight();
 }
 
 export function toggleClass(element, className) {
-  const regex = new RegExp(`(^| )${className}( |$)`, 'g');
-  if (regex.test(element.className)) {
-    element.className = element.className.replace(regex, '');
+  if (hasClass(element, className)) {
+    removeClass(element, className);
   } else {
-    element.className += ` ${className}`;
+    addClass(element, className);
   }
 }
 
@@ -58,11 +68,10 @@ export function setElementData(element, key, value) {
 
 export function getAncestorsWithClass(elem, className) {
   const parents = [];
-  if (!elem.parentNode) {
+  if (!elem.parentNode || !elem.parentNode.className) {
     return parents;
   }
-  const regex = new RegExp(`(^| )${className}( |$)`, 'g');
-  if (regex.test(elem.parentNode.className)) {
+  if (hasClass(elem.parentNode, className)) {
     parents.push(parent);
   }
 

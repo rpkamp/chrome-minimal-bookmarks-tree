@@ -1,3 +1,4 @@
 /dist/
 /mbt.zip
 /node_modules
+/tests/*_test.js

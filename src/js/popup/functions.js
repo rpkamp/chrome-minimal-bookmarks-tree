@@ -6,6 +6,8 @@ import {
   setElementData,
   toggleClass,
   getAncestorsWithClass,
+  addClass,
+  removeClass,
 } from '../functions';
 import $ from '../../../node_modules/jquery/dist/jquery';
 
@@ -75,7 +77,10 @@ export function buildTree(
       bookmark.style.backgroundRepeat = 'no-repeat';
       d.appendChild(bookmark);
     } else { // folder
-      d.className += ` folder${isOpen ? ' open' : ''}`;
+      addClass(d, 'folder');
+      if (isOpen) {
+        addClass(d, 'open');
+      }
 
       const folder = document.createElement('span');
       folder.innerText = child.title;
@@ -84,7 +89,7 @@ export function buildTree(
       if (hideEmptyFolders && child.children && !child.children.length) {
         // we need to add hidden nodes for these
         // otherwise sorting doesn't work properly
-        d.className += ' hidden';
+        addClass(d, 'hidden');
       } else {
         setElementData(d, 'item-id', child.id);
         d.setAttribute('id', `tree${child.id}`);
@@ -104,14 +109,12 @@ export function buildTree(
   return wrapper;
 }
 
-function handleToggleFolder(elem) {
-  const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
-
+function handleToggleFolder(element) {
   if (mbtSettings.get('close_old_folder')) {
-    elem.parentNode.querySelectorAll('.folder.open').forEach((element) => {
-      if (element !== elem) {
-        element.className = element.className.replace(/(^| )open($| )/, '');
-        element.querySelectorAll('.sub').forEach((elementToHide) => {
+    element.parentNode.querySelectorAll('.folder.open').forEach((openFolderElement) => {
+      if (openFolderElement !== element) {
+        removeClass(openFolderElement, 'open');
+        openFolderElement.querySelectorAll('.sub').forEach((elementToHide) => {
           // @TODO: slide
           elementToHide.style.display = 'none';
         });
@@ -119,19 +122,20 @@ function handleToggleFolder(elem) {
     });
   }
 
-  toggleClass(elem, 'open');
+  toggleClass(element, 'open');
   // @TODO: slide
-  const elementToToggle = elem.querySelectorAll('.sub')[0];
+  const elementToToggle = element.querySelectorAll('.sub')[0];
   elementToToggle.style.display =
     elementToToggle.style.display === 'block' ? 'none' : 'block';
 
   const id = getElementData(elementToToggle.parentNode, 'item-id');
   if (mbtSettings.get('close_old_folder')) {
-    const parents = getAncestorsWithClass(elem, 'open');
+    const parents = getAncestorsWithClass(element, 'open');
     openFolders.clear();
     if (elementToToggle.style.display === 'block') {
       openFolders.add(id);
     }
+    console.log(parents);
     parents.forEach((parent) => {
       openFolders.add(getElementData(parent, 'item-id'));
     });
@@ -261,7 +265,7 @@ export function showContextMenuFolder(folder, offset) {
       });
     });
   });
-  folder.className += ' selected';
+  addClass(folder, 'selected');
   showContextMenu(offset);
 }
 
@@ -302,6 +306,6 @@ export function showContextMenuBookmark(bookmark, offset) {
       });
     });
   });
-  bookmark.className += ' selected';
+  addClass(bookmark, 'selected');
   showContextMenu(offset);
 }

@@ -5,17 +5,25 @@ module.exports = function (grunt) {
         platform: "linux",
         version: "48.0"
     }, {
+        browserName: "googlechrome",
+        platform: "linux",
+        version: "47.0"
+    }, {
         browserName: "chrome",
         platform: "Windows 10",
         version: "beta"
     }, {
         browserName: "chrome",
         platform: "Windows 10",
-        version: "50.0"
+        version: "55.0"
     }, {
         browserName: "chrome",
         platform: "Windows 10",
-        version: "49.0"
+        version: "54.0"
+    }, {
+        browserName: "chrome",
+        platform: "Windows 10",
+        version: "53.0"
     }, {
         browserName: "chrome",
         platform: "OS X 10.11",
@@ -23,11 +31,15 @@ module.exports = function (grunt) {
     }, {
         browserName: "chrome",
         platform: "OS X 10.11",
-        version: "50.0"
+        version: "55.0"
     }, {
         browserName: "chrome",
         platform: "OS X 10.11",
-        version: "49.0"
+        version: "54.0"
+    }, {
+        browserName: "chrome",
+        platform: "OS X 10.11",
+        version: "53.0"
     }];
 
     grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -75,10 +87,31 @@ module.exports = function (grunt) {
                 entry: {
                     background: './src/js/background.js',
                     options: './src/js/options.js',
-                    popup: './src/js/popup.js'
+                    popup: './src/js/popup.js',
                 },
                 output: {
                     path: './dist/js',
+                    filename: '[name].js'
+                },
+                module: {
+                    loaders: [{
+                        test: /\.js$/,
+                        exclude: /node_modules/,
+                        loader: 'babel-loader'
+                    }]
+                },
+                resolve: {
+                    extensions: ['', '.js']
+                }
+            },
+            buildTests: {
+                progress: true,
+                entry: {
+                    settings_test: './tests/src/settings_test.js',
+                    class_test: './tests/src/class_test.js',
+                },
+                output: {
+                    path: './tests/',
                     filename: '[name].js'
                 },
                 module: {
@@ -129,7 +162,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('build', ['webpack', 'copy', 'htmlmin', 'cssmin']);
-    grunt.registerTask('test', ['connect', 'saucelabs-qunit']);
+    grunt.registerTask('build-tests', ['webpack:buildTests']);
+    grunt.registerTask('test', ['build-tests', 'connect', 'saucelabs-qunit']);
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('default', 'build');
 };
