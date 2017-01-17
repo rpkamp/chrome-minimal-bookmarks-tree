@@ -1,3 +1,5 @@
+/* global localStorage */
+
 export default class Settings {
   constructor() {
     this.cache = {};

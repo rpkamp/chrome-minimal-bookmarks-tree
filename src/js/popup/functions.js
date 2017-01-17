@@ -1,3 +1,5 @@
+/* global window, document */
+
 import Settings from '../settings';
 import PersistentSet from '../PersistentSet';
 import {
@@ -19,12 +21,12 @@ export function setElementDimensions(tab, selector, preferredWidth, preferredHei
 
   const width = scale * Math.min(
     tab.width - 100,
-    preferredWidth
+    preferredWidth,
   );
 
   const height = scale * Math.min(
     tab.height - 100,
-    preferredHeight
+    preferredHeight,
   );
 
   const elem = document.querySelector(selector);
@@ -42,7 +44,7 @@ export function buildTree(
   treeNode,
   hideEmptyFolders,
   topLevel = false,
-  visible = true
+  visible = true,
 ) {
   let wrapper;
   let d;
@@ -59,9 +61,9 @@ export function buildTree(
     }
   }
 
-  for (const child of treeNode.children) {
+  treeNode.children.forEach((child) => {
     if (typeof child === 'undefined') {
-      continue;
+      return;
     }
     isOpen = openFolders.contains(child.id);
     d = document.createElement('li');
@@ -105,7 +107,8 @@ export function buildTree(
     }
 
     wrapper.appendChild(d);
-  }
+  });
+
   return wrapper;
 }
 
@@ -116,6 +119,7 @@ function handleToggleFolder(element) {
         removeClass(openFolderElement, 'open');
         openFolderElement.querySelectorAll('.sub').forEach((elementToHide) => {
           // @TODO: slide
+          // eslint-disable-next-line no-param-reassign
           elementToHide.style.display = 'none';
         });
       }
@@ -135,7 +139,6 @@ function handleToggleFolder(element) {
     if (elementToToggle.style.display === 'block') {
       openFolders.add(id);
     }
-    console.log(parents);
     parents.forEach((parent) => {
       openFolders.add(getElementData(parent, 'item-id'));
     });
@@ -150,10 +153,12 @@ function handleToggleFolder(element) {
   }
 
   openFolders.remove(id);
-  elementToToggle.querySelectorAll('li').forEach((element) => {
-    openFolders.remove(getElementData(element, 'item-id'));
-    element.className = element.className.replace(/(^| )open( |$)/, '');
-    element.querySelectorAll('.sub').forEach((sub) => {
+  elementToToggle.querySelectorAll('li').forEach((folderToHide) => {
+    openFolders.remove(getElementData(folderToHide, 'item-id'));
+    // eslint-disable-next-line no-param-reassign
+    folderToHide.className = folderToHide.className.replace(/(^| )open( |$)/, '');
+    folderToHide.querySelectorAll('.sub').forEach((sub) => {
+      // eslint-disable-next-line no-param-reassign
       sub.style.display = 'none';
     });
   });
@@ -171,7 +176,7 @@ export function toggleFolder(elem) {
       data[0],
       mbtSettings.get('hide_empty_folders'),
       false,
-      false
+      false,
     );
     elem.appendChild(t);
     setElementData(elem, 'loaded', '1');
@@ -190,9 +195,9 @@ function handleOpenAllBookmarks(data) {
   }
 
   if (data.children) {
-    for (const child of data.children) {
+    data.children.forEach((child) => {
       handleOpenAllBookmarks(child);
-    }
+    });
   }
 }
 
@@ -219,14 +224,15 @@ function showContextMenu(offset) {
   const windowHeight = $(window).height();
   const contextHeight = $context.height();
   const scrollTop = $('#wrapper').scrollTop();
-  let top = scrollTop + offset.y;
-  if (top > scrollTop + windowHeight - contextHeight) {
-    top = scrollTop + windowHeight - contextHeight - 15;
+  let topY = scrollTop + offset.y;
+  const bottomY = scrollTop + windowHeight;
+  if (topY > bottomY - contextHeight) {
+    topY = bottomY - contextHeight - 15;
   }
 
   $context.css({
     left: offset.x,
-    top,
+    topY,
   });
 }
 
@@ -239,7 +245,7 @@ export function showContextMenuFolder(folder, offset) {
   });
   $('#folder_delete').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
-      if (confirm('Are you sure you want to delete this folder?')) {
+      if (window.confirm('Are you sure you want to delete this folder?')) {
         window.chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
           folder.parentNode.removeChild(folder);
         });
@@ -273,7 +279,7 @@ export function showContextMenuBookmark(bookmark, offset) {
   $('#context > li').off('mousedown').hide();
   $('#bookmark_delete').show().one('mousedown', (subEvent) => {
     contextAction(subEvent, () => {
-      if (confirm('Are you sure you want to delete this bookmark?')) {
+      if (window.confirm('Are you sure you want to delete this bookmark?')) {
         window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
           bookmark.remove();
         });
@@ -299,7 +305,7 @@ export function showContextMenuBookmark(bookmark, offset) {
           .text($('#edit_name').val())
           .attr(
             'title',
-            `${$('#edit_name').val()} [${$('#edit_url').val()}]`
+            `${$('#edit_name').val()} [${$('#edit_url').val()}]`,
           );
         $('.selected').removeClass('selected');
         $('#overlay').slideUp(animationDuration);

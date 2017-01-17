@@ -1,3 +1,5 @@
+/* global localStorage */
+
 export default class PersistentSet {
   constructor(key) {
     this.key = key;

@@ -1,3 +1,5 @@
+/* global window,document,localStorage */
+
 import {
   nothing,
   translateDocument,
@@ -27,14 +29,15 @@ import {
     const otherBookmarks = buildTree(
       bookmarksTree[0].children[1],
       hideEmptyFolders,
-      true
+      true,
     );
 
+    // eslint-disable-next-line no-param-reassign
     delete bookmarksTree[0].children[1];
     const bookmarksFolder = buildTree(
       bookmarksTree[0],
       hideEmptyFolders,
-      true
+      true,
     );
 
     if (bookmarksFolder) {
@@ -178,7 +181,7 @@ import {
       '#wrapper',
       parseInt(settings.get('width'), 10),
       parseInt(settings.get('height'), 10),
-      zoom
+      zoom,
     );
   });
   if (zoom !== 100) {

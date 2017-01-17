@@ -1,3 +1,5 @@
+/* global window */
+
 export function nothing(e) {
   e.preventDefault();
   e.stopPropagation();
@@ -23,13 +25,14 @@ export function setBrowserActionIcon(icon) {
 
 export function translateDocument(document) {
   const translatableElements = document.querySelectorAll('[data-i18n-key]');
-  for (const translatableElement of translatableElements) {
+  translatableElements.forEach((translatableElement) => {
     const key = translatableElement.getAttribute('data-i18n-key');
     const translation = window.chrome.i18n.getMessage(key);
     if (translation !== '') {
+      // eslint-disable-next-line no-param-reassign
       translatableElement.innerHTML = translation;
     }
-  }
+  });
 }
 
 export function hasClass(element, className) {
@@ -39,14 +42,17 @@ export function hasClass(element, className) {
 
 export function addClass(element, className) {
   if (element.className === '') {
+    // eslint-disable-next-line no-param-reassign
     element.className = className;
   } else {
+    // eslint-disable-next-line no-param-reassign
     element.className += ` ${className}`;
   }
 }
 
 export function removeClass(element, className) {
   const regex = new RegExp(`\\b${className}( |$)`, 'g');
+  // eslint-disable-next-line no-param-reassign
   element.className = element.className.replace(regex, '').trimRight();
 }
 
@@ -72,7 +78,7 @@ export function getAncestorsWithClass(elem, className) {
     return parents;
   }
   if (hasClass(elem.parentNode, className)) {
-    parents.push(parent);
+    parents.push(elem);
   }
 
   return parents.concat(getAncestorsWithClass(elem.parentNode));
