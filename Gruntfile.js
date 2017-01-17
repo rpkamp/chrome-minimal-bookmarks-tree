@@ -163,7 +163,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', ['webpack', 'copy', 'htmlmin', 'cssmin']);
     grunt.registerTask('build-tests', ['webpack:buildTests']);
-    grunt.registerTask('test', ['build-tests', 'connect', 'saucelabs-qunit']);
+    grunt.registerTask('test', ['lint', 'build-tests', 'connect', 'saucelabs-qunit']);
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('default', 'build');
 };
