@@ -49,11 +49,26 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     grunt.initConfig({
         pkg: '<json:package.json>',
         meta: {
             banner: '/*! <%= pkg.name %> */'
+        },
+        compress: {
+            main: {
+                options: {
+                    archive: 'mbt.zip',
+                },
+                files: [
+                    {
+                        cwd: 'dist/',
+                        src: '**',
+                        expand: true,
+                    }
+                ]
+            }
         },
         connect: {
             server: {
@@ -161,6 +176,7 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('pack', ['test', 'build', 'compress']);
     grunt.registerTask('build', ['webpack', 'copy', 'htmlmin', 'cssmin']);
     grunt.registerTask('build-tests', ['webpack:buildTests']);
     grunt.registerTask('test', ['lint', 'build-tests', 'connect', 'saucelabs-qunit']);
