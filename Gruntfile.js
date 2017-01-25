@@ -126,12 +126,11 @@ module.exports = function (grunt) {
       buildTests: {
         progress: true,
         entry: {
-          settings_test: './tests/src/settings_test.js',
-          class_test: './tests/src/class_test.js',
+          settings_test: './tests/src/tests.js',
         },
         output: {
           path: './tests/',
-          filename: '[name].js'
+          filename: 'tests.js'
         },
         module: {
           loaders: [{
