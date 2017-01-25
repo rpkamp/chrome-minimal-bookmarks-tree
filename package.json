@@ -27,6 +27,7 @@
     "eslint-plugin-react": "^6.9.0",
     "grunt": "^1.0.1",
     "grunt-babel": "^6.0.0",
+    "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-compress": "^1.4.1",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-copy": "^1.0.0",
