@@ -38,6 +38,7 @@
     "grunt-webpack": "^1.0.18",
     "htmlmin": "0.0.7",
     "jquery": "^3.1.1",
+    "qunit": "^0.9.1",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
   },
