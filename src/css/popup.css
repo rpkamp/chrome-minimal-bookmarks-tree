@@ -125,7 +125,7 @@ li {
     display: none;
 }
 
-#edit_panel {
+#overlayContents {
     position: absolute;
     width: 100%;
     left: 0;
@@ -136,11 +136,15 @@ li {
     z-index: 2;
 }
 
-#edit_panel .row {
+#overlayContents .row {
     clear: both;
 }
 
-#edit_panel .row label {
+#overlayContents .question {
+    margin-bottom: 20px;
+}
+
+#overlayContents .row label {
     width: 60px;
     font-weight: bold;
     text-align: right;
@@ -148,14 +152,14 @@ li {
     padding-top: 5px;
 }
 
-#edit_panel .row input {
+#overlayContents .row input {
     display: block;
     border: 1px solid #ccc;
     padding: 5px 10px;
     width: calc(100% - 50px);
 }
 
-#edit_panel .actions {
+#overlayContents .actions {
 }
 
 .btn {

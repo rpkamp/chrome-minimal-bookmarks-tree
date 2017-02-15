@@ -236,11 +236,31 @@ function showContextMenu(contextMenu, offset) {
   contextMenu.style.top = `${topY}px`;
 }
 
-function closeEditor(editor) {
-  editor.parentNode.removeChild(editor);
+function closePopup(contents) {
+  contents.parentNode.removeChild(contents);
   // @TODO slide?
   removeClass(document.querySelector('.selected'), 'selected');
   document.querySelector('#overlay').style.display = 'none';
+}
+
+function showConfirm(question, confirmationCallback) {
+  const confirmDialog = document.createElement('div');
+  confirmDialog.innerHTML = document.querySelector('#confirmTemplate').innerHTML;
+  confirmDialog.setAttribute('id', 'overlayContents');
+
+  confirmDialog.querySelector('.question').innerHTML = question;
+
+  confirmDialog.querySelector('.confirm').addEventListener('click', () => {
+    confirmationCallback();
+    closePopup(confirmDialog);
+  });
+
+  confirmDialog.querySelector('.cancel').addEventListener('click', () => {
+    closePopup(confirmDialog);
+  });
+
+  document.querySelector('#overlay').appendChild(confirmDialog);
+  document.querySelector('#overlay').style.display = 'block';
 }
 
 export function showContextMenuFolder(folder, offset) {
@@ -257,11 +277,11 @@ export function showContextMenuFolder(folder, offset) {
   });
   contextMenu.querySelector('.delete').addEventListener('click', (event) => {
     contextAction(event, () => {
-      if (window.confirm('Are you sure you want to delete this folder?')) {
+      showConfirm(`${window.chrome.i18n.getMessage('deleteBookmark')}<br /><br />${folder.querySelector('span').innerText}`, () => {
         window.chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
           folder.parentNode.removeChild(folder);
         });
-      }
+      });
     });
   });
   contextMenu.querySelector('.edit').addEventListener('click', (subEvent) => {
@@ -269,14 +289,14 @@ export function showContextMenuFolder(folder, offset) {
     contextAction(subEvent, () => {
       const editor = document.createElement('div');
       editor.innerHTML = document.querySelector('#editFolderTemplate').innerHTML;
-      editor.setAttribute('id', 'edit_panel');
+      editor.setAttribute('id', 'overlayContents');
 
       document.querySelector('#overlay').appendChild(editor);
 
       document.querySelector('#folderName').value = folder.querySelector('span').innerText;
 
       document.querySelector('.cancel').addEventListener('click', () => {
-        closeEditor(editor);
+        closePopup(editor);
       });
       document.querySelector('.save').addEventListener('click', () => {
         window.chrome.bookmarks.update(itemId, {
@@ -284,7 +304,7 @@ export function showContextMenuFolder(folder, offset) {
         });
         folder.querySelector('span').innerText = document.querySelector('#folderName').value;
 
-        closeEditor(editor);
+        closePopup(editor);
       });
 
       // @TODO: slide?
@@ -311,11 +331,11 @@ export function showContextMenuBookmark(bookmark, offset) {
 
   contextMenu.querySelector('.delete').addEventListener('click', (event) => {
     contextAction(event, () => {
-      if (window.confirm('Are you sure you want to delete this bookmark?')) {
+      showConfirm(`${window.chrome.i18n.getMessage('deleteBookmark')}<br /><br />${bookmark.querySelector('span').innerText}`, () => {
         window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
           bookmark.parentNode.removeChild(bookmark);
         });
-      }
+      });
     });
   });
   contextMenu.querySelector('.edit').addEventListener('click', (event) => {
@@ -323,7 +343,7 @@ export function showContextMenuBookmark(bookmark, offset) {
     contextAction(event, () => {
       const editor = document.createElement('div');
       editor.innerHTML = document.querySelector('#editBookmarkTemplate').innerHTML;
-      editor.setAttribute('id', 'edit_panel');
+      editor.setAttribute('id', 'overlayContents');
 
       document.querySelector('#overlay').appendChild(editor);
 
@@ -331,7 +351,7 @@ export function showContextMenuBookmark(bookmark, offset) {
       document.querySelector('#bookmarkUrl').value = getElementData(bookmark, 'url');
 
       document.querySelector('.cancel').addEventListener('click', () => {
-        closeEditor(editor);
+        closePopup(editor);
       });
       document.querySelector('.save').addEventListener('click', () => {
         const span = bookmark.querySelector('span');
@@ -340,7 +360,7 @@ export function showContextMenuBookmark(bookmark, offset) {
 
         window.chrome.bookmarks.update(itemId, {
           title: name,
-          url: url,
+          url,
         });
 
         span.innerText = name;
@@ -350,19 +370,19 @@ export function showContextMenuBookmark(bookmark, offset) {
         );
         setElementData(bookmark, 'url', url);
 
-        closeEditor(editor);
+        closePopup(editor);
       });
 
       // @TODO: slide?
       document.querySelector('#overlay').style.display = 'block';
-      document.querySelector('#bookmarkName').addEventListener('keyup', (event) => {
-        if (event.keyCode !== 13) {
+      document.querySelector('#bookmarkName').addEventListener('keyup', (keyEvent) => {
+        if (keyEvent.keyCode !== 13) {
           return;
         }
         document.querySelector('.save').click();
       });
-      document.querySelector('#bookmarkUrl').addEventListener('keyup', (event) => {
-        if (event.keyCode !== 13) {
+      document.querySelector('#bookmarkUrl').addEventListener('keyup', (keyEvent) => {
+        if (keyEvent.keyCode !== 13) {
           return;
         }
         document.querySelector('.save').click();

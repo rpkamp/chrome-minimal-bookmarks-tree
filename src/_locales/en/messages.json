@@ -118,5 +118,17 @@
     },
     "bookmarkEditCancel": {
         "message": "Cancel"
+    },
+    "confirmationConfirm": {
+        "message": "Yes"
+    },
+    "confirmationDeny": {
+        "message": "Never mind"
+    },
+    "deleteBookmark": {
+        "message": "Are you sure you want to delete this bookmark?"
+    },
+    "deleteFolder": {
+        "message": "Are you sure you want to delete this folder?"
     }
 }
