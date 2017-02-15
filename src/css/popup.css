@@ -11,7 +11,7 @@ body {
 }
 
 #wrapper {
-	min-height: 50px;
+	min-height: 150px;
 	overflow-y: auto;
 	overflow-x: hidden;
 	position: relative;
@@ -77,13 +77,12 @@ li {
 	display: none;
 }
 
-#context, #context li {
+.contextMenu, .contextMenu li {
 	margin: 0;
 	padding: 0;
 }
 
-#context {
-	display: none;
+.contextMenu {
 	position: absolute;
 	background: #eee;
 	border: #ccc;
@@ -93,12 +92,12 @@ li {
 	cursor: pointer;
 }
 
-#context li {
+.contextMenu li {
 	border-radius: 5px;
 	padding: 3px 5px;
 }
 
-#context li:hover {
+.contextMenu li:hover {
 	background: #aaa;
 }
 
@@ -133,7 +132,7 @@ li {
     top: 0;
     background: rgba(200, 200, 200, 0.95);
     border-bottom: 1px solid #ccc;
-    padding: 5px 10px;
+    padding: 10px;
     z-index: 2;
 }
 
@@ -142,7 +141,6 @@ li {
 }
 
 #edit_panel .row label {
-    float: left;
     width: 60px;
     font-weight: bold;
     text-align: right;
@@ -151,13 +149,13 @@ li {
 }
 
 #edit_panel .row input {
+    display: block;
     border: 1px solid #ccc;
-    padding: 2px 5px;
-    width: 50%;
+    padding: 5px 10px;
+    width: calc(100% - 50px);
 }
 
 #edit_panel .actions {
-    margin-left: 70px;
 }
 
 .btn {

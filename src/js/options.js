@@ -23,7 +23,6 @@ import {
   const dropdowns = window.document.querySelectorAll('select');
   dropdowns.forEach((dropdown) => {
     const id = dropdown.getAttribute('id');
-    // eslint-disable-next-line no-param-reassign
     dropdown.value = settings.get(id);
     addEventListenerMulti(dropdown, 'change click keyup', () => {
       settings.set(id, dropdown.value);
@@ -36,18 +35,15 @@ import {
   const numericInputs = window.document.querySelectorAll('input[type="number"]');
   numericInputs.forEach((numericInput) => {
     const id = numericInput.getAttribute('id');
-    // eslint-disable-next-line no-param-reassign
     numericInput.value = settings.get(id);
     addEventListenerMulti(numericInput, 'change keyup', () => {
       const value = parseInt(numericInput.value, 10);
       const minValue = parseInt(numericInput.getAttribute('min'), 10);
       const maxValue = parseInt(numericInput.getAttribute('max'), 10);
       if (isNaN(value) || value < minValue || value > maxValue) {
-        // eslint-disable-next-line no-param-reassign
         numericInput.style.border = '1px solid red';
         return;
       }
-      // eslint-disable-next-line no-param-reassign
       numericInput.style.border = '';
       settings.set(id, numericInput.value);
     });

@@ -11,7 +11,6 @@ import {
   addClass,
   removeClass,
 } from '../functions';
-import $ from '../../../node_modules/jquery/dist/jquery';
 
 const mbtSettings = new Settings();
 const openFolders = new PersistentSet('openfolders');
@@ -119,7 +118,6 @@ function handleToggleFolder(element) {
         removeClass(openFolderElement, 'open');
         openFolderElement.querySelectorAll('.sub').forEach((elementToHide) => {
           // @TODO: slide
-          // eslint-disable-next-line no-param-reassign
           elementToHide.style.display = 'none';
         });
       }
@@ -155,10 +153,8 @@ function handleToggleFolder(element) {
   openFolders.remove(id);
   elementToToggle.querySelectorAll('li').forEach((folderToHide) => {
     openFolders.remove(getElementData(folderToHide, 'item-id'));
-    // eslint-disable-next-line no-param-reassign
-    folderToHide.className = folderToHide.className.replace(/(^| )open( |$)/, '');
+    removeClass(folderToHide, 'open');
     folderToHide.querySelectorAll('.sub').forEach((sub) => {
-      // eslint-disable-next-line no-param-reassign
       sub.style.display = 'none';
     });
   });
@@ -208,43 +204,59 @@ export function openAllBookmarks(folder) {
   });
 }
 
+export function removeContextMenu() {
+  const contextMenu = document.querySelector('#contextMenu');
+  if (!contextMenu) {
+    return;
+  }
+  contextMenu.parentNode.removeChild(contextMenu);
+}
+
 function contextAction(e, callback) {
-  document.querySelector('#context').style.display = 'none';
+  removeContextMenu();
   callback.call();
   return nothing(e);
 }
 
-function showContextMenu(offset) {
-  const $context = $('#context');
+function showContextMenu(contextMenu, offset) {
+  contextMenu.style.left = -10000;
 
-  $context.css({
-    left: -10000,
-  }).show(); // draw offscreen for dimensions
+  document.querySelector('body').appendChild(contextMenu);
 
-  const windowHeight = $(window).height();
-  const contextHeight = $context.height();
-  const scrollTop = $('#wrapper').scrollTop();
+  const windowHeight = window.innerHeight;
+  const contextHeight = contextMenu.getBoundingClientRect().height;
+  const scrollTop = document.querySelector('#wrapper').scrollTop;
   let topY = scrollTop + offset.y;
   const bottomY = scrollTop + windowHeight;
   if (topY > bottomY - contextHeight) {
     topY = bottomY - contextHeight - 15;
   }
 
-  $context.css({
-    left: offset.x,
-    topY,
-  });
+  contextMenu.style.left = `${offset.x}px`;
+  contextMenu.style.top = `${topY}px`;
+}
+
+function closeEditor(editor) {
+  editor.parentNode.removeChild(editor);
+  // @TODO slide?
+  removeClass(document.querySelector('.selected'), 'selected');
+  document.querySelector('#overlay').style.display = 'none';
 }
 
 export function showContextMenuFolder(folder, offset) {
-  $('#context > li').off('mousedown').hide();
-  $('#folder_open_all').show().one('mousedown', (subEvent) => {
-    contextAction(subEvent, () => {
+  removeContextMenu();
+  const contextMenu = document.createElement('ul');
+  contextMenu.className = 'contextMenu';
+  contextMenu.innerHTML = document.querySelector('#folderContextMenuTemplate').innerHTML;
+  contextMenu.setAttribute('id', 'contextMenu');
+
+  contextMenu.querySelector('.openAll').addEventListener('click', (event) => {
+    contextAction(event, () => {
       openAllBookmarks(folder);
     });
   });
-  $('#folder_delete').show().one('mousedown', (subEvent) => {
-    contextAction(subEvent, () => {
+  contextMenu.querySelector('.delete').addEventListener('click', (event) => {
+    contextAction(event, () => {
       if (window.confirm('Are you sure you want to delete this folder?')) {
         window.chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
           folder.parentNode.removeChild(folder);
@@ -252,66 +264,112 @@ export function showContextMenuFolder(folder, offset) {
       }
     });
   });
-  $('#folder_edit').show().one('mousedown', (subEvent) => {
-    const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
+  contextMenu.querySelector('.edit').addEventListener('click', (subEvent) => {
     const itemId = getElementData(folder, 'item-id');
     contextAction(subEvent, () => {
-      $('#url_row').hide();
-      $('#edit_name').val($('> span', $(folder)).text());
-      $('#overlay').slideDown(animationDuration, () => {
-        $('#edit_name').focus();
+      const editor = document.createElement('div');
+      editor.innerHTML = document.querySelector('#editFolderTemplate').innerHTML;
+      editor.setAttribute('id', 'edit_panel');
+
+      document.querySelector('#overlay').appendChild(editor);
+
+      document.querySelector('#folderName').value = folder.querySelector('span').innerText;
+
+      document.querySelector('.cancel').addEventListener('click', () => {
+        closeEditor(editor);
       });
-      $('#edit_save').off('click').one('click', () => {
+      document.querySelector('.save').addEventListener('click', () => {
         window.chrome.bookmarks.update(itemId, {
-          title: $('#edit_name').val(),
+          title: document.querySelector('#folderName').value,
         });
-        $('> span', $(folder)).text($('#edit_name').val());
-        $('.selected').removeClass('selected');
-        $('#overlay').slideUp(animationDuration);
+        folder.querySelector('span').innerText = document.querySelector('#folderName').value;
+
+        closeEditor(editor);
+      });
+
+      // @TODO: slide?
+      document.querySelector('#overlay').style.display = 'block';
+      document.querySelector('#folderName').focus();
+      document.querySelector('#folderName').addEventListener('keyup', (event) => {
+        if (event.keyCode !== 13) {
+          return;
+        }
+        document.querySelector('.save').click();
       });
     });
   });
   addClass(folder, 'selected');
-  showContextMenu(offset);
+  showContextMenu(contextMenu, offset);
 }
 
 export function showContextMenuBookmark(bookmark, offset) {
-  $('#context > li').off('mousedown').hide();
-  $('#bookmark_delete').show().one('mousedown', (subEvent) => {
-    contextAction(subEvent, () => {
+  removeContextMenu();
+  const contextMenu = document.createElement('ul');
+  contextMenu.className = 'contextMenu';
+  contextMenu.innerHTML = document.querySelector('#bookmarkContextMenuTemplate').innerHTML;
+  contextMenu.setAttribute('id', 'contextMenu');
+
+  contextMenu.querySelector('.delete').addEventListener('click', (event) => {
+    contextAction(event, () => {
       if (window.confirm('Are you sure you want to delete this bookmark?')) {
         window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
-          bookmark.remove();
+          bookmark.parentNode.removeChild(bookmark);
         });
       }
     });
   });
-  $('#bookmark_edit').show().one('mousedown', (subEvent) => {
-    const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
+  contextMenu.querySelector('.edit').addEventListener('click', (event) => {
     const itemId = getElementData(bookmark, 'item-id');
-    contextAction(subEvent, () => {
-      $('#url_row').show();
-      $('#edit_name').val($('> span', $(bookmark)).text()).focus();
-      $('#edit_url').val(getElementData(bookmark, 'url'));
-      $('#overlay').slideDown(animationDuration, () => {
-        $('#edit_name').focus();
+    contextAction(event, () => {
+      const editor = document.createElement('div');
+      editor.innerHTML = document.querySelector('#editBookmarkTemplate').innerHTML;
+      editor.setAttribute('id', 'edit_panel');
+
+      document.querySelector('#overlay').appendChild(editor);
+
+      document.querySelector('#bookmarkName').value = bookmark.querySelector('span').innerText;
+      document.querySelector('#bookmarkUrl').value = getElementData(bookmark, 'url');
+
+      document.querySelector('.cancel').addEventListener('click', () => {
+        closeEditor(editor);
       });
-      $('#edit_save').off('click').one('click', () => {
+      document.querySelector('.save').addEventListener('click', () => {
+        const span = bookmark.querySelector('span');
+        const name = document.querySelector('#bookmarkName').value;
+        const url = document.querySelector('#bookmarkUrl').value;
+
         window.chrome.bookmarks.update(itemId, {
-          title: $('#edit_name').val(),
-          url: $('#edit_url').val(),
+          title: name,
+          url: url,
         });
-        $('> span', $(bookmark))
-          .text($('#edit_name').val())
-          .attr(
-            'title',
-            `${$('#edit_name').val()} [${$('#edit_url').val()}]`,
-          );
-        $('.selected').removeClass('selected');
-        $('#overlay').slideUp(animationDuration);
+
+        span.innerText = name;
+        span.setAttribute(
+          'title',
+          `${name} [${url}]`,
+        );
+        setElementData(bookmark, 'url', url);
+
+        closeEditor(editor);
       });
+
+      // @TODO: slide?
+      document.querySelector('#overlay').style.display = 'block';
+      document.querySelector('#bookmarkName').addEventListener('keyup', (event) => {
+        if (event.keyCode !== 13) {
+          return;
+        }
+        document.querySelector('.save').click();
+      });
+      document.querySelector('#bookmarkUrl').addEventListener('keyup', (event) => {
+        if (event.keyCode !== 13) {
+          return;
+        }
+        document.querySelector('.save').click();
+      });
+      document.querySelector('#bookmarkName').focus();
     });
   });
   addClass(bookmark, 'selected');
-  showContextMenu(offset);
+  showContextMenu(contextMenu, offset);
 }

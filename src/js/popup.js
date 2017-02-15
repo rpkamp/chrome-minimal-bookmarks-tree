@@ -16,6 +16,7 @@ import {
   showContextMenuFolder,
   showContextMenuBookmark,
   openAllBookmarks,
+  removeContextMenu,
 } from './popup/functions';
 
 (function init(settings, chrome) {
@@ -32,7 +33,6 @@ import {
       true,
     );
 
-    // eslint-disable-next-line no-param-reassign
     delete bookmarksTree[0].children[1];
     const bookmarksFolder = buildTree(
       bookmarksTree[0],
@@ -57,10 +57,10 @@ import {
       if (!event.target || event.target.nodeName !== 'SPAN') {
         return nothing(event);
       }
-      document.querySelector('#context').style.display = 'none';
       document.querySelectorAll('.selected').forEach((element) => {
         removeClass(element, 'selected');
       });
+      removeContextMenu();
       if (hasClass(event.target.parentNode, 'folder')) {
         toggleFolder(event.target.parentNode);
 
@@ -88,10 +88,10 @@ import {
       if (!event.target || event.target.nodeName !== 'SPAN') {
         return nothing(event);
       }
-      document.querySelector('#context').style.display = 'none';
       document.querySelectorAll('.selected').forEach((element) => {
         removeClass(element, 'selected');
       });
+      removeContextMenu();
       if (hasClass(event.target.parentNode, 'folder')) {
         showContextMenuFolder(event.target.parentNode, {
           x: event.pageX,
@@ -113,10 +113,10 @@ import {
       if (!event.target || event.target.nodeName !== 'SPAN') {
         return nothing(event);
       }
-      document.querySelector('#context').style.display = 'none';
       document.querySelectorAll('.selected').forEach((element) => {
         removeClass(element, 'selected');
       });
+      removeContextMenu();
       if (event.button === 1) {
         if (hasClass(event.target.parentNode, 'folder')) {
           openAllBookmarks(event.target.parentNode);
@@ -141,25 +141,6 @@ import {
         }, 100);
       }
     }
-
-    document.querySelector('#edit_cancel').addEventListener('click', () => {
-      // $('#overlay').slideUp(animationDuration);
-      document.querySelector('#overlay').style.display = 'none';
-      document.querySelectorAll('.selected').forEach((element) => {
-        removeClass(element, 'selected');
-      });
-    });
-
-    document.querySelector('#edit_name').addEventListener('keyup', (event) => {
-      if (event.keyCode === 13) {
-        document.querySelector('#edit_save').click();
-      }
-    });
-    document.querySelector('#edit_url').addEventListener('keyup', (event) => {
-      if (event.keyCode === 13) {
-        document.querySelector('#edit_save').click();
-      }
-    });
   });
 
   document.addEventListener('contextmenu', () => false);
@@ -171,7 +152,6 @@ import {
         localStorage.setItem('scrolltop', document.querySelector('#wrapper').scrollTop);
       }, 100);
     }
-    document.querySelector('#context').style.display = 'none';
   });
   translateDocument(window.document);
 

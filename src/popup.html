@@ -7,33 +7,43 @@
     <body>
         <div id="wrapper">
             <div id="loading" data-i18n-key="popupLoading">Loading ...</div>
-            <ul id="context">
-                <li id="bookmark_edit" data-i18n-key="popupEditBookmark">Edit ...</li>
-                <li id="bookmark_delete" data-i18n-key="popupDeleteBookmark">Delete</li>
-
-                <li id="folder_open_all" data-i18n-key="popupOpenAll">Open all</li>
-                <li id="folder_edit" data-i18n-key="popupEditFolder">Edit ...</li>
-                <li id="folder_delete" data-i18n-key="popupDeleteFolder">Delete</li>
-            </ul>
             <ul id="bookmarks">
             </ul>
         </div>
-        <div id="overlay">
-            <div id="edit_panel">
-                <div class="row">
-                    <label for="edit_name" data-i18n-key="bookmarkEditName">Name</label>
-                    <input type="text" id="edit_name" /><br />
-                </div>
-                <div class="row" id="url_row">
-                    <label for="edit_url" data-i18n-key="bookmarkEditUrl">URL</label>
-                    <input type="text" id="edit_url" /><br />
-                </div>
-                <div class="row actions">
-                    <button type="button" id="edit_save" class="btn blue"  data-i18n-key="bookmarkEditSave">Save</button>
-                    <button type="button" id="edit_cancel" class="btn"  data-i18n-key="bookmarkEditCancel">Cancel</button>
-                </div>
+        <div id="overlay"></div>
+        <script type="text/template" id="folderContextMenuTemplate">
+            <li class="openAll" data-i18n-key="popupOpenAll">Open all</li>
+            <li class="edit" data-i18n-key="popupEditFolder">Edit ...</li>
+            <li class="delete" data-i18n-key="popupDeleteFolder">Delete</li>
+        </script>
+        <script type="text/template" id="bookmarkContextMenuTemplate">
+            <li class="edit" data-i18n-key="popupEditBookmark">Edit ...</li>
+            <li class="delete" data-i18n-key="popupDeleteBookmark">Delete</li>
+        </script>
+        <script type="text/template" id="editFolderTemplate">
+            <div class="row">
+                <label for="folderName" data-i18n-key="bookmarkEditName">Name</label>
+                <input type="text" id="folderName" /><br />
             </div>
-        </div>
+            <div class="row actions">
+                <button type="button" class="btn blue save" data-i18n-key="bookmarkEditSave">Save</button>
+                <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
+            </div>
+        </script>
+        <script type="text/template" id="editBookmarkTemplate">
+            <div class="row">
+                <label for="bookmarkName" data-i18n-key="bookmarkEditName">Name</label>
+                <input type="text" id="bookmarkName" /><br />
+            </div>
+            <div class="row">
+                <label for="bookmarkUrl" data-i18n-key="bookmarkEditUrl">URL</label>
+                <input type="text" id="bookmarkUrl" /><br />
+            </div>
+            <div class="row actions">
+                <button type="button" class="btn blue save" data-i18n-key="bookmarkEditSave">Save</button>
+                <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
+            </div>
+        </script>
         <script src="js/popup.js"></script>
     </body>
 </html>
