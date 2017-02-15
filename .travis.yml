@@ -3,7 +3,7 @@ language: node_js
 node_js:
  - "6"
 
-script: grunt test
+script: grunt pack
 
 before_script:
  - npm install
@@ -11,3 +11,12 @@ before_script:
 branches:
   only:
    - master
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: "mbt.zip"
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: true
