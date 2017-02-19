@@ -10,6 +10,7 @@ import {
   getAncestorsWithClass,
   addClass,
   removeClass,
+  handleOpenAllBookmarks,
 } from '../functions';
 
 const mbtSettings = new Settings();
@@ -178,23 +179,6 @@ export function toggleFolder(elem) {
     setElementData(elem, 'loaded', '1');
     handleToggleFolder(elem);
   });
-}
-
-function handleOpenAllBookmarks(data) {
-  if (data.url) {
-    window.chrome.tabs.create({
-      url: data.url,
-      active: false,
-    });
-
-    return;
-  }
-
-  if (data.children) {
-    data.children.forEach((child) => {
-      handleOpenAllBookmarks(child);
-    });
-  }
 }
 
 export function openAllBookmarks(folder) {

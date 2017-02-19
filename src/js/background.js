@@ -1,5 +1,7 @@
+/* global chrome */
+
 import Settings from './settings';
-import { setBrowserActionIcon } from './functions';
+import { setBrowserActionIcon, handleOpenAllBookmarks } from './functions';
 
 const settings = new Settings();
 
@@ -25,3 +27,44 @@ if (version === null) {
 }
 
 setBrowserActionIcon(settings.get('icon'));
+
+function htmlEncode(text) {
+  return text.replace(/&/g, '&amp;');
+}
+
+chrome.omnibox.onInputChanged.addListener((query, suggest) => {
+  chrome.bookmarks.search(query, (bookmarks) => {
+    const suggestions = [];
+    bookmarks.forEach((bookmark) => {
+      if (bookmark.url) {
+        suggestions.push({
+          description: htmlEncode(bookmark.title),
+          content: bookmark.url,
+        });
+      } else {
+        suggestions.push({
+          description: `${htmlEncode(bookmark.title)} (bookmarks folder)`,
+          content: `bmfolder:${bookmark.id}`,
+        });
+      }
+    });
+
+    suggest(suggestions);
+  });
+});
+
+chrome.omnibox.onInputEntered.addListener((input) => {
+  if (/^https?:\/\//i.test(input)) {
+    chrome.tabs.query({ active: true }, (tab) => {
+      chrome.tabs.update(tab.id, { url: input });
+    });
+    return;
+  }
+
+  const matches = input.match(/^bmfolder:(\d+)$/);
+  if (matches) {
+    chrome.bookmarks.getSubTree(matches[1], (data) => {
+      handleOpenAllBookmarks(data[0]);
+    });
+  }
+});

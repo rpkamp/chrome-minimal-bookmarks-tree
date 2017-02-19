@@ -7,6 +7,9 @@
 	"background": {
 		"page": "background.html"
 	},
+	"omnibox": {
+		"keyword": "bm"
+	},
 	"options_page": "options.html",
 	"permissions": [
 		"bookmarks",

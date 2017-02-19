@@ -79,3 +79,20 @@ export function getAncestorsWithClass(elem, className) {
 
   return parents.concat(getAncestorsWithClass(elem.parentNode));
 }
+
+export function handleOpenAllBookmarks(bookmark) {
+  if (bookmark.url) {
+    window.chrome.tabs.create({
+      url: bookmark.url,
+      active: false,
+    });
+
+    return;
+  }
+
+  if (bookmark.children) {
+    bookmark.children.forEach((child) => {
+      handleOpenAllBookmarks(child);
+    });
+  }
+}
