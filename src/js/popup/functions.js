@@ -140,11 +140,11 @@ function handleToggleFolder(element) {
 
   const id = getElementData(elementToToggle.parentNode, 'item-id');
   if (mbtSettings.get('close_old_folder')) {
-    const parents = getAncestorsWithClass(element, 'open');
     openFolders.clear();
     if (isOpen) {
       openFolders.add(id);
     }
+    const parents = getAncestorsWithClass(element, 'open');
     parents.forEach((parent) => {
       openFolders.add(getElementData(parent, 'item-id'));
     });

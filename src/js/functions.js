@@ -72,10 +72,10 @@ export function getAncestorsWithClass(elem, className) {
     return parents;
   }
   if (hasClass(elem.parentNode, className)) {
-    parents.push(elem);
+    parents.push(elem.parentNode);
   }
 
-  return parents.concat(getAncestorsWithClass(elem.parentNode));
+  return parents.concat(getAncestorsWithClass(elem.parentNode, className));
 }
 
 export function slideUp(element, duration) {
