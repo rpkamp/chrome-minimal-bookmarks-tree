@@ -118,5 +118,17 @@
     },
     "bookmarkEditCancel": {
         "message": "Annuleren"
+    },
+    "confirmationConfirm": {
+        "message": "Ja"
+    },
+    "confirmationDeny": {
+        "message": "Doe toch maar niet"
+    },
+    "deleteBookmark": {
+        "message": "Weet u zeker dat u deze bladwijzer wilt verwijderen?"
+    },
+    "deleteFolder": {
+        "message": "Weet u zeker dat u deze map wilt verwijderen?"
     }
 }
