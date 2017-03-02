@@ -73,8 +73,13 @@ li {
 }
 
 .sub {
-	padding: 0 0 2px 20px;
-	display: none;
+	padding: 0 0 0 20px;
+	height: 0;
+    overflow: hidden;
+}
+
+.folder.open > .sub {
+    padding: 0 0 2px 20px;
 }
 
 .contextMenu, .contextMenu li {

@@ -9,8 +9,11 @@ import {
   toggleClass,
   getAncestorsWithClass,
   addClass,
+  hasClass,
   removeClass,
   handleOpenAllBookmarks,
+  slideUp,
+  slideDown,
 } from '../functions';
 
 const mbtSettings = new Settings();
@@ -57,7 +60,7 @@ export function buildTree(
     wrapper = document.createElement('ul');
     wrapper.className = 'sub';
     if (visible) {
-      wrapper.style.display = 'block';
+      wrapper.style.height = 'auto';
     }
   }
 
@@ -113,29 +116,33 @@ export function buildTree(
 }
 
 function handleToggleFolder(element) {
+  const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
+
   if (mbtSettings.get('close_old_folder')) {
     element.parentNode.querySelectorAll('.folder.open').forEach((openFolderElement) => {
       if (openFolderElement !== element) {
         removeClass(openFolderElement, 'open');
         openFolderElement.querySelectorAll('.sub').forEach((elementToHide) => {
-          // @TODO: slide
-          elementToHide.style.display = 'none';
+          slideUp(elementToHide, animationDuration);
         });
       }
     });
   }
 
   toggleClass(element, 'open');
-  // @TODO: slide
+  const isOpen = hasClass(element, 'open');
   const elementToToggle = element.querySelectorAll('.sub')[0];
-  elementToToggle.style.display =
-    elementToToggle.style.display === 'block' ? 'none' : 'block';
+  if (isOpen) {
+    slideDown(elementToToggle, animationDuration);
+  } else {
+    slideUp(elementToToggle, animationDuration);
+  }
 
   const id = getElementData(elementToToggle.parentNode, 'item-id');
   if (mbtSettings.get('close_old_folder')) {
     const parents = getAncestorsWithClass(element, 'open');
     openFolders.clear();
-    if (elementToToggle.style.display === 'block') {
+    if (isOpen) {
       openFolders.add(id);
     }
     parents.forEach((parent) => {
@@ -145,7 +152,7 @@ function handleToggleFolder(element) {
     return;
   }
 
-  if (elementToToggle.style.display === 'block') {
+  if (isOpen) {
     openFolders.add(id);
 
     return;
@@ -156,7 +163,7 @@ function handleToggleFolder(element) {
     openFolders.remove(getElementData(folderToHide, 'item-id'));
     removeClass(folderToHide, 'open');
     folderToHide.querySelectorAll('.sub').forEach((sub) => {
-      sub.style.display = 'none';
+      slideUp(sub, animationDuration);
     });
   });
 }
@@ -222,7 +229,6 @@ function showContextMenu(contextMenu, offset) {
 
 function closePopup(contents) {
   contents.parentNode.removeChild(contents);
-  // @TODO slide?
   removeClass(document.querySelector('.selected'), 'selected');
   document.querySelector('#overlay').style.display = 'none';
 }
@@ -291,7 +297,6 @@ export function showContextMenuFolder(folder, offset) {
         closePopup(editor);
       });
 
-      // @TODO: slide?
       document.querySelector('#overlay').style.display = 'block';
       document.querySelector('#folderName').focus();
       document.querySelector('#folderName').addEventListener('keyup', (event) => {
@@ -357,7 +362,6 @@ export function showContextMenuBookmark(bookmark, offset) {
         closePopup(editor);
       });
 
-      // @TODO: slide?
       document.querySelector('#overlay').style.display = 'block';
       document.querySelector('#bookmarkName').addEventListener('keyup', (keyEvent) => {
         if (keyEvent.keyCode !== 13) {
