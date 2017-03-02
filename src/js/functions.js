@@ -9,10 +9,6 @@ export function nothing(e) {
   return false;
 }
 
-export function addEventListenerMulti(element, events, callback) {
-  events.split(' ').forEach(event => element.addEventListener(event, callback, false));
-}
-
 export function setBrowserActionIcon(icon) {
   const iconPaths = {
     default: 'icons/bookmark48.png',

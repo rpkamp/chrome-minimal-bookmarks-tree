@@ -3,12 +3,15 @@
 import Settings from './settings';
 import {
   nothing,
-  addEventListenerMulti,
   setBrowserActionIcon,
   translateDocument,
 } from './functions';
 
 (function init(settings) {
+  const addEventListenerMulti = (element, events, callback) => {
+    events.split(' ').forEach(event => element.addEventListener(event, callback, false));
+  };
+
   const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach((checkbox) => {
     const id = checkbox.getAttribute('id');
