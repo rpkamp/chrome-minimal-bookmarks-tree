@@ -1,13 +1,4 @@
 {
-    "omnibarDefaultSuggestion": {
-        "message": "Search for bookmarks using Minimal Bookmarks Tree"
-    },
-    "folderMoveFailed": {
-        "message": "Unable to move bookmark or folder. Please try again."
-    },
-    "sortNotAllowed": {
-        "message": "You can not sort the bookmarks bar folder, or move anything above this folder."
-    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Options"
     },
@@ -130,5 +121,8 @@
     },
     "deleteFolder": {
         "message": "Are you sure you want to delete this folder?"
+    },
+    "omniboxFolderDescription": {
+        "message": "bookmarks folder"
     }
 }

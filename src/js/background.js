@@ -35,6 +35,7 @@ function htmlEncode(text) {
 chrome.omnibox.onInputChanged.addListener((query, suggest) => {
   chrome.bookmarks.search(query, (bookmarks) => {
     const suggestions = [];
+    const folderDescription = chrome.i18n.getMessage('omniboxFolderDescription');
     bookmarks.forEach((bookmark) => {
       if (bookmark.url) {
         suggestions.push({
@@ -43,7 +44,7 @@ chrome.omnibox.onInputChanged.addListener((query, suggest) => {
         });
       } else {
         suggestions.push({
-          description: `${htmlEncode(bookmark.title)} (bookmarks folder)`,
+          description: `${htmlEncode(bookmark.title)} (${folderDescription})`,
           content: `bmfolder:${bookmark.id}`,
         });
       }
