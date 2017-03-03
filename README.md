@@ -80,7 +80,16 @@ grunt test
 
 to run tests in sauce labs.
 
+### Icons
+
+Main icon: [https://www.iconfinder.com/icons/40698/bookmark_icon#size=128][main-icon]
+Star: [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128][star]
+Open star: [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star]
+
 [NPM]: https://docs.npmjs.com/getting-started/installing-node
 [grunt-cli]: http://gruntjs.com/getting-started#installing-the-cli
 [chrome-extensions]: chrome://extensions/
 [sauce-labs]: https://saucelabs.com/
+[main-icon]: https://www.iconfinder.com/icons/40698/bookmark_icon#size=128
+[star]: https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128
+[open-star]: https://www.iconfinder.com/icons/326487/rate_star_icon#size=128
