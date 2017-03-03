@@ -9,7 +9,7 @@ export default class HeightAnimator {
   constructor(element, targetHeight, duration) {
     this.element = element;
     this.duration = duration;
-    if (targetHeight === 'auto') {
+    if (targetHeight === 'auto' && duration > 0) {
       this.targetHeight = Array.prototype.reduce.call(
         element.childNodes,
         (carry, child) => carry + (child.offsetHeight || 0),
@@ -45,7 +45,7 @@ export default class HeightAnimator {
 
   start() {
     if (this.duration <= 0) {
-      this.element.style.height = `${this.targetHeight}px`;
+      this.element.style.height = this.targetHeight === 'auto' ? 'auto' : `${this.targetHeight}px`;
 
       return;
     }
