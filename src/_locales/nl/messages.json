@@ -1,13 +1,4 @@
 {
-    "omnibarDefaultSuggestion": {
-        "message": "Zoek naar bladwijzers met Minimal Bookmarks Tree"
-    },
-    "folderMoveFailed": {
-        "message": "De bladwijzer of map kon niet verplaatst worden. Probeert u het later nog eens."
-    },
-    "sortNotAllowed": {
-        "message": "De bladwijzerbar map kan niet verplaatst worden, en er kan ook niets boven deze map gezet worden."
-    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },
@@ -118,5 +109,20 @@
     },
     "bookmarkEditCancel": {
         "message": "Annuleren"
+    },
+    "confirmationConfirm": {
+        "message": "Ja"
+    },
+    "confirmationDeny": {
+        "message": "Doe toch maar niet"
+    },
+    "deleteBookmark": {
+        "message": "Weet u zeker dat u deze bladwijzer wilt verwijderen?"
+    },
+    "deleteFolder": {
+        "message": "Weet u zeker dat u deze map wilt verwijderen?"
+    },
+    "omniboxFolderDescription": {
+        "message": "bladwijzer map"
     }
 }

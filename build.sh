@@ -5,4 +5,4 @@ if [ -f mbt.zip ]; then
 	rm -f mbt.zip
 fi
 
-(cd src && zip -r ../mbt.zip *)
+(cd dist && zip -r ../mbt.zip *)

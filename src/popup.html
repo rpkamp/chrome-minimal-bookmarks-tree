@@ -2,45 +2,59 @@
 <html>
     <head>
         <title data-i18n-key="popupTitle">Minimal Bookmarks Tree</title>
-        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-        <script src="js/jquery.mjs.nestedSortable.js"></script>
-        <script src="js/settings.js"></script>
-        <script src="js/init_settings.js"></script>
-        <script src="js/popup/functions.js"></script>
-        <script src="js/popup/main.js"></script>
-        <script src="js/i18n-html.js"></script>
         <link rel="stylesheet" type="text/css" href="css/popup.css" />
     </head>
     <body>
         <div id="wrapper">
             <div id="loading" data-i18n-key="popupLoading">Loading ...</div>
-            <ul id="context">
-                <li id="bookmark_edit" data-i18n-key="popupEditBookmark">Edit ...</li>
-                <li id="bookmark_delete" data-i18n-key="popupDeleteBookmark">Delete</li>
-
-                <li id="folder_open_all" data-i18n-key="popupOpenAll">Open all</li>
-                <li id="folder_edit" data-i18n-key="popupEditFolder">Edit ...</li>
-                <li id="folder_delete" data-i18n-key="popupDeleteFolder">Delete</li>
-            </ul>
             <ul id="bookmarks">
             </ul>
         </div>
-        <div id="overlay">
-            <div id="edit_panel">
+        <div id="overlay"></div>
+        <div id="templates">
+            <div id="folderContextMenuTemplate">
+                <li class="openAll" data-i18n-key="popupOpenAll">Open all</li>
+                <li class="edit" data-i18n-key="popupEditFolder">Edit ...</li>
+                <li class="delete" data-i18n-key="popupDeleteFolder">Delete</li>
+            </div>
+            <div id="bookmarkContextMenuTemplate">
+                <li class="edit" data-i18n-key="popupEditBookmark">Edit ...</li>
+                <li class="delete" data-i18n-key="popupDeleteBookmark">Delete</li>
+            </div>
+            <div id="editFolderTemplate">
                 <div class="row">
-                    <label for="edit_name" data-i18n-key="bookmarkEditName">Name</label>
-                    <input type="text" id="edit_name" /><br />
-                </div>
-                <div class="row" id="url_row">
-                    <label for="edit_url" data-i18n-key="bookmarkEditUrl">URL</label>
-                    <input type="text" id="edit_url" /><br />
+                    <label for="folderName" data-i18n-key="bookmarkEditName">Name</label>
+                    <input type="text" id="folderName" /><br />
                 </div>
                 <div class="row actions">
-                    <button type="button" id="edit_save" class="btn blue"  data-i18n-key="bookmarkEditSave">Save</button>
-                    <button type="button" id="edit_cancel" class="btn"  data-i18n-key="bookmarkEditCancel">Cancel</button>
+                    <button type="button" class="btn blue save" data-i18n-key="bookmarkEditSave">Save</button>
+                    <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
+                </div>
+            </div>
+            <div id="editBookmarkTemplate">
+                <div class="row">
+                    <label for="bookmarkName" data-i18n-key="bookmarkEditName">Name</label>
+                    <input type="text" id="bookmarkName" /><br />
+                </div>
+                <div class="row">
+                    <label for="bookmarkUrl" data-i18n-key="bookmarkEditUrl">URL</label>
+                    <input type="text" id="bookmarkUrl" /><br />
+                </div>
+                <div class="row actions">
+                    <button type="button" class="btn blue save" data-i18n-key="bookmarkEditSave">Save</button>
+                    <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
+                </div>
+            </div>
+            <div id="confirmTemplate">
+                <div class="row">
+                    <div class="question"></div>
+                </div>
+                <div class="row actions">
+                    <button type="button" class="btn blue confirm" data-i18n-key="confirmationConfirm">Yes</button>
+                    <button type="button" class="btn cancel" data-i18n-key="confirmationDeny">Never mind</button>
                 </div>
             </div>
         </div>
+        <script src="js/popup.js"></script>
     </body>
 </html>

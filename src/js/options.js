@@ -1,61 +1,62 @@
-document.addEventListener('DOMContentLoaded', function() {
-    $(':input[type="checkbox"]').each(function() {
-        var id = $(this).attr('id');
-        if (MBT_settings.get(id)) {
-            $(this).prop('checked', true);
-        }
-        $(this).on('change click keyup', function() {
-            MBT_settings.set(id, $(this).prop('checked'));
-        });
-    });
-    $('select').each( function() {
-        var id = $(this).attr('id');
-        $(this).val(MBT_settings.get(id));
-        $(this).on('change click keyup', function() {
-            MBT_settings.set(id, $(this).val());
-            console.log(id);
-            if (id === 'icon') {
-                console.log(chrome.extension.getBackgroundPage().setIcon);
-                chrome.extension.getBackgroundPage().setIcon($(this).val());
-            }
-        });
-    });
-    $(':input[type="number"]').each(function() {
-        var id = $(this).attr('id');
-        $(this).val(MBT_settings.get(id));
-        $(this).on('change click keyup', function() {
-            var v = parseInt($(this).val(), 10);
-            var minValue = parseInt($(this).attr('min'), 10);
-            var maxValue = parseInt($(this).attr('max'), 10);
-            if (isNaN(v) || v < minValue || v > maxValue) {
-                $(this).css('border', '1px solid red');
-                return;
-            }
-            $(this).css('border', '');
-            MBT_settings.set(id, $(this).val());
-        }).on('blur', function(event) {
-            event.target.checkValidity();
-        }).bind('invalid', function(event) {
-            setTimeout(function() { $(event.target).focus();}, 50);
-        });
-    });
-    $('.license-toggle').on('click', function(e) {
-        $('#license').show();
-        $(this).hide();
-        e.preventDefault();
-        return false;
-    });
-});
+/* global window,document */
 
+import Settings from './settings';
+import {
+  nothing,
+  setBrowserActionIcon,
+  translateDocument,
+} from './functions';
 
+(function init(settings) {
+  const addEventListenerMulti = (element, events, callback) => {
+    events.split(' ').forEach(event => element.addEventListener(event, callback, false));
+  };
 
-console.log('DEBUG INFO:');
-var settings = ['close_old_folder', 'open_all_sub', 'animation_duration', 'hide_empty_folders', 'remember_scroll_position', 'height', 'width', 'zoom', 'icon'];
-for (var i in settings) {
-    console.log(settings[i], MBT_settings.get(settings[i]));
-}
+  const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach((checkbox) => {
+    const id = checkbox.getAttribute('id');
+    if (settings.get(id)) {
+      checkbox.setAttribute('checked', 'checked');
+    }
+    addEventListenerMulti(checkbox, 'click keyup', () => {
+      settings.set(id, checkbox.checked);
+    });
+  });
 
-var helpers = ['openfolders', 'scrolltop'];
-for (var i in helpers) {
-    console.log(helpers[i], localStorage.getItem(helpers[i]));
-}
+  const dropdowns = window.document.querySelectorAll('select');
+  dropdowns.forEach((dropdown) => {
+    const id = dropdown.getAttribute('id');
+    dropdown.value = settings.get(id);
+    addEventListenerMulti(dropdown, 'change click keyup', () => {
+      settings.set(id, dropdown.value);
+      if (id === 'icon') {
+        setBrowserActionIcon(dropdown.value);
+      }
+    });
+  });
+
+  const numericInputs = window.document.querySelectorAll('input[type="number"]');
+  numericInputs.forEach((numericInput) => {
+    const id = numericInput.getAttribute('id');
+    numericInput.value = settings.get(id);
+    addEventListenerMulti(numericInput, 'change keyup', () => {
+      const value = parseInt(numericInput.value, 10);
+      const minValue = parseInt(numericInput.getAttribute('min'), 10);
+      const maxValue = parseInt(numericInput.getAttribute('max'), 10);
+      if (isNaN(value) || value < minValue || value > maxValue) {
+        numericInput.style.border = '1px solid red';
+        return;
+      }
+      numericInput.style.border = '';
+      settings.set(id, numericInput.value);
+    });
+  });
+
+  document.querySelector('.license-toggle').addEventListener('click', (event) => {
+    document.querySelector('#license').style.display = 'block';
+    document.querySelector('.license-toggle').style.display = 'none';
+    return nothing(event);
+  });
+
+  translateDocument(window.document);
+}(new Settings()));
