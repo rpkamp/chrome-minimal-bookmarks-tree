@@ -97,7 +97,6 @@ export function buildTree(
         addClass(d, 'hidden');
       } else {
         setElementData(d, 'item-id', child.id);
-        d.setAttribute('id', `tree${child.id}`);
 
         if (child.children && child.children.length) {
           if (isOpen) {
@@ -214,17 +213,24 @@ function showContextMenu(contextMenu, offset) {
 
   document.querySelector('body').appendChild(contextMenu);
 
+  const contextClientRect = contextMenu.getBoundingClientRect();
+
+  let yCoordinate = offset.y;
   const windowHeight = window.innerHeight;
-  const contextHeight = contextMenu.getBoundingClientRect().height;
-  const scrollTop = document.querySelector('#wrapper').scrollTop;
-  let topY = scrollTop + offset.y;
-  const bottomY = scrollTop + windowHeight;
-  if (topY > bottomY - contextHeight) {
-    topY = bottomY - contextHeight - 15;
+  const contextHeight = contextClientRect.height;
+  if (yCoordinate > windowHeight - contextHeight) {
+    yCoordinate = windowHeight - contextHeight - 15;
   }
 
-  contextMenu.style.left = `${offset.x}px`;
-  contextMenu.style.top = `${topY}px`;
+  let xCoordinate = offset.x;
+  const windowWidth = window.innerWidth;
+  const contextWidth = contextClientRect.width;
+  if (xCoordinate > windowWidth - contextWidth) {
+    xCoordinate = windowWidth - contextWidth - 15;
+  }
+
+  contextMenu.style.left = `${xCoordinate}px`;
+  contextMenu.style.top = `${yCoordinate}px`;
 }
 
 function closePopup(contents) {

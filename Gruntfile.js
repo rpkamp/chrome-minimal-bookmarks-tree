@@ -152,6 +152,7 @@ module.exports = function (grunt) {
           { expand: true, cwd: 'src/', src: ['js/vendor/**'], dest: 'dist/' },
           { expand: true, cwd: 'src/', src: ['manifest.json'], dest: 'dist/' },
           { src: 'node_modules/bootstrap/dist/css/bootstrap.min.css', dest: 'dist/css/bootstrap4.css' },
+          { src: 'node_modules/dragula/dist/dragula.css', dest: 'dist/css/dragula.css' },
         ]
       }
     },

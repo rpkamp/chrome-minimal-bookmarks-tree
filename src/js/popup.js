@@ -7,6 +7,7 @@ import {
   addClass,
   removeClass,
   getElementData,
+  elementIndex,
 } from './functions';
 import Settings from './settings';
 import {
@@ -18,9 +19,11 @@ import {
   openAllBookmarks,
   removeContextMenu,
 } from './popup/functions';
+import dragula from '../../node_modules/dragula/dragula';
 
 (function init(settings, chrome) {
   let scrollTimeout;
+  let initialIndexOfDraggable;
   const zoom = parseInt(settings.get('zoom'), 10);
   const hideEmptyFolders = settings.get('hide_empty_folders');
   const loading = document.querySelector('#loading');
@@ -111,7 +114,7 @@ import {
 
     bm.addEventListener('mousedown', (event) => {
       if (!event.target || event.target.nodeName !== 'SPAN') {
-        return nothing(event);
+        return false;
       }
       document.querySelectorAll('.selected').forEach((element) => {
         removeClass(element, 'selected');
@@ -121,13 +124,13 @@ import {
         if (hasClass(event.target.parentNode, 'folder')) {
           openAllBookmarks(event.target.parentNode);
 
-          return nothing(event);
+          return false;
         }
         const url = getElementData(event.target.parentNode, 'url');
         chrome.tabs.create({ url });
       }
 
-      return nothing(event);
+      return false;
     });
 
     bm.style.display = 'block';
@@ -141,6 +144,39 @@ import {
         }, 100);
       }
     }
+
+    dragula([bm], {
+      isContainer: element => hasClass(element, 'sub'),
+      moves: element => !hasClass(element, 'nosort'),
+      accepts: (element, target) => {
+        if (element.parentNode.getAttribute('id') === 'bookmarks' && elementIndex(element) === 0) {
+          return false;
+        }
+
+        return (hasClass(element, 'folder') || hasClass(target, 'sub'));
+      },
+      revertOnSpill: true,
+    }).on('drag', (element) => {
+      initialIndexOfDraggable = elementIndex(element);
+    }).on('drop', (element) => {
+      const options = {
+        index: elementIndex(element),
+      };
+
+      if (options.index > initialIndexOfDraggable) {
+        // we need to compensate for the original element that was
+        // in the tree but has been moved down
+        options.index++;
+      }
+
+      if (element.parentNode.getAttribute('id') === 'bookmarks') {
+        options.index--;
+      } else {
+        options.parentId = getElementData(element.parentNode.parentNode, 'item-id');
+      }
+
+      chrome.bookmarks.move(getElementData(element, 'item-id'), options);
+    });
   });
 
   document.addEventListener('contextmenu', () => false);
@@ -153,6 +189,7 @@ import {
       }, 100);
     }
   });
+
   translateDocument(window.document);
 
   chrome.tabs.query({ active: true }, (tabs) => {
@@ -164,6 +201,7 @@ import {
       zoom,
     );
   });
+
   if (zoom !== 100) {
     document.querySelector('html').style.zoom = `${zoom}%`;
   }
