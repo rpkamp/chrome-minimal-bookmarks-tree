@@ -5,5 +5,7 @@ module.exports = {
   ],
   "rules": {
     "no-param-reassign": 0,
+    "no-plusplus": 0,
+    "no-continue": 0,
   }
 };

@@ -97,7 +97,6 @@ export function buildTree(
         addClass(d, 'hidden');
       } else {
         setElementData(d, 'item-id', child.id);
-        d.setAttribute('id', `tree${child.id}`);
 
         if (child.children && child.children.length) {
           if (isOpen) {

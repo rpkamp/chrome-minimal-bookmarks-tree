@@ -1,4 +1,4 @@
-/* global window */
+/* global window,Node */
 
 import HeightAnimator from './HeightAnimator';
 
