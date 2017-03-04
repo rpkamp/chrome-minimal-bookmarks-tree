@@ -88,6 +88,25 @@ export function slideDown(element, duration) {
   animator.start();
 }
 
+export function elementIndex(element) {
+  if (!element || typeof element.parentNode === 'undefined') {
+    return null;
+  }
+  const parent = element.parentNode;
+  const children = parent.childNodes;
+  let i = 0;
+  for (let j = 0; j < children.length; j++) {
+    if (children[j].nodeType === Node.TEXT_NODE) {
+      continue;
+    }
+    if (element === children[j]) {
+      return i;
+    }
+    i++;
+  }
+  return -1;
+}
+
 export function handleOpenAllBookmarks(bookmark) {
   if (bookmark.url) {
     window.chrome.tabs.create({
