@@ -52,6 +52,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
+  var webpack = require('webpack');
+
   grunt.initConfig({
     pkg: '<json:package.json>',
     meta: {
@@ -121,7 +123,15 @@ module.exports = function (grunt) {
         },
         resolve: {
           extensions: ['', '.js']
-        }
+        },
+        plugins: [
+          new webpack.DefinePlugin({
+            DEBUG: false,
+            PRODUCTION: true
+          }),
+          new webpack.optimize.DedupePlugin(),
+          new webpack.optimize.UglifyJsPlugin()
+        ]
       },
       buildTests: {
         progress: true,
