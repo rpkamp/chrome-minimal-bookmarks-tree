@@ -1,0 +1,128 @@
+{
+    "optionsHeader": {
+        "message": "Minimal Bookmarks Tree Optionen"
+    },
+    "optionCloseFolderOnOpenNew": {
+        "message": "Schlie\u00dfe aktuellen Ordner beim \u00d6ffnen eines Neuen."
+    },
+    "optionOpenAllTraverseSubfolders": {
+        "message": "Beim Klicken von \"\u00d6ffne Alle\" werden auch alle Unterordner ge\u00f6ffnet."
+    },
+    "optionHideEmptyFolders": {
+        "message": "Verstecke leere Ordner."
+    },
+    "optionRememberScrollPosition": {
+        "message": "Speichere Scroll Position beim Schlie\u00dfen von Minimal Bookmarks Tree."
+    },
+    "optionIcon": {
+        "message": "Icon"
+    },
+    "optionIconDefault": {
+        "message": "Standard"
+    },
+    "optionIconStar": {
+        "message": "Stern"
+    },
+    "optionIconOpenStar": {
+        "message": "\u00d6ffne Stern"
+    },
+    "optionAnimationSpeed": {
+        "message": "Animationsgeschw."
+    },
+    "optionAnimationSpeedNoAnimation": {
+        "message": "Keine Animation"
+    },
+    "optionAnimationSpeedVerySlow": {
+        "message": "Tr\u00e4ge"
+    },
+    "optionAnimationSpeedSlow": {
+        "message": "Langsam"
+    },
+    "optionAnimationSpeedMedium": {
+        "message": "Mittel"
+    },
+    "optionAnimationSpeedFast": {
+        "message": "Schnell"
+    },
+    "optionAnimationSpeedVeryFast": {
+        "message": "Super schnell"
+    },
+    "optionZoomLevel": {
+        "message": "Zoom Stufe"
+    },
+    "optionPreferredHeight": {
+        "message": "Bevorzugte H\u00f6he"
+    },
+    "optionPreferredWidth": {
+        "message": "Bevorzugte Breite"
+    },
+    "optionMin": {
+        "message": "Min"
+    },
+    "optionMax": {
+        "message": "Max"
+    },
+    "optionDefault": {
+        "message": "Standard"
+    },
+    "optionWidthHeightEnforcedByBrowser": {
+        "message": "Die maximal m\u00f6gliche Breite und H\u00f6he wird von Chrome vorgegeben, nicht durch Minimal Bookmarks Tree."
+    },
+    "optionWidthHeightOptimization": {
+        "message": "Minimal Bookmarks Tree passt sich automatisch an die verf\u00fcgbare Bildfl\u00e4che an, und skaliert nur herunter falls nicht gen\u00fcgend Platz vorhanden ist. Wenn es dir zu gro\u00df ist, kannst du manuell kleinere Werte in den Feldern f\u00fcr Breite\/H\u00f6he eintragen."
+    },
+    "optionSavedAutomatically": {
+        "message": "\u00c4nderungen werden automatisch gespeichert."
+    },
+    "optionShowLicense": {
+        "message": "AGB anzeigen"
+    },
+    "popupTitle": {
+        "message": "Minimal Bookmarks Tree"
+    },
+    "popupLoading": {
+        "message": "Laden ..."
+    },
+    "popupEditBookmark": {
+        "message": "Bearbeiten ..."
+    },
+    "popupDeleteBookmark": {
+        "message": "L\u00f6schen"
+    },
+    "popupOpenAll": {
+        "message": "\u00d6ffne Alle"
+    },
+    "popupEditFolder": {
+        "message": "Bearbeiten ..."
+    },
+    "popupDeleteFolder": {
+        "message": "L\u00f6schen"
+    },
+    "bookmarkEditName": {
+        "message": "Name"
+    },
+    "bookmarkEditUrl": {
+        "message": "URL"
+    },
+    "bookmarkEditSave": {
+        "message": "Speichern"
+    },
+    "bookmarkEditCancel": {
+        "message": "Abbrechen"
+    },
+    "confirmationConfirm": {
+        "message": "Ja"
+    },
+    "confirmationDeny": {
+        "message": "Nein"
+    },
+    "deleteBookmark": {
+        "message": "Wollen Sie dieses Lesezeichen wirklich l\u00f6schen?"
+    },
+    "deleteFolder": {
+        "message": "Wollen Sie diesen Ordner wirklich l\u00f6schen?"
+    },
+    "folderDescription": {
+        "message": "Lesezeichen Ordner"
+    }
+}
