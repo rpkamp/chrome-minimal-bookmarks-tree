@@ -107,19 +107,32 @@ export function elementIndex(element) {
   return -1;
 }
 
-export function handleOpenAllBookmarks(bookmark) {
+function getAllBookmarksStartingAt(bookmark) {
+  let bookmarks = [];
   if (bookmark.url) {
-    window.chrome.tabs.create({
-      url: bookmark.url,
-      active: false,
-    });
-
-    return;
+    bookmarks.push(bookmark.url);
   }
 
   if (bookmark.children) {
     bookmark.children.forEach((child) => {
-      handleOpenAllBookmarks(child);
+      bookmarks = bookmarks.concat(getAllBookmarksStartingAt(child));
     });
   }
+
+  return bookmarks;
+}
+
+export function handleOpenAllBookmarks(startingBookmark) {
+  const bookmarks = getAllBookmarksStartingAt(startingBookmark);
+
+  window.chrome.tabs.query({ active: true }, (tab) => {
+    window.chrome.tabs.update(tab.id, { url: bookmarks[0] });
+  });
+
+  bookmarks.slice(1).forEach((bookmark) => {
+    window.chrome.tabs.create({
+      url: bookmark,
+      active: false,
+    });
+  });
 }
