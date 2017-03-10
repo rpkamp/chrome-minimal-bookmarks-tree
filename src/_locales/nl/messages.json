@@ -1,4 +1,10 @@
 {
+    "omniboxFolderDescription": {
+        "message": "bladwijzer map"
+    },
+    "omniboxDefaultSuggestion": {
+        "message": "Zoek naar bladwijzers en mappen"
+    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },
@@ -121,8 +127,5 @@
     },
     "deleteFolder": {
         "message": "Weet u zeker dat u deze map wilt verwijderen?"
-    },
-    "omniboxFolderDescription": {
-        "message": "bladwijzer map"
     }
 }

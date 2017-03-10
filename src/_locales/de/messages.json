@@ -1,4 +1,10 @@
 {
+    "omniboxFolderDescription": {
+        "message": "Lesezeichen Ordner"
+    },
+    "omniboxDefaultSuggestion": {
+        "message": "Suche nach Lesezeichen und Ordner"
+    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Optionen"
     },
@@ -121,8 +127,5 @@
     },
     "deleteFolder": {
         "message": "Wollen Sie diesen Ordner wirklich l\u00f6schen?"
-    },
-    "folderDescription": {
-        "message": "Lesezeichen Ordner"
     }
 }
