@@ -8,6 +8,7 @@ import { handleOpenAllBookmarks } from './functions';
 export default function () {
   let defaultSuggestionContent = '';
   const folderDescription = chrome.i18n.getMessage('omniboxFolderDescription');
+  const defaultSuggestion = chrome.i18n.getMessage('omniboxDefaultSuggestion');
 
   function quoteAmpersands(text) {
     return text.replace(/&/g, '&amp;');
@@ -30,7 +31,7 @@ export default function () {
   function removeDefaultSuggestion() {
     defaultSuggestionContent = '';
     chrome.omnibox.setDefaultSuggestion({
-      description: 'S',
+      description: defaultSuggestion,
     });
   }
 
@@ -99,6 +100,10 @@ export default function () {
         handleOpenAllBookmarks(data[0]);
       });
     }
+  });
+
+  chrome.omnibox.onInputStarted.addListener(() => {
+    removeDefaultSuggestion();
   });
 
   chrome.omnibox.onInputCancelled.addListener(() => {

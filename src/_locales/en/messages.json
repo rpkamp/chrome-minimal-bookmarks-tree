@@ -124,5 +124,8 @@
     },
     "omniboxFolderDescription": {
         "message": "bookmarks folder"
+    },
+    "omniboxDefaultSuggestion": {
+        "message": "Search for bookmarks and bookmark folders"
     }
 }
