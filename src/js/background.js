@@ -1,7 +1,8 @@
 /* global chrome */
 
 import Settings from './settings';
-import { setBrowserActionIcon, handleOpenAllBookmarks } from './functions';
+import { setBrowserActionIcon } from './functions';
+import initialiseOmniboxBookmarksSearch from './omnibox';
 
 const settings = new Settings();
 
@@ -28,44 +29,4 @@ if (version === null) {
 
 setBrowserActionIcon(settings.get('icon'));
 
-function htmlEncode(text) {
-  return text.replace(/&/g, '&amp;');
-}
-
-chrome.omnibox.onInputChanged.addListener((query, suggest) => {
-  chrome.bookmarks.search(query, (bookmarks) => {
-    const suggestions = [];
-    const folderDescription = chrome.i18n.getMessage('omniboxFolderDescription');
-    bookmarks.forEach((bookmark) => {
-      if (bookmark.url) {
-        suggestions.push({
-          description: htmlEncode(bookmark.title),
-          content: bookmark.url,
-        });
-      } else {
-        suggestions.push({
-          description: `${htmlEncode(bookmark.title)} (${folderDescription})`,
-          content: `bmfolder:${bookmark.id}`,
-        });
-      }
-    });
-
-    suggest(suggestions);
-  });
-});
-
-chrome.omnibox.onInputEntered.addListener((input) => {
-  if (/^https?:\/\//i.test(input)) {
-    chrome.tabs.query({ active: true }, (tab) => {
-      chrome.tabs.update(tab.id, { url: input });
-    });
-    return;
-  }
-
-  const matches = input.match(/^bmfolder:(\d+)$/);
-  if (matches) {
-    chrome.bookmarks.getSubTree(matches[1], (data) => {
-      handleOpenAllBookmarks(data[0]);
-    });
-  }
-});
+initialiseOmniboxBookmarksSearch();
