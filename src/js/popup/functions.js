@@ -189,7 +189,7 @@ export function toggleFolder(elem) {
 
 export function openAllBookmarks(folder) {
   window.chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data) => {
-    handleOpenAllBookmarks(data[0]);
+    handleOpenAllBookmarks(data[0], true);
     window.close();
   });
 }

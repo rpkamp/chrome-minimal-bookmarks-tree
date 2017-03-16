@@ -79,7 +79,7 @@ export default function () {
     const inputMatches = input.match(/^bmfolder:(\d+)$/);
     if (inputMatches) {
       chrome.bookmarks.getSubTree(inputMatches[1], (data) => {
-        handleOpenAllBookmarks(data[0]);
+        handleOpenAllBookmarks(data[0], false);
       });
     }
 
@@ -97,7 +97,7 @@ export default function () {
     const defaultSuggestionMatches = defaultSuggestionContent.match(/^bmfolder:(\d+)$/);
     if (defaultSuggestionMatches) {
       chrome.bookmarks.getSubTree(defaultSuggestionMatches[1], (data) => {
-        handleOpenAllBookmarks(data[0]);
+        handleOpenAllBookmarks(data[0], false);
       });
     }
   });

@@ -122,12 +122,19 @@ function getAllBookmarksStartingAt(bookmark) {
   return bookmarks;
 }
 
-export function handleOpenAllBookmarks(startingBookmark) {
+export function handleOpenAllBookmarks(startingBookmark, startWithNewTab) {
   const bookmarks = getAllBookmarksStartingAt(startingBookmark);
 
-  window.chrome.tabs.query({ active: true }, (tab) => {
-    window.chrome.tabs.update(tab.id, { url: bookmarks[0] });
-  });
+  if (startWithNewTab) {
+    window.chrome.tabs.create({
+      url: bookmarks[0],
+      active: false,
+    });
+  } else {
+    window.chrome.tabs.query({ active: true }, (tab) => {
+      window.chrome.tabs.update(tab.id, { url: bookmarks[0] });
+    });
+  }
 
   bookmarks.slice(1).forEach((bookmark) => {
     window.chrome.tabs.create({
