@@ -10,8 +10,10 @@ export function nothing(e) {
 export function setBrowserActionIcon(icon) {
   const iconPaths = {
     default: '/icons/bookmark48.png',
-    star: '/icons/star_fav.png',
-    star_empty: '/icons/star_fav_empty.png',
+    star: '/icons/black-star.png',
+    star_empty: '/icons/black-open-star.png',
+    white_star: '/icons/white-star.png',
+    white_star_empty: '/icons/white-open-star.png',
   };
 
   window.chrome.browserAction.setIcon({
