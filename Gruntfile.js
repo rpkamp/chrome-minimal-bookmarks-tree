@@ -85,17 +85,22 @@ module.exports = function (grunt) {
       },
     },
     eslint: {
-      src: ['src/js/**/*.js']
+      src: [
+        'src/browser_action/*.js',
+        'src/options/*.js',
+        'src/background/*.js',
+        'src/common/*.js',
+      ],
     },
     webpack: {
-      build: {
+      browserActionPage: {
         progress: true,
         entry: {
-          popup: './src/js/popup.js',
+          popup: './src/browser_action/index.js',
         },
         output: {
-          path: './dist/js',
-          filename: '[name].js'
+          path: './dist/browser_action/',
+          filename: 'index.js'
         },
         module: {
           loaders: [{
@@ -116,7 +121,7 @@ module.exports = function (grunt) {
           new webpack.optimize.UglifyJsPlugin()
         ]
       },
-      buildOptions: {
+      optionsPage: {
         progress: true,
         entry: './src/options/index.js',
         output: {
@@ -142,7 +147,7 @@ module.exports = function (grunt) {
           new webpack.optimize.UglifyJsPlugin()
         ]
       },
-      buildBackground: {
+      backgroundPage: {
         progress: true,
         entry: './src/background/index.js',
         output: {
@@ -168,7 +173,7 @@ module.exports = function (grunt) {
           new webpack.optimize.UglifyJsPlugin()
         ]
       },
-      buildTests: {
+      tests: {
         progress: true,
         entry: {
           settings_test: './tests/src/tests.js',
@@ -196,7 +201,7 @@ module.exports = function (grunt) {
           { expand: true, cwd: 'src/', src: ['icons/**'], dest: 'dist/' },
           { expand: true, cwd: 'src/', src: ['manifest.json'], dest: 'dist/' },
           { src: 'node_modules/bootstrap/dist/css/bootstrap.min.css', dest: 'dist/options/bootstrap4.css' },
-          { src: 'node_modules/dragula/dist/dragula.css', dest: 'dist/css/dragula.css' },
+          { src: 'node_modules/dragula/dist/dragula.css', dest: 'dist/browser_action/dragula.css' },
         ]
       }
     },
@@ -210,7 +215,7 @@ module.exports = function (grunt) {
           removeScriptTypeAttributes: true
         },
         files: [
-          { expand: true, cwd: 'src/', src: '*.html', dest: 'dist/' },
+          { expand: true, cwd: 'src/browser_action/', src: '*.html', dest: 'dist/browser_action/' },
           { expand: true, cwd: 'src/options/', src: '*.html', dest: 'dist/options/' },
           { expand: true, cwd: 'src/background/', src: '*.html', dest: 'dist/background/' }
         ]
@@ -220,7 +225,7 @@ module.exports = function (grunt) {
       options: {},
       main: {
         files: [
-          { expand: true, cwd: 'src/', src: 'css/*.css', dest: 'dist/' },
+          { expand: true, cwd: 'src/browser_action/', src: '*.css', dest: 'dist/browser_action/' },
           { expand: true, cwd: 'src/options/', src: '*.css', dest: 'dist/options/' },
           { expand: true, cwd: 'src/background/', src: '*.css', dest: 'dist/background/' }
         ]
@@ -229,8 +234,8 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('pack', ['test', 'clean:pack', 'build', 'compress']);
-  grunt.registerTask('build', ['clean:build', 'webpack', 'webpack:buildOptions', 'webpack:buildBackground', 'copy', 'htmlmin', 'cssmin']);
-  grunt.registerTask('build-tests', ['webpack:buildTests']);
+  grunt.registerTask('build', ['clean:build', 'webpack:browserActionPage', 'webpack:optionsPage', 'webpack:backgroundPage', 'copy', 'htmlmin', 'cssmin']);
+  grunt.registerTask('build-tests', ['webpack:tests']);
   grunt.registerTask('test', ['lint', 'build-tests', 'connect', 'saucelabs-qunit']);
   grunt.registerTask('lint', ['eslint']);
   grunt.registerTask('default', 'build');

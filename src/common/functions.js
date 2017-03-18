@@ -1,7 +1,5 @@
 /* global window,Node */
 
-import HeightAnimator from './HeightAnimator';
-
 export function nothing(e) {
   e.preventDefault();
   e.stopPropagation();
@@ -76,16 +74,6 @@ export function getAncestorsWithClass(elem, className) {
   }
 
   return parents.concat(getAncestorsWithClass(elem.parentNode, className));
-}
-
-export function slideUp(element, duration) {
-  const animator = new HeightAnimator(element, 0, duration);
-  animator.start();
-}
-
-export function slideDown(element, duration) {
-  const animator = new HeightAnimator(element, 'auto', duration);
-  animator.start();
 }
 
 export function elementIndex(element) {
