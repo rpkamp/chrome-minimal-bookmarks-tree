@@ -63,13 +63,13 @@ li {
 
 .folder > span {
 	color: #000;
-	background-image: url(/icons/folder_closed.png);
+	background-image: url(folder_closed.png);
 	background-position: 0 3px;
 	background-repeat: no-repeat;
 }
 
 .folder.open > span {
-	background-image: url(/icons/folder_open.png);
+	background-image: url(folder_open.png);
 }
 
 .sub {

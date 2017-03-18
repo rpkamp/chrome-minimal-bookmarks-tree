@@ -200,6 +200,7 @@ module.exports = function (grunt) {
           { expand: true, cwd: 'src/', src: ['_locales/**'], dest: 'dist/' },
           { expand: true, cwd: 'src/', src: ['icons/**'], dest: 'dist/' },
           { expand: true, cwd: 'src/', src: ['manifest.json'], dest: 'dist/' },
+          { expand: true, cwd: 'src/browser_action/', src: ['*.png'], dest: 'dist/browser_action/' },
           { src: 'node_modules/bootstrap/dist/css/bootstrap.min.css', dest: 'dist/options/bootstrap4.css' },
           { src: 'node_modules/dragula/dist/dragula.css', dest: 'dist/browser_action/dragula.css' },
         ]
