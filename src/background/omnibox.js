@@ -1,5 +1,5 @@
 /* global chrome */
-import { handleOpenAllBookmarks } from './functions';
+import { handleOpenAllBookmarks } from '../js/functions';
 
 /**
  * Hook into the chrome omnibox API to let people search
