@@ -1,7 +1,8 @@
 /* global window, document */
 
-import Settings from '../settings';
-import PersistentSet from '../PersistentSet';
+import Settings from '../js/settings';
+import HeightAnimator from './HeightAnimator';
+import PersistentSet from './PersistentSet';
 import {
   nothing,
   getElementData,
@@ -12,9 +13,7 @@ import {
   hasClass,
   removeClass,
   handleOpenAllBookmarks,
-  slideUp,
-  slideDown,
-} from '../functions';
+} from '../js/functions';
 
 const mbtSettings = new Settings();
 const openFolders = new PersistentSet('openfolders');
@@ -112,6 +111,16 @@ export function buildTree(
   });
 
   return wrapper;
+}
+
+export function slideUp(element, duration) {
+  const animator = new HeightAnimator(element, 0, duration);
+  animator.start();
+}
+
+export function slideDown(element, duration) {
+  const animator = new HeightAnimator(element, 'auto', duration);
+  animator.start();
 }
 
 function handleToggleFolder(element) {

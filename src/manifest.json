@@ -17,8 +17,8 @@
 		"chrome://favicon/"
 	],
 	"browser_action": {
-	    "default_title": "Bookmarks",
-	    "default_popup": "popup.html",
+	    "default_title": "Minimal Bookmarks Tree",
+	    "default_popup": "browser_action/index.html",
 		"default_icon": "icons/bookmark48.png"
 	},
 	"icons": {

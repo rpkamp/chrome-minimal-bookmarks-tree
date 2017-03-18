@@ -8,8 +8,8 @@ import {
   removeClass,
   getElementData,
   elementIndex,
-} from './functions';
-import Settings from './settings';
+} from '../js/functions';
+import Settings from '../js/settings';
 import {
   buildTree,
   setElementDimensions,
@@ -18,7 +18,7 @@ import {
   showContextMenuBookmark,
   openAllBookmarks,
   removeContextMenu,
-} from './popup/functions';
+} from './functions';
 import dragula from '../../node_modules/dragula/dragula';
 
 (function init(settings, chrome) {
