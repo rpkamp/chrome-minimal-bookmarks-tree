@@ -1,11 +1,11 @@
 /* global window,document */
 
-import Settings from './settings';
+import Settings from '../js/settings';
 import {
   nothing,
   setBrowserActionIcon,
   translateDocument,
-} from './functions';
+} from '../js/functions';
 
 (function init(settings) {
   const addEventListenerMulti = (element, events, callback) => {
