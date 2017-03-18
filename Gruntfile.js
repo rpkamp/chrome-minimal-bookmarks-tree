@@ -89,6 +89,7 @@ module.exports = function (grunt) {
         'src/browser_action/*.js',
         'src/options/*.js',
         'src/background/*.js',
+        'src/common/*.js',
       ],
     },
     webpack: {

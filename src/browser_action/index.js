@@ -8,8 +8,8 @@ import {
   removeClass,
   getElementData,
   elementIndex,
-} from '../js/functions';
-import Settings from '../js/settings';
+} from '../common/functions';
+import Settings from '../common/settings';
 import {
   buildTree,
   setElementDimensions,

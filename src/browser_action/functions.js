@@ -1,6 +1,6 @@
 /* global window, document */
 
-import Settings from '../js/settings';
+import Settings from '../common/settings';
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
 import {
@@ -13,7 +13,7 @@ import {
   hasClass,
   removeClass,
   handleOpenAllBookmarks,
-} from '../js/functions';
+} from '../common/functions';
 
 const mbtSettings = new Settings();
 const openFolders = new PersistentSet('openfolders');
