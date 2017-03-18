@@ -13,8 +13,7 @@ branches:
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
-  file: "mbt.zip"
+  file: mbt.zip
   skip_cleanup: true
   on:
     tags: true
-    all_branches: true
