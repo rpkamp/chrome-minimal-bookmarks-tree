@@ -1,29 +1,17 @@
 /* global module:false */
 module.exports = function (grunt) {
   var browsers = [{
-    browserName: "googlechrome",
-    platform: "linux",
-    version: "48.0"
-  }, {
-    browserName: "googlechrome",
-    platform: "linux",
-    version: "47.0"
-  }, {
     browserName: "chrome",
     platform: "Windows 10",
     version: "beta"
   }, {
     browserName: "chrome",
     platform: "Windows 10",
-    version: "55.0"
+    version: "56.0"
   }, {
     browserName: "chrome",
     platform: "Windows 10",
-    version: "54.0"
-  }, {
-    browserName: "chrome",
-    platform: "Windows 10",
-    version: "53.0"
+    version: "51.0"
   }, {
     browserName: "chrome",
     platform: "OS X 10.11",
@@ -31,15 +19,11 @@ module.exports = function (grunt) {
   }, {
     browserName: "chrome",
     platform: "OS X 10.11",
-    version: "55.0"
+    version: "56.0"
   }, {
     browserName: "chrome",
     platform: "OS X 10.11",
-    version: "54.0"
-  }, {
-    browserName: "chrome",
-    platform: "OS X 10.11",
-    version: "53.0"
+    version: "51.0"
   }];
 
   grunt.loadNpmTasks('grunt-contrib-cssmin');
