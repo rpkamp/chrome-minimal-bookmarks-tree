@@ -1,4 +1,4 @@
-import { hasClass, addClass, removeClass, toggleClass } from '../../src/js/functions';
+import { hasClass, addClass, removeClass, toggleClass } from '../../src/common/functions';
 
 export default function() {
   QUnit.test("hasClass on one class", function (assert) {

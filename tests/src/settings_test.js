@@ -1,4 +1,4 @@
-import Settings from '../../src/js/settings';
+import Settings from '../../src/common/settings';
 
 export default function() {
   QUnit.test("Simple set and get", function (assert) {
