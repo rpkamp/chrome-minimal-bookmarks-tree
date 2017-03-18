@@ -26,6 +26,12 @@
     "optionIconOpenStar": {
          "message": "Open star"
     },
+    "optionIconWhiteStar": {
+        "message": "White Star"
+    },
+    "optionIconWhiteOpenStar": {
+        "message": "White Open star"
+    },
     "optionAnimationSpeed": {
         "message": "Animation speed"
     },

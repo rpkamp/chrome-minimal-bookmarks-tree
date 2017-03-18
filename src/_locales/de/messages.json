@@ -1,10 +1,4 @@
 {
-    "omniboxFolderDescription": {
-        "message": "Lesezeichen Ordner"
-    },
-    "omniboxDefaultSuggestion": {
-        "message": "Suche nach Lesezeichen und Ordner"
-    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Optionen"
     },
@@ -30,7 +24,13 @@
         "message": "Stern"
     },
     "optionIconOpenStar": {
-        "message": "\u00d6ffne Stern"
+        "message": "Offner Stern"
+    },
+    "optionIconWhiteStar": {
+        "message": "Wei\u00dfer Stern"
+    },
+    "optionIconWhiteOpenStar": {
+        "message": "Offner Wei\u00dfer Stern"
     },
     "optionAnimationSpeed": {
         "message": "Animationsgeschw."
@@ -127,5 +127,11 @@
     },
     "deleteFolder": {
         "message": "Wollen Sie diesen Ordner wirklich l\u00f6schen?"
+    },
+    "omniboxFolderDescription": {
+        "message": "Lesezeichen Ordner"
+    },
+    "omniboxDefaultSuggestion": {
+        "message": "Suche nach Lesezeichen und Ordner"
     }
 }
