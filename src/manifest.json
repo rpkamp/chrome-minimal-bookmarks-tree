@@ -11,7 +11,7 @@
 	"omnibox": {
 		"keyword": "bm"
 	},
-	"options_page": "options.html",
+	"options_page": "options/index.html",
 	"permissions": [
 		"bookmarks",
 		"chrome://favicon/"
