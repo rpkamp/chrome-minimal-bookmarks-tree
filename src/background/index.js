@@ -1,7 +1,7 @@
 /* global chrome */
 
-import Settings from './settings';
-import { setBrowserActionIcon } from './functions';
+import Settings from '../js/settings';
+import { setBrowserActionIcon } from '../js/functions';
 import initialiseOmniboxBookmarksSearch from './omnibox';
 
 const settings = new Settings();

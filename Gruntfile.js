@@ -91,7 +91,6 @@ module.exports = function (grunt) {
       build: {
         progress: true,
         entry: {
-          background: './src/js/background.js',
           popup: './src/js/popup.js',
         },
         output: {
@@ -122,6 +121,32 @@ module.exports = function (grunt) {
         entry: './src/options/index.js',
         output: {
           path: './dist/options',
+          filename: 'index.js'
+        },
+        module: {
+          loaders: [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader'
+          }]
+        },
+        resolve: {
+          extensions: ['', '.js']
+        },
+        plugins: [
+          new webpack.DefinePlugin({
+            DEBUG: false,
+            PRODUCTION: true
+          }),
+          new webpack.optimize.DedupePlugin(),
+          new webpack.optimize.UglifyJsPlugin()
+        ]
+      },
+      buildBackground: {
+        progress: true,
+        entry: './src/background/index.js',
+        output: {
+          path: './dist/background',
           filename: 'index.js'
         },
         module: {
@@ -186,7 +211,8 @@ module.exports = function (grunt) {
         },
         files: [
           { expand: true, cwd: 'src/', src: '*.html', dest: 'dist/' },
-          { expand: true, cwd: 'src/options/', src: '*.html', dest: 'dist/options/' }
+          { expand: true, cwd: 'src/options/', src: '*.html', dest: 'dist/options/' },
+          { expand: true, cwd: 'src/background/', src: '*.html', dest: 'dist/background/' }
         ]
       }
     },
@@ -195,14 +221,15 @@ module.exports = function (grunt) {
       main: {
         files: [
           { expand: true, cwd: 'src/', src: 'css/*.css', dest: 'dist/' },
-          { expand: true, cwd: 'src/options/', src: '*.css', dest: 'dist/options/' }
+          { expand: true, cwd: 'src/options/', src: '*.css', dest: 'dist/options/' },
+          { expand: true, cwd: 'src/background/', src: '*.css', dest: 'dist/background/' }
         ]
       }
     }
   });
 
   grunt.registerTask('pack', ['test', 'clean:pack', 'build', 'compress']);
-  grunt.registerTask('build', ['clean:build', 'webpack', 'webpack:buildOptions', 'copy', 'htmlmin', 'cssmin']);
+  grunt.registerTask('build', ['clean:build', 'webpack', 'webpack:buildOptions', 'webpack:buildBackground', 'copy', 'htmlmin', 'cssmin']);
   grunt.registerTask('build-tests', ['webpack:buildTests']);
   grunt.registerTask('test', ['lint', 'build-tests', 'connect', 'saucelabs-qunit']);
   grunt.registerTask('lint', ['eslint']);
