@@ -1,10 +1,4 @@
 {
-    "omniboxFolderDescription": {
-        "message": "bladwijzer map"
-    },
-    "omniboxDefaultSuggestion": {
-        "message": "Zoek naar bladwijzers en mappen"
-    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },
@@ -31,6 +25,12 @@
     },
     "optionIconOpenStar": {
         "message": "Open ster"
+    },
+    "optionIconWhiteStar": {
+        "message": "Witte ster"
+    },
+    "optionIconWhiteOpenStar": {
+        "message": "Witte open ster"
     },
     "optionAnimationSpeed": {
         "message": "Animatiesnelheid"
@@ -127,5 +127,11 @@
     },
     "deleteFolder": {
         "message": "Weet u zeker dat u deze map wilt verwijderen?"
+    },
+    "omniboxFolderDescription": {
+        "message": "bladwijzer map"
+    },
+    "omniboxDefaultSuggestion": {
+        "message": "Zoek naar bladwijzers en mappen"
     }
 }

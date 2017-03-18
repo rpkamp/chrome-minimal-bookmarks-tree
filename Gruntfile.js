@@ -44,8 +44,8 @@ module.exports = function (grunt) {
       banner: '/*! <%= pkg.name %> */'
     },
     clean: {
-      pack: ['dist', 'mbt.zip'],
-      build: ['dist']
+      pack: ['dist/', 'mbt.zip'],
+      build: ['dist/']
     },
     compress: {
       main: {
