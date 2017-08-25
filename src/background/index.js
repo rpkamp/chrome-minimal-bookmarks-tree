@@ -1,5 +1,3 @@
-/* global chrome */
-
 import Settings from '../common/settings';
 import { setBrowserActionIcon } from '../common/functions';
 import initialiseOmniboxBookmarksSearch from './omnibox';
