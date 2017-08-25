@@ -127,7 +127,7 @@ import dragula from '../../node_modules/dragula/dragula';
           return false;
         }
         const url = getElementData(event.target.parentNode, 'url');
-        chrome.tabs.create({ url });
+        chrome.tabs.create({ url, active: false });
       }
 
       return false;
