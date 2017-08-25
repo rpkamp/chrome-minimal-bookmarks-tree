@@ -2,8 +2,12 @@ language: node_js
 
 node_js: "6"
 
-before_script: npm install
 script: grunt pack
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
 
 branches:
   only:
