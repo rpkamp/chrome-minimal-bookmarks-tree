@@ -4,18 +4,18 @@ Minimal Bookmarks Tree is an extension for Google Chrome and can be found in the
 
 ## Development
 
-To work on this project you need [NodeJS and NPM][NPM].
+To work on this project you need [Yarn][yarn].
 Once you have that, run
 
 ```bash
-npm install
+yarn install
 ```
 
 That will install all dependencies required for this project.
 
 You will also need to install [grunt-cli][grunt-cli].
 
-Once `npm` and `grunt` are installed, you can edit the files in `src/`. When you are happy with your work run
+Once `yarn` and `grunt` are installed, you can edit the files in `src/`. When you are happy with your work run
 
 ```bash
 grunt
@@ -86,7 +86,7 @@ Main icon: [https://www.iconfinder.com/icons/40698/bookmark_icon#size=128][main-
 Star: [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128][star]
 Open star: [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star]
 
-[NPM]: https://docs.npmjs.com/getting-started/installing-node
+[yarn]: https://yarnpkg.com/lang/en/docs/install/
 [grunt-cli]: http://gruntjs.com/getting-started#installing-the-cli
 [chrome-extensions]: chrome://extensions/
 [sauce-labs]: https://saucelabs.com/
