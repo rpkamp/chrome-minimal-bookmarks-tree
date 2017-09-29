@@ -4,8 +4,7 @@ html,body {
 }
 
 body {
-    margin: 2rem 0;
-    background: #e0eeee;
+    background: #fff;
 }
 
 .license-toggle {
@@ -24,14 +23,14 @@ body {
 }
 
 .donate {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
+    border: 1px solid #ccc;
+    background: #eee;
+    padding: 10px 20px;
+    text-align: center;
+    margin-top: 10px;
+    border-radius: 5px;
 }
 
-@media (max-width:600px) {
-    .donate {
-        position: static;
-        margin-left: 1rem;
-    }
+.donate img {
+    margin-top: 5px;
 }
