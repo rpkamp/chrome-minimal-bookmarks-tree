@@ -29,6 +29,14 @@ import dragula from '../../node_modules/dragula/dragula';
   const loading = document.querySelector('#loading');
   const bm = document.querySelector('#bookmarks');
 
+  const execScript = ((code) => {
+    const head = document.querySelector('head');
+    const script = document.createElement('script');
+    script.textContent = code;
+    head.appendChild(script);
+    head.removeChild(script);
+  }).toString();
+
   chrome.bookmarks.getTree((bookmarksTree) => {
     const otherBookmarks = buildTree(
       bookmarksTree[0].children[1],
@@ -79,7 +87,18 @@ import dragula from '../../node_modules/dragula/dragula';
         }
 
         chrome.tabs.query({ active: true }, (tab) => {
-          chrome.tabs.update(tab.id, { url });
+          // Detects bookmarklet
+          const bookmarklet = /^javascript:(.*)/i.exec(url);
+          if (bookmarklet && bookmarklet[1]) {
+            // Run bookmarklet in selected webpage's context
+            chrome.tabs.executeScript(tab.id, {
+              code: `(${execScript})(${
+                JSON.stringify(decodeURIComponent(bookmarklet[1]))
+              })`,
+            });
+          } else {
+            chrome.tabs.update(tab.id, { url });
+          }
           window.close();
         });
       }

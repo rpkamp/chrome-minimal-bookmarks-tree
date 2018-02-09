@@ -17,6 +17,9 @@
 	},
 	"permissions": [
 		"bookmarks",
+		"http://*/",
+		"https://*/",
+		"file://*/",
 		"chrome://favicon/"
 	],
 	"browser_action": {
