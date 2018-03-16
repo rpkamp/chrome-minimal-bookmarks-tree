@@ -1,4 +1,7 @@
 {
+    "optionConfirmBookmarkDeletion": {
+        "message": "Lesezeichen l\u00f6schen best\u00e4tigen"
+    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Optionen"
     },

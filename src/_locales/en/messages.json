@@ -133,5 +133,8 @@
     },
     "omniboxDefaultSuggestion": {
         "message": "Search for bookmarks and bookmark folders"
+    },
+    "optionConfirmBookmarkDeletion": {
+        "message": "Confirm bookmark deletion"
     }
 }
