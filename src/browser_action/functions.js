@@ -335,11 +335,17 @@ export function showContextMenuBookmark(bookmark, offset) {
 
   contextMenu.querySelector('.delete').addEventListener('click', (event) => {
     contextAction(event, () => {
-      showConfirm(`${window.chrome.i18n.getMessage('deleteBookmark')}<br /><br />${bookmark.querySelector('span').innerText}`, () => {
+      if (mbtSettings.get('confirm_bookmark_deletion')) {
+        showConfirm(`${window.chrome.i18n.getMessage('deleteBookmark')}<br /><br />${bookmark.querySelector('span').innerText}`, () => {
+          window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
+            bookmark.parentNode.removeChild(bookmark);
+          });
+        });
+      } else {
         window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
           bookmark.parentNode.removeChild(bookmark);
         });
-      });
+      }
     });
   });
   contextMenu.querySelector('.edit').addEventListener('click', (event) => {

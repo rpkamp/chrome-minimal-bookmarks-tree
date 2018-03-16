@@ -1,4 +1,7 @@
 {
+    "optionConfirmBookmarkDeletion": {
+        "message": "Vraag bevestiging bij verwijderen bladwijzer"
+    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },

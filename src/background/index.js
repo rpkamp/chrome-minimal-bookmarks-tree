@@ -21,8 +21,15 @@ if (version === null) {
   setDefaultSetting('width', 300);
   setDefaultSetting('zoom', 100);
   setDefaultSetting('icon', 'default');
+  setDefaultSetting('confirm_bookmark_deletion', true);
 
   settings.set('default_settings_version', 1);
+}
+
+if (version === 1) {
+  setDefaultSetting('confirm_bookmark_deletion', true);
+
+  settings.set('default_settings_version', 2);
 }
 
 setBrowserActionIcon(settings.get('icon'));
