@@ -9,6 +9,11 @@
 <body>
 	<div class="container">
 
+        <div class="donate">
+            <strong>Like this extension? Buy me a coffee 🙂</strong>
+            <a href="https://paypal.me/rpkamp"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="Donate with paypal" /></a>
+        </div>
+
         <div class="row form-group">
             <label for="icon" data-i18n-key="optionIcon" class="col-sm-2 col-form-label">Icon</label>
             <div class="col-sm-4">
@@ -34,6 +39,38 @@
                 </select>
             </div>
         </div>
+
+        <div class="row form-group">
+            <label for="click_action" data-i18n-key="optionClickAction" class="col-sm-2 col-form-label">On click, open bookmark in</label>
+            <div class="col-sm-4">
+                <select id="click_action" class="form-control">
+                    <option value="current" data-i18n-key="optionClickActionCurrent">Current tab</option>
+                    <option value="new" data-i18n-key="optionClickActionNew">New tab</option>
+                    <option value="background" data-i18n-key="optionClickActionBackground">Background tab</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label for="middle_click_action" data-i18n-key="optionMiddleClickAction" class="col-sm-2 col-form-label">On middle click, open bookmark in</label>
+            <div class="col-sm-4">
+                <select id="middle_click_action" class="form-control">
+                    <option value="current" data-i18n-key="optionClickActionCurrent">Current tab</option>
+                    <option value="new" data-i18n-key="optionClickActionNew">New tab</option>
+                    <option value="background" data-i18n-key="optionClickActionBackground">Background tab</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label for="super_click_action" data-i18n-key="optionSuperClickAction" class="col-sm-2 col-form-label">On ctrl/option + click, open bookmark in</label>
+            <div class="col-sm-4">
+                <select id="super_click_action" class="form-control">
+                    <option value="current" data-i18n-key="optionClickActionCurrent">Current tab</option>
+                    <option value="new" data-i18n-key="optionClickActionNew">New tab</option>
+                    <option value="background" data-i18n-key="optionClickActionBackground">Background tab</option>
+                </select>
+            </div>
+        </div>
+
         <div class="row form-group">
             <label for="zoom" data-i18n-key="optionZoomLevel" class="col-sm-2 col-form-label">Zoom Level</label>
             <div class="col-sm-3">
@@ -115,11 +152,6 @@
             <span data-i18n-key="optionWidthHeightOptimization">Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above.</span>
             <span data-i18n-key="optionWidthHeightEnforcedByBrowser">Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree.</span><br />
         </em></small>
-
-        <div class="donate">
-            <strong>Like this extension? Buy me a coffee 🙂</strong>
-            <a href="https://paypal.me/rpkamp"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="Donate with paypal" /></a>
-        </div>
 
         <a class="license-toggle" href="#" data-i18n-key="optionShowLicense">Show license</a>
 

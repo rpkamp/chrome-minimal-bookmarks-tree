@@ -136,5 +136,23 @@
     },
     "optionConfirmBookmarkDeletion": {
         "message": "Confirm bookmark deletion"
+    },
+    "optionClickAction": {
+        "message": "On click, open bookmark in"
+    },
+    "optionMiddleClickAction": {
+        "message": "On middle click, open bookmark in"
+    },
+    "optionSuperClickAction": {
+        "message": "On ctrl/option + click, open bookmark in"
+    },
+    "optionClickActionCurrent": {
+        "message": "Current tab"
+    },
+    "optionClickActionNew": {
+        "message": "New tab"
+    },
+    "optionClickActionBackground": {
+        "message": "Background tab"
     }
 }

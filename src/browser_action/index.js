@@ -8,6 +8,7 @@ import {
   removeClass,
   getElementData,
   elementIndex,
+  openBookmark,
 } from '../common/functions';
 import Settings from '../common/settings';
 import {
@@ -60,29 +61,31 @@ import dragula from '../../node_modules/dragula/dragula';
       if (!event.target || event.target.nodeName !== 'SPAN') {
         return nothing(event);
       }
+
       document.querySelectorAll('.selected').forEach((element) => {
         removeClass(element, 'selected');
       });
+
       removeContextMenu();
+
       if (hasClass(event.target.parentNode, 'folder')) {
         toggleFolder(event.target.parentNode);
 
         return nothing(event);
       }
 
-      const url = getElementData(event.target.parentNode, 'url');
-      if (event.button === 0) {
-        if (event.ctrlKey || event.metaKey) {
-          chrome.tabs.create({ url, active: false });
-
-          return nothing(event);
-        }
-
-        chrome.tabs.query({ active: true }, (tab) => {
-          chrome.tabs.update(tab.id, { url });
-          window.close();
-        });
+      if (event.button !== 0) {
+        return nothing(event);
       }
+
+      let actionType = 'click_action';
+
+      if (event.ctrlKey || event.metaKey) {
+        actionType = 'super_click_action';
+      }
+
+      const url = getElementData(event.target.parentNode, 'url');
+      openBookmark(url, settings.get(actionType));
 
       return nothing(event);
     });
@@ -124,13 +127,13 @@ import dragula from '../../node_modules/dragula/dragula';
         if (hasClass(event.target.parentNode, 'folder')) {
           openAllBookmarks(event.target.parentNode);
 
-          return false;
+          return nothing(event);
         }
         const url = getElementData(event.target.parentNode, 'url');
-        chrome.tabs.create({ url, active: false });
+        openBookmark(url, settings.get('middle_click_action'));
       }
 
-      return false;
+      return nothing(event);
     });
 
     bm.style.display = 'block';
