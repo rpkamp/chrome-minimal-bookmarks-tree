@@ -2,6 +2,24 @@
     "optionConfirmBookmarkDeletion": {
         "message": "Vraag bevestiging bij verwijderen bladwijzer"
     },
+    "optionClickAction": {
+        "message": "Bij klik, open bladwijzer in"
+    },
+    "optionMiddleClickAction": {
+        "message": "Bij middelklik, open bladwijzer in"
+    },
+    "optionSuperClickAction": {
+        "message": "Bij ctrl\/option + klik, open bladwijzer in"
+    },
+    "optionClickActionCurrent": {
+        "message": "Huidige tab"
+    },
+    "optionClickActionNew": {
+        "message": "Nieuwe tab"
+    },
+    "optionClickActionBackground": {
+        "message": "Nieuw tab, in de achtergrond"
+    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },

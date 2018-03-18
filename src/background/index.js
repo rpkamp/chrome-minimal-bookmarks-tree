@@ -4,33 +4,27 @@ import initialiseOmniboxBookmarksSearch from './omnibox';
 
 const settings = new Settings();
 
-function setDefaultSetting(key, value) {
-  if (settings.get(key) === null) {
-    settings.set(key, value);
+const setDefaultSetting = (key, value) => {
+  if (settings.get(key) !== null) {
+    return;
   }
-}
 
-const version = settings.get('default_settings_version');
-if (version === null) {
-  setDefaultSetting('close_old_folder', false);
-  setDefaultSetting('open_all_sub', true);
-  setDefaultSetting('animation_duration', 200);
-  setDefaultSetting('hide_empty_folders', false);
-  setDefaultSetting('remember_scroll_position', true);
-  setDefaultSetting('height', 500);
-  setDefaultSetting('width', 300);
-  setDefaultSetting('zoom', 100);
-  setDefaultSetting('icon', 'default');
-  setDefaultSetting('confirm_bookmark_deletion', true);
+  settings.set(key, value);
+};
 
-  settings.set('default_settings_version', 1);
-}
-
-if (version === 1) {
-  setDefaultSetting('confirm_bookmark_deletion', true);
-
-  settings.set('default_settings_version', 2);
-}
+setDefaultSetting('close_old_folder', false);
+setDefaultSetting('open_all_sub', true);
+setDefaultSetting('animation_duration', 200);
+setDefaultSetting('hide_empty_folders', false);
+setDefaultSetting('remember_scroll_position', true);
+setDefaultSetting('height', 500);
+setDefaultSetting('width', 300);
+setDefaultSetting('zoom', 100);
+setDefaultSetting('icon', 'default');
+setDefaultSetting('confirm_bookmark_deletion', true);
+setDefaultSetting('click_action', 'current');
+setDefaultSetting('middle_click_action', 'background');
+setDefaultSetting('super_click_action', 'new');
 
 setBrowserActionIcon(settings.get('icon'));
 
