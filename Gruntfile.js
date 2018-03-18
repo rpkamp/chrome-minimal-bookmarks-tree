@@ -81,7 +81,7 @@ module.exports = function (grunt) {
       ],
     },
     webpack: {
-      browserActionPage: {
+      browserAction: {
         progress: true,
         entry: {
           popup: './src/browser_action/index.js',
@@ -135,11 +135,11 @@ module.exports = function (grunt) {
           new webpack.optimize.UglifyJsPlugin()
         ]
       },
-      backgroundPage: {
+      eventpage: {
         progress: true,
-        entry: './src/background/index.js',
+        entry: './src/eventpage/index.js',
         output: {
-          path: './dist/background',
+          path: './dist/eventpage',
           filename: 'index.js'
         },
         module: {
@@ -206,7 +206,7 @@ module.exports = function (grunt) {
         files: [
           { expand: true, cwd: 'src/browser_action/', src: '*.html', dest: 'dist/browser_action/' },
           { expand: true, cwd: 'src/options/', src: '*.html', dest: 'dist/options/' },
-          { expand: true, cwd: 'src/background/', src: '*.html', dest: 'dist/background/' }
+          { expand: true, cwd: 'src/eventpage/', src: '*.html', dest: 'dist/eventpage/' }
         ]
       }
     },
@@ -216,14 +216,14 @@ module.exports = function (grunt) {
         files: [
           { expand: true, cwd: 'src/browser_action/', src: '*.css', dest: 'dist/browser_action/' },
           { expand: true, cwd: 'src/options/', src: '*.css', dest: 'dist/options/' },
-          { expand: true, cwd: 'src/background/', src: '*.css', dest: 'dist/background/' }
+          { expand: true, cwd: 'src/eventpage/', src: '*.css', dest: 'dist/eventpage/' }
         ]
       }
     }
   });
 
   grunt.registerTask('pack', ['test', 'clean:pack', 'build', 'compress']);
-  grunt.registerTask('build', ['clean:build', 'webpack:browserActionPage', 'webpack:optionsPage', 'webpack:backgroundPage', 'copy', 'htmlmin', 'cssmin']);
+  grunt.registerTask('build', ['clean:build', 'webpack:browserAction', 'webpack:optionsPage', 'webpack:eventpage', 'copy', 'htmlmin', 'cssmin']);
   grunt.registerTask('build-tests', ['webpack:tests']);
   grunt.registerTask('test', ['lint', 'build-tests', 'connect', 'saucelabs-qunit']);
   grunt.registerTask('lint', ['eslint']);
