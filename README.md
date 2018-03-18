@@ -78,11 +78,11 @@ grunt test
 
 to run tests in sauce labs.
 
-### Translations
+## Translations
 
 Translations for minimal bookmarks tree are managed using [OneSky][oneskyapp]. Please feel free to suggest alternate translations and/or languages!
 
-### Icons
+## Icons
 
 ![main icon](src/icons/bookmark32.png)
 
@@ -96,7 +96,7 @@ Star: [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128]
 
 Open star: [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star]
 
-### Donations
+## Donations
 
 Like this extension? Buy me a coffee 🙂
 
