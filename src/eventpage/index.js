@@ -26,12 +26,13 @@ window.chrome.runtime.onInstalled.addListener(() => {
   setDefaultSetting('click_action', 'current');
   setDefaultSetting('middle_click_action', 'background');
   setDefaultSetting('super_click_action', 'new');
+
+  initialiseOmniboxBookmarksSearch();
 });
 
 window.chrome.runtime.onStartup.addListener(() => {
   const settings = new Settings();
 
-  console.log('onStartup!');
   if (settings.get('icon') !== null) {
     setBrowserActionIcon(settings.get('icon'));
   }
