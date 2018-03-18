@@ -96,6 +96,12 @@ Star: [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128]
 
 Open star: [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star]
 
+### Donations
+
+Like this extension? Buy me a coffee 🙂
+
+[![Donate with PayPal](https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg)][donate]
+
 [yarn]: https://yarnpkg.com/lang/en/docs/install/
 [grunt-cli]: http://gruntjs.com/getting-started#installing-the-cli
 [chrome-extensions]: chrome://extensions/
@@ -104,3 +110,4 @@ Open star: [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][ope
 [main-icon]: https://www.iconfinder.com/icons/40698/bookmark_icon#size=128
 [star]: https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128
 [open-star]: https://www.iconfinder.com/icons/326487/rate_star_icon#size=128
+[donate]: https://paypal.me/rpkamp
