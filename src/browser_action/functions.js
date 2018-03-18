@@ -78,7 +78,7 @@ export function buildTree(
       bookmark.innerText = child.title;
       bookmark.title = `${child.title} [${child.url}]`;
       bookmark.style.backgroundImage = `url("chrome://favicon/${child.url}")`;
-      bookmark.style.backgroundRepeat = 'no-repeat';
+      bookmark.className = 'bookmark';
       d.appendChild(bookmark);
     } else { // folder
       addClass(d, 'folder');
