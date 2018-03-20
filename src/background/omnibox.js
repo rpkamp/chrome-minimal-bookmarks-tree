@@ -1,4 +1,4 @@
-/* global chrome */
+/* global window */
 import { handleOpenAllBookmarks } from '../common/functions';
 
 /**
@@ -7,8 +7,8 @@ import { handleOpenAllBookmarks } from '../common/functions';
  */
 export default function () {
   let defaultSuggestionContent = '';
-  const folderDescription = chrome.i18n.getMessage('omniboxFolderDescription');
-  const defaultSuggestion = chrome.i18n.getMessage('omniboxDefaultSuggestion');
+  const folderDescription = window.chrome.i18n.getMessage('omniboxFolderDescription');
+  const defaultSuggestion = window.chrome.i18n.getMessage('omniboxDefaultSuggestion');
 
   function setDefaultSuggestion(suggestion) {
     if (suggestion.description === '' && suggestion.description === '') {
@@ -20,14 +20,14 @@ export default function () {
     }
 
     defaultSuggestionContent = suggestion.content;
-    chrome.omnibox.setDefaultSuggestion({
+    window.chrome.omnibox.setDefaultSuggestion({
       description: suggestion.description,
     });
   }
 
   function removeDefaultSuggestion() {
     defaultSuggestionContent = '';
-    chrome.omnibox.setDefaultSuggestion({
+    window.chrome.omnibox.setDefaultSuggestion({
       description: defaultSuggestion,
     });
   }
@@ -61,15 +61,15 @@ export default function () {
     }
 
     if (/^https?:\/\//i.test(input)) {
-      chrome.tabs.query({ active: true }, (tab) => {
-        chrome.tabs.update(tab.id, { url: input });
+      window.chrome.tabs.query({ active: true }, (tab) => {
+        window.chrome.tabs.update(tab.id, { url: input });
       });
       return;
     }
 
     const matches = input.match(/^bmfolder:(\d+)$/);
     if (matches) {
-      chrome.bookmarks.getSubTree(matches[1], (data) => {
+      window.chrome.bookmarks.getSubTree(matches[1], (data) => {
         handleOpenAllBookmarks(data[0], false);
       });
       return;
@@ -78,8 +78,8 @@ export default function () {
     throw new Error('Unable to handle input as it does not start with http://, https:// or bmfolder:');
   }
 
-  chrome.omnibox.onInputChanged.addListener((input, suggest) => {
-    chrome.bookmarks.search(input, (bookmarksAndFolders) => {
+  window.chrome.omnibox.onInputChanged.addListener((input, suggest) => {
+    window.chrome.bookmarks.search(input, (bookmarksAndFolders) => {
       const highlighter = createHighlighter(input);
       const suggestions = bookmarksAndFolders.map(
         bookmarkOrFolder => bookmarkOrFolderToSuggestion(bookmarkOrFolder, highlighter),
@@ -96,7 +96,7 @@ export default function () {
     });
   });
 
-  chrome.omnibox.onInputEntered.addListener((input) => {
+  window.chrome.omnibox.onInputEntered.addListener((input) => {
     try {
       handleOmniboxInputEntered(input);
       return;
