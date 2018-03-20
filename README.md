@@ -4,7 +4,7 @@ Minimal Bookmarks Tree is an extension for Google Chrome and can be found in the
 
 ## Development
 
-To work on this project you need [Yarn][yarn].
+To work on this project you need [Yarn][yarn] and [grunt-cli][grunt-cli].
 Once you have that, run
 
 ```bash
@@ -13,9 +13,7 @@ yarn install
 
 That will install all dependencies required for this project.
 
-You will also need to install [grunt-cli][grunt-cli].
-
-Once `yarn` and `grunt` are installed, you can edit the files in `src/`. When you are happy with your work run
+Now you can edit the files in `src/`. When you are happy with your work run
 
 ```bash
 grunt
@@ -23,9 +21,9 @@ grunt
 
 to build a distribution from the sources. This will transpile the ES6 to ES5, compress the CSS,
 minify the HTML and copy some vendor files to a distribution. The distribution wil be placed
-in a `dist` folder in the project.
+in a `dist/` folder in the project.
 You can add now load the extension in Chrome by going to the [chrome extensions page][chrome-extensions],
-tick "Developer mode" and click "Load unpacked extension...". In the file window select the `dist` directory.
+tick "Developer mode" and click "Load unpacked extension...". In the file window select the `dist/` directory.
 
 ## Grunt options
 The following commands are available for `grunt`:
@@ -80,16 +78,36 @@ grunt test
 
 to run tests in sauce labs.
 
-### Icons
+## Translations
+
+Translations for minimal bookmarks tree are managed using [OneSky][oneskyapp]. Please feel free to suggest alternate translations and/or languages!
+
+## Icons
+
+![main icon](src/icons/bookmark32.png)
 
 Main icon: [https://www.iconfinder.com/icons/40698/bookmark_icon#size=128][main-icon]
+
+![star icon](src/icons/black-star.png)
+
 Star: [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128][star]
+
+![open star icon](src/icons/black-open-star.png)
+
 Open star: [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star]
+
+## Donations
+
+Like this extension? Buy me a coffee 🙂
+
+[![Donate with PayPal](https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg)][donate]
 
 [yarn]: https://yarnpkg.com/lang/en/docs/install/
 [grunt-cli]: http://gruntjs.com/getting-started#installing-the-cli
 [chrome-extensions]: chrome://extensions/
 [sauce-labs]: https://saucelabs.com/
+[oneskyapp]: https://minimalbookmarkstree.oneskyapp.com/collaboration/project?id=60763
 [main-icon]: https://www.iconfinder.com/icons/40698/bookmark_icon#size=128
 [star]: https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128
 [open-star]: https://www.iconfinder.com/icons/326487/rate_star_icon#size=128
+[donate]: https://paypal.me/rpkamp

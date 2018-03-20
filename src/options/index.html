@@ -9,6 +9,11 @@
 <body>
 	<div class="container">
 
+        <div class="donate">
+            <strong>Like this extension? Buy me a coffee 🙂</strong>
+            <a href="https://paypal.me/rpkamp"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="Donate with paypal" /></a>
+        </div>
+
         <div class="row form-group">
             <label for="icon" data-i18n-key="optionIcon" class="col-sm-2 col-form-label">Icon</label>
             <div class="col-sm-4">
@@ -34,6 +39,38 @@
                 </select>
             </div>
         </div>
+
+        <div class="row form-group">
+            <label for="click_action" data-i18n-key="optionClickAction" class="col-sm-2 col-form-label">On click, open bookmark in</label>
+            <div class="col-sm-4">
+                <select id="click_action" class="form-control">
+                    <option value="current" data-i18n-key="optionClickActionCurrent">Current tab</option>
+                    <option value="new" data-i18n-key="optionClickActionNew">New tab</option>
+                    <option value="background" data-i18n-key="optionClickActionBackground">Background tab</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label for="middle_click_action" data-i18n-key="optionMiddleClickAction" class="col-sm-2 col-form-label">On middle click, open bookmark in</label>
+            <div class="col-sm-4">
+                <select id="middle_click_action" class="form-control">
+                    <option value="current" data-i18n-key="optionClickActionCurrent">Current tab</option>
+                    <option value="new" data-i18n-key="optionClickActionNew">New tab</option>
+                    <option value="background" data-i18n-key="optionClickActionBackground">Background tab</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label for="super_click_action" data-i18n-key="optionSuperClickAction" class="col-sm-2 col-form-label">On ctrl/option + click, open bookmark in</label>
+            <div class="col-sm-4">
+                <select id="super_click_action" class="form-control">
+                    <option value="current" data-i18n-key="optionClickActionCurrent">Current tab</option>
+                    <option value="new" data-i18n-key="optionClickActionNew">New tab</option>
+                    <option value="background" data-i18n-key="optionClickActionBackground">Background tab</option>
+                </select>
+            </div>
+        </div>
+
         <div class="row form-group">
             <label for="zoom" data-i18n-key="optionZoomLevel" class="col-sm-2 col-form-label">Zoom Level</label>
             <div class="col-sm-3">
@@ -73,32 +110,40 @@
                     <label for="hide_empty_folders">
                         <input type="checkbox" id="hide_empty_folders" />
                         <span data-i18n-key="optionHideEmptyFolders">
-                        Hide empty folders
-                    </span>
+                            Hide empty folders
+                        </span>
                     </label>
                 </p>
                 <p>
                     <label for="close_old_folder">
                         <input type="checkbox" id="close_old_folder" />
                         <span data-i18n-key="optionCloseFolderOnOpenNew">
-                        Close currently opened folder when opening a new one
-                    </span>
+                            Close currently opened folder when opening a new one
+                        </span>
                     </label>
                 </p>
                 <p>
                     <label for="open_all_sub">
                         <input type="checkbox" id="open_all_sub" />
                         <span data-i18n-key="optionOpenAllTraverseSubfolders">
-                        "Open all" opens all bookmarks in all subfolders as well
-                    </span>
+                            "Open all" opens all bookmarks in all subfolders as well
+                        </span>
                     </label>
                 </p>
                 <p>
                     <label for="remember_scroll_position">
                         <input type="checkbox" id="remember_scroll_position" />
                         <span data-i18n-key="optionRememberScrollPosition">
-                        Remember scroll position
-                    </span>
+                            Remember scroll position
+                        </span>
+                    </label>
+                </p>
+                <p>
+                    <label for="confirm_bookmark_deletion">
+                        <input type="checkbox" id="confirm_bookmark_deletion" />
+                        <span data-i18n-key="optionConfirmBookmarkDeletion">
+                            Confirm bookmark deletion
+                        </span>
                     </label>
                 </p>
             </div>
@@ -107,11 +152,6 @@
             <span data-i18n-key="optionWidthHeightOptimization">Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above.</span>
             <span data-i18n-key="optionWidthHeightEnforcedByBrowser">Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree.</span><br />
         </em></small>
-
-        <div class="donate">
-            <strong>Like this extension? Buy me a coffee 🙂</strong>
-            <a href="https://paypal.me/rpkamp"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="Donate with paypal" /></a>
-        </div>
 
         <a class="license-toggle" href="#" data-i18n-key="optionShowLicense">Show license</a>
 

@@ -7,5 +7,6 @@ module.exports = {
     "no-param-reassign": 0,
     "no-plusplus": 0,
     "no-continue": 0,
+    "linebreak-style": 0
   }
 };

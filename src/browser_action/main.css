@@ -1,5 +1,5 @@
 html, body {
-	margin: 0 0 0 4px;
+	margin: 0;
 	padding: 0;
 	overflow: hidden;
 	-webkit-user-select: none;
@@ -23,7 +23,7 @@ span {
 	cursor: pointer;
 	white-space: nowrap;
 	text-decoration: none;
-	padding: 3px 3px 3px 21px;
+	padding: 6px 3px 3px 27px;
 	color: #444;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -44,7 +44,6 @@ span {
 span:hover,
 .selected > span {
 	background-color: #eee;
-	border-radius: 5px;
 }
 
 ul, li {
@@ -64,8 +63,14 @@ li {
 .folder > span {
 	color: #000;
 	background-image: url(folder_closed.png);
-	background-position: 0 3px;
+	background-position: 6px 3px;
 	background-repeat: no-repeat;
+    vertical-align: 2px;
+}
+
+.bookmark {
+    background-position: 6px 3px;
+    background-repeat: no-repeat;
 }
 
 .folder.open > span {

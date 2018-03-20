@@ -112,24 +112,27 @@ function getAllBookmarksStartingAt(bookmark) {
   return bookmarks;
 }
 
+export function openBookmark(url, where) {
+  if (where === 'new') {
+    window.chrome.tabs.create({ url, active: true });
+    return;
+  }
+
+  if (where === 'background') {
+    window.chrome.tabs.create({ url, active: false });
+    return;
+  }
+
+  window.chrome.tabs.update({ url, active: true });
+  window.close();
+}
+
 export function handleOpenAllBookmarks(startingBookmark, startWithNewTab) {
   const bookmarks = getAllBookmarksStartingAt(startingBookmark);
 
-  if (startWithNewTab) {
-    window.chrome.tabs.create({
-      url: bookmarks[0],
-      active: false,
-    });
-  } else {
-    window.chrome.tabs.query({ active: true }, (tab) => {
-      window.chrome.tabs.update(tab.id, { url: bookmarks[0] });
-    });
-  }
+  openBookmark(bookmarks[0], startWithNewTab ? 'background' : 'current');
 
   bookmarks.slice(1).forEach((bookmark) => {
-    window.chrome.tabs.create({
-      url: bookmark,
-      active: false,
-    });
+    openBookmark(bookmark, 'background');
   });
 }
