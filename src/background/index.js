@@ -1,3 +1,4 @@
+/* global window */
 import Settings from '../common/settings';
 import { setBrowserActionIcon } from '../common/functions';
 import initialiseOmniboxBookmarksSearch from './omnibox';
@@ -26,8 +27,6 @@ window.chrome.runtime.onInstalled.addListener(() => {
   setDefaultSetting('click_action', 'current');
   setDefaultSetting('middle_click_action', 'background');
   setDefaultSetting('super_click_action', 'new');
-
-  initialiseOmniboxBookmarksSearch();
 });
 
 window.chrome.runtime.onStartup.addListener(() => {
@@ -36,6 +35,6 @@ window.chrome.runtime.onStartup.addListener(() => {
   if (settings.get('icon') !== null) {
     setBrowserActionIcon(settings.get('icon'));
   }
-
-  initialiseOmniboxBookmarksSearch();
 });
+
+initialiseOmniboxBookmarksSearch();
