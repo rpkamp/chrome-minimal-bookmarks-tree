@@ -46,7 +46,6 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "bootstrap": "4.0.0-beta",
     "constitute": "^1.6.2",
     "dragula": "^3.7.2"
   }

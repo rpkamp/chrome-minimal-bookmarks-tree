@@ -5,6 +5,56 @@ html,body {
 
 body {
     background: #fff;
+    width: 500px;
+}
+
+.container {
+    padding: 15px;
+    padding-top: 0;
+    max-height: 300px;
+    overflow-y: scroll;
+    border-top: 1px solid #ccc;
+}
+
+.main-options {
+    position: relative;
+}
+
+.donate {
+    border: 1px solid #ccc;
+    background: #eee;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.donate img {
+    margin-top: 5px;
+}
+
+.donate a {
+    display: block;
+}
+
+.row {
+    clear: both;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.row label {
+    float: left;
+    width: 200px;
+    text-align: right;
+    padding-right: 10px;
+    padding-top: 4px;
+}
+
+.cb-row {
+    margin-left: 210px;
+}
+
+.cb-row label {
+    text-align: left;
 }
 
 .license-toggle {
@@ -18,19 +68,7 @@ body {
     margin-top: 2rem;
 }
 
-.main-options {
-    position: relative;
-}
-
-.donate {
-    border: 1px solid #ccc;
-    background: #eee;
-    padding: 10px 20px;
-    text-align: center;
-    margin-top: 10px;
-    border-radius: 5px;
-}
-
-.donate img {
-    margin-top: 5px;
+.disclaimer {
+    margin-top: 2rem;
+    font-style: italic;
 }
