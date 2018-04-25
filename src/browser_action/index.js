@@ -10,7 +10,6 @@ import {
   elementIndex,
   openBookmark,
 } from '../common/functions';
-import Settings from '../common/settings';
 import {
   buildTree,
   setElementDimensions,
@@ -20,6 +19,7 @@ import {
   openAllBookmarks,
   removeContextMenu,
 } from './functions';
+import Settings from '../common/settings';
 import dragula from '../../node_modules/dragula/dragula';
 
 (function init(settings, chrome) {
@@ -67,7 +67,7 @@ import dragula from '../../node_modules/dragula/dragula';
 
     bm.addEventListener('click', (event) => {
       if (!event.target || event.target.nodeName !== 'SPAN') {
-        return nothing(event);
+        return false;
       }
 
       document.querySelectorAll('.selected').forEach((element) => {
@@ -79,11 +79,11 @@ import dragula from '../../node_modules/dragula/dragula';
       if (hasClass(event.target.parentNode, 'folder')) {
         toggleFolder(event.target.parentNode);
 
-        return nothing(event);
+        return false;
       }
 
       if (event.button !== 0) {
-        return nothing(event);
+        return false;
       }
 
       let actionType = 'click_action';
@@ -147,6 +147,7 @@ import dragula from '../../node_modules/dragula/dragula';
         removeClass(element, 'selected');
       });
       removeContextMenu();
+
       if (event.button === 1) {
         if (hasClass(event.target.parentNode, 'folder')) {
           openAllBookmarks(event.target.parentNode);
@@ -157,7 +158,7 @@ import dragula from '../../node_modules/dragula/dragula';
         openBookmark(url, settings.get('middle_click_action'));
       }
 
-      return nothing(event);
+      return false;
     });
 
     bm.style.display = 'block';

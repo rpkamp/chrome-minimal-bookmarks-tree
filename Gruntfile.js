@@ -135,11 +135,11 @@ module.exports = function (grunt) {
           new webpack.optimize.UglifyJsPlugin()
         ]
       },
-      eventpage: {
+      background: {
         progress: true,
-        entry: './src/eventpage/index.js',
+        entry: './src/background/index.js',
         output: {
-          path: './dist/eventpage',
+          path: './dist/background',
           filename: 'index.js'
         },
         module: {
@@ -206,7 +206,7 @@ module.exports = function (grunt) {
         files: [
           { expand: true, cwd: 'src/browser_action/', src: '*.html', dest: 'dist/browser_action/' },
           { expand: true, cwd: 'src/options/', src: '*.html', dest: 'dist/options/' },
-          { expand: true, cwd: 'src/eventpage/', src: '*.html', dest: 'dist/eventpage/' }
+          { expand: true, cwd: 'src/background/', src: '*.html', dest: 'dist/background/' }
         ]
       }
     },
@@ -216,14 +216,14 @@ module.exports = function (grunt) {
         files: [
           { expand: true, cwd: 'src/browser_action/', src: '*.css', dest: 'dist/browser_action/' },
           { expand: true, cwd: 'src/options/', src: '*.css', dest: 'dist/options/' },
-          { expand: true, cwd: 'src/eventpage/', src: '*.css', dest: 'dist/eventpage/' }
+          { expand: true, cwd: 'src/background/', src: '*.css', dest: 'dist/background/' }
         ]
       }
     }
   });
 
   grunt.registerTask('pack', ['test', 'clean:pack', 'build', 'compress']);
-  grunt.registerTask('build', ['clean:build', 'webpack:browserAction', 'webpack:optionsPage', 'webpack:eventpage', 'copy', 'htmlmin', 'cssmin']);
+  grunt.registerTask('build', ['clean:build', 'webpack:browserAction', 'webpack:optionsPage', 'webpack:background', 'copy', 'htmlmin', 'cssmin']);
   grunt.registerTask('build-tests', ['webpack:tests']);
   grunt.registerTask('test', ['lint', 'build-tests', 'connect', 'saucelabs-qunit']);
   grunt.registerTask('lint', ['eslint']);
