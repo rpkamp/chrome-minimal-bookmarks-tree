@@ -20,6 +20,12 @@
     "optionClickActionBackground": {
         "message": "Nieuw tab, in de achtergrond"
     },
+    "optionClickActionNewWindow": {
+        "message": "Nieuw venster"
+    },
+    "optionClickActionNewIncognitoWindow": {
+        "message": "Nieuw incognitovenster"
+    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },
