@@ -43,7 +43,7 @@ import {
       const value = parseInt(numericInput.value, 10);
       const minValue = parseInt(numericInput.getAttribute('min'), 10);
       const maxValue = parseInt(numericInput.getAttribute('max'), 10);
-      if (isNaN(value) || value < minValue || value > maxValue) {
+      if (Number.isNaN(value) || value < minValue || value > maxValue) {
         numericInput.style.border = '1px solid red';
         return;
       }

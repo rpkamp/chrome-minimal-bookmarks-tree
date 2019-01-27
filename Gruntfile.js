@@ -1,6 +1,6 @@
 /* global module:false */
 module.exports = function (grunt) {
-  var browsers = [{
+  const browsers = [{
     browserName: "chrome",
     platform: "OS X 10.12",
     version: "beta"
@@ -24,7 +24,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  var webpack = require('webpack');
+  const webpack = require('webpack');
+  const path = require('path');
 
   grunt.initConfig({
     pkg: '<json:package.json>',
@@ -83,103 +84,86 @@ module.exports = function (grunt) {
     webpack: {
       browserAction: {
         progress: true,
-        entry: {
-          popup: './src/browser_action/index.js',
-        },
+        entry: './src/browser_action/index.js',
         output: {
-          path: './dist/browser_action/',
+          path: path.resolve(__dirname, 'dist/browser_action/'),
           filename: 'index.js'
         },
         module: {
-          loaders: [{
+          rules: [{
             test: /\.js$/,
-            exclude: /node_modules/,
             loader: 'babel-loader'
           }]
         },
-        resolve: {
-          extensions: ['', '.js']
+        optimization: {
+          minimize: true
         },
         plugins: [
           new webpack.DefinePlugin({
             DEBUG: false,
             PRODUCTION: true
-          }),
-          new webpack.optimize.DedupePlugin(),
-          new webpack.optimize.UglifyJsPlugin()
+          })
         ]
       },
       optionsPage: {
         progress: true,
         entry: './src/options/index.js',
         output: {
-          path: './dist/options',
+          path: path.resolve(__dirname, 'dist/options/'),
           filename: 'index.js'
         },
         module: {
-          loaders: [{
+          rules: [{
             test: /\.js$/,
-            exclude: /node_modules/,
             loader: 'babel-loader'
           }]
         },
-        resolve: {
-          extensions: ['', '.js']
+        optimization: {
+          minimize: true
         },
         plugins: [
           new webpack.DefinePlugin({
             DEBUG: false,
             PRODUCTION: true
           }),
-          new webpack.optimize.DedupePlugin(),
-          new webpack.optimize.UglifyJsPlugin()
         ]
       },
       background: {
         progress: true,
         entry: './src/background/index.js',
         output: {
-          path: './dist/background',
+          path: path.resolve(__dirname, 'dist/background/'),
           filename: 'index.js'
         },
         module: {
-          loaders: [{
+          rules: [{
             test: /\.js$/,
-            exclude: /node_modules/,
             loader: 'babel-loader'
           }]
         },
-        resolve: {
-          extensions: ['', '.js']
+        optimization: {
+          minimize: true
         },
         plugins: [
           new webpack.DefinePlugin({
             DEBUG: false,
             PRODUCTION: true
           }),
-          new webpack.optimize.DedupePlugin(),
-          new webpack.optimize.UglifyJsPlugin()
         ]
       },
       tests: {
         progress: true,
-        entry: {
-          settings_test: './tests/src/tests.js',
-        },
+        entry: './tests/src/tests.js',
         output: {
-          path: './tests/',
+          path: path.resolve(__dirname, 'tests'),
           filename: 'tests.js'
         },
         module: {
-          loaders: [{
+          rules: [{
             test: /\.js$/,
-            exclude: /node_modules/,
             loader: 'babel-loader'
           }]
         },
-        resolve: {
-          extensions: ['', '.js']
-        }
       }
     },
     copy: {
