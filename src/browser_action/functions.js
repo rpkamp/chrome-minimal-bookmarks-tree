@@ -22,13 +22,8 @@ export function setElementDimensions(tab, selector, preferredWidth, preferredHei
   const scale = 1 / (zoom / 100);
 
   const width = scale * Math.min(
-    tab.width - 100,
+    tab.width,
     preferredWidth,
-  );
-
-  const height = scale * Math.min(
-    tab.height - 100,
-    preferredHeight,
   );
 
   const elem = document.querySelector(selector);
@@ -39,7 +34,7 @@ export function setElementDimensions(tab, selector, preferredWidth, preferredHei
   elem.style.width = `${width}px`;
   elem.style.minWidth = `${width}px`;
   elem.style.maxWidth = `${width}px`;
-  elem.style.maxHeight = `${height}px`;
+  elem.style.maxHeight = `${preferredHeight}px`;
 }
 
 export function buildTree(
