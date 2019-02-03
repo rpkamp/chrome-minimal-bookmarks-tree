@@ -20,6 +20,12 @@
     "optionClickActionBackground": {
         "message": "Hintengrund Tab"
     },
+    "optionClickActionNewWindow": {
+        "message": "neuem Fenster"
+    },
+    "optionClickActionNewIncognitoWindow": {
+        "message": "neuem Inkognito-Fenster"
+    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Optionen"
     },

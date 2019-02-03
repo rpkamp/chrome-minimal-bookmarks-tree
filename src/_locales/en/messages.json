@@ -154,5 +154,11 @@
     },
     "optionClickActionBackground": {
         "message": "Background tab"
+    },
+    "optionClickActionNewWindow": {
+        "message": "New Window"
+    },
+    "optionClickActionNewIncognitoWindow": {
+        "message": "New Incognito Window"
     }
 }

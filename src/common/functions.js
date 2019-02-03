@@ -123,6 +123,16 @@ export function openBookmark(url, where) {
     return;
   }
 
+  if (where === 'new-window') {
+    window.chrome.windows.create({ url });
+    return;
+  }
+
+  if (where === 'new-incognito-window') {
+    window.chrome.windows.create({ url, incognito: true });
+    return;
+  }
+
   window.chrome.tabs.update({ url, active: true });
   window.close();
 }
