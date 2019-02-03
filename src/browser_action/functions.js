@@ -12,7 +12,7 @@ import {
   addClass,
   hasClass,
   removeClass,
-  handleOpenAllBookmarks,
+  handleOpenAllBookmarks, openBookmark,
 } from '../common/functions';
 
 const mbtSettings = new Settings();
@@ -392,6 +392,21 @@ export function showContextMenuBookmark(bookmark, offset) {
         document.querySelector('.save').click();
       });
       document.querySelector('#bookmarkName').focus();
+    });
+  });
+  contextMenu.querySelector('.open-new').addEventListener('click', (event) => {
+    contextAction(event, () => {
+      openBookmark(getElementData(bookmark, 'url'), 'background');
+    });
+  });
+  contextMenu.querySelector('.open-new-window').addEventListener('click', (event) => {
+    contextAction(event, () => {
+      openBookmark(getElementData(bookmark, 'url'), 'new-window');
+    });
+  });
+  contextMenu.querySelector('.open-incognito-window').addEventListener('click', (event) => {
+    contextAction(event, () => {
+      openBookmark(getElementData(bookmark, 'url'), 'new-incognito-window');
     });
   });
   addClass(bookmark, 'selected');
