@@ -95,11 +95,18 @@ li {
 .contextMenu {
 	position: absolute;
 	background: #eee;
-	border: #ccc;
+	border: 1px solid #888;
 	border-radius: 5px;
 	z-index: 10;
 	padding: 5px;
 	cursor: pointer;
+}
+
+.contextMenu hr {
+    padding: 0;
+    margin: 5px 0;
+    border: 0;
+    border-bottom: 1px solid #888;
 }
 
 .contextMenu li {
@@ -109,6 +116,7 @@ li {
 
 .contextMenu li:hover {
 	background: #aaa;
+    color: #ffff00;
 }
 
 ::-webkit-scrollbar {
@@ -217,7 +225,9 @@ li {
     border:1px solid #84bbf3;
     text-shadow:1px 1px 0px #528ecc;
     color: #fff;
-}.blue:hover {
+}
+
+.blue:hover {
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
     background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
