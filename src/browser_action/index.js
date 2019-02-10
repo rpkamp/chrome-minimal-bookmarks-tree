@@ -1,5 +1,6 @@
 /* global window,document,localStorage */
 
+import * as autoScroll from 'dom-autoscroller';
 import {
   nothing,
   translateDocument,
@@ -149,7 +150,7 @@ import dragula from '../../node_modules/dragula/dragula';
       }
     }
 
-    dragula([bm], {
+    const drake = dragula([bm], {
       isContainer: element => hasClass(element, 'sub'),
       moves: element => !hasClass(element, 'nosort'),
       accepts: (element, target) => {
@@ -180,6 +181,15 @@ import dragula from '../../node_modules/dragula/dragula';
       }
 
       chrome.bookmarks.move(getElementData(element, 'item-id'), options);
+    });
+
+    autoScroll([
+      document.querySelector('#wrapper'),
+    ], {
+      margin: 20,
+      maxSpeed: 5,
+      scrollWhenOutside: true,
+      autoScroll: () => this.down && drake.dragging,
     });
   });
 

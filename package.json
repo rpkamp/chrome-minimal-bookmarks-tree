@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "constitute": "^1.6.2",
+    "dom-autoscroller": "^2.3.4",
     "dragula": "^3.7.2"
   }
 }
