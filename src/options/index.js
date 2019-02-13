@@ -3,14 +3,42 @@
 import Settings from '../common/settings';
 import {
   nothing,
+  removeClass,
   setBrowserActionIcon,
   translateDocument,
 } from '../common/functions';
 
-(function init(settings) {
+(function init(settings, chrome) {
   const addEventListenerMulti = (element, events, callback) => {
     events.split(' ').forEach(event => element.addEventListener(event, callback, false));
   };
+
+  const initDropDowns = () => {
+    const dropdowns = window.document.querySelectorAll('select');
+    dropdowns.forEach((dropdown) => {
+      const id = dropdown.getAttribute('id');
+      dropdown.value = settings.get(id);
+      addEventListenerMulti(dropdown, 'change click keyup', () => {
+        settings.set(id, dropdown.value);
+        if (id === 'icon') {
+          setBrowserActionIcon(dropdown.value);
+        }
+      });
+    });
+  };
+
+  const fontList = window.document.querySelector('#font');
+  chrome.fontSettings.getFontList((fonts) => {
+    fonts.forEach((font) => {
+      const option = window.document.createElement('option');
+      option.textContent = font.displayName;
+      option.style.fontFamily = font.displayName;
+      option.textContent = font.displayName;
+      fontList.appendChild(option);
+    });
+    removeClass(fontList.parentElement, 'hidden');
+    initDropDowns();
+  });
 
   const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach((checkbox) => {
@@ -20,18 +48,6 @@ import {
     }
     addEventListenerMulti(checkbox, 'click keyup', () => {
       settings.set(id, checkbox.checked);
-    });
-  });
-
-  const dropdowns = window.document.querySelectorAll('select');
-  dropdowns.forEach((dropdown) => {
-    const id = dropdown.getAttribute('id');
-    dropdown.value = settings.get(id);
-    addEventListenerMulti(dropdown, 'change click keyup', () => {
-      settings.set(id, dropdown.value);
-      if (id === 'icon') {
-        setBrowserActionIcon(dropdown.value);
-      }
     });
   });
 
@@ -59,4 +75,4 @@ import {
   });
 
   translateDocument(window.document);
-}(new Settings()));
+}(new Settings(), window.chrome));

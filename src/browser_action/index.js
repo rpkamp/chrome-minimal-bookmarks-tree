@@ -27,6 +27,7 @@ import dragula from '../../node_modules/dragula/dragula';
   let scrollTimeout;
   let initialIndexOfDraggable;
   const zoom = parseInt(settings.get('zoom'), 10);
+  const font = settings.get('font', '__default__');
   const hideEmptyFolders = settings.get('hide_empty_folders');
   const loading = document.querySelector('#loading');
   const bm = document.querySelector('#bookmarks');
@@ -218,5 +219,9 @@ import dragula from '../../node_modules/dragula/dragula';
 
   if (zoom !== 100) {
     document.querySelector('html').style.zoom = `${zoom}%`;
+  }
+
+  if (font !== '__default__') {
+    document.querySelector('body').style.fontFamily = font;
   }
 }(new Settings(), window.chrome));

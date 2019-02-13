@@ -41,6 +41,10 @@ body {
     margin-top: 1rem;
 }
 
+.hidden {
+    display: none;
+}
+
 .row label {
     float: left;
     width: 200px;
