@@ -66,7 +66,7 @@ module.exports = function (grunt) {
             return process.env.saucekey;
           },
           urls: ['http://127.0.0.1:9999/tests/index.html'],
-          build: process.env.TRAVIS_JOB_ID,
+          build: process.env.CIRCLE_JOB,
           tunnelTimeout: 5,
           browsers: browsers,
           tesstname: "MBT QUnit tests"
