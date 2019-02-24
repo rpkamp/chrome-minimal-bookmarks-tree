@@ -5,7 +5,7 @@ node_js: "10"
 script: grunt pack
 
 cache:
-  yarn: true
+  npm: true
 
 branches:
   only:
