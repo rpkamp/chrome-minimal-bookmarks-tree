@@ -18,7 +18,8 @@
 	},
 	"permissions": [
 		"bookmarks",
-		"chrome://favicon/"
+		"chrome://favicon/",
+		"fontSettings"
 	],
 	"browser_action": {
 	    "default_title": "Minimal Bookmarks Tree",
