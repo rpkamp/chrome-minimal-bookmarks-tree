@@ -1,4 +1,6 @@
-# Minimal Bookmarks Tree [![CircleCI](https://circleci.com/gh/rpkamp/chrome-minimal-bookmarks-tree/tree/master.svg?style=svg)](https://circleci.com/gh/rpkamp/chrome-minimal-bookmarks-tree/tree/master)
+# Minimal Bookmarks Tree 
+
+![build status](https://img.shields.io/circleci/project/github/rpkamp/chrome-minimal-bookmarks-tree.svg) ![users](https://img.shields.io/chrome-web-store/users/mohenkbngkbmdlkiemonbgdfgdjacaeb.svg?label=users) ![rating](https://img.shields.io/chrome-web-store/stars/mohenkbngkbmdlkiemonbgdfgdjacaeb.svg)
 
 Minimal Bookmarks Tree is an extension for Google Chrome and can be found in the [Chrome Web Store](https://chrome.google.com/webstore/detail/mohenkbngkbmdlkiemonbgdfgdjacaeb).
 
@@ -89,6 +91,7 @@ Translations for minimal bookmarks tree are managed using [OneSky][oneskyapp]. P
 | Main icon | ![main icon](src/icons/bookmark32.png) | [https://www.iconfinder.com/icons/40698/bookmark_icon#size=128][main-icon] |
 | Star | ![star icon](src/icons/black-star.png) | [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128][star] |
 | Open star | ![open star icon](src/icons/black-open-star.png) | [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star] |
+
 White star and white open star are custom edits of the "Star" and "Open star" icons listed above.
 
 ## Donations
