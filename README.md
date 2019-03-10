@@ -84,17 +84,12 @@ Translations for minimal bookmarks tree are managed using [OneSky][oneskyapp]. P
 
 ## Icons
 
-![main icon](src/icons/bookmark32.png)
-
-Main icon: [https://www.iconfinder.com/icons/40698/bookmark_icon#size=128][main-icon]
-
-![star icon](src/icons/black-star.png)
-
-Star: [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128][star]
-
-![open star icon](src/icons/black-open-star.png)
-
-Open star: [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star]
+| Description | Icon | URL |
+| --- | --- | --- |
+| Main icon | ![main icon](src/icons/bookmark32.png) | [https://www.iconfinder.com/icons/40698/bookmark_icon#size=128][main-icon] |
+| Star | ![star icon](src/icons/black-star.png) | [https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128][star] |
+| Open star | ![open star icon](src/icons/black-open-star.png) | [https://www.iconfinder.com/icons/326487/rate_star_icon#size=128][open-star] |
+White star and white open star are custom edits of the "Star" and "Open star" icons listed above.
 
 ## Donations
 
