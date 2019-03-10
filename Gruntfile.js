@@ -63,7 +63,7 @@ module.exports = function (grunt) {
         options: {
           username: 'rpkamp',
           key: function () {
-            return process.env.saucekey;
+            return process.env.SAUCE_LABS_ACCESS_KEY;
           },
           urls: ['http://127.0.0.1:9999/tests/index.html'],
           build: process.env.CIRCLE_JOB,
