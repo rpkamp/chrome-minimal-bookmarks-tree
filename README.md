@@ -65,10 +65,10 @@ under "my account".
 When you've found the Access Key, run 
 
 ```bash
-export saucekey=<your-key-here>
+export SAUCE_LABS_ACCESS_KEY=<your-key-here>
 ```
 
-without this `saucekey` in your environment testing with Sauce Labs is not possible.
+without this `SAUCE_LABS_ACCESS_KEY` in your environment testing with Sauce Labs is not possible.
 
 Once the key is set, you can run
 
