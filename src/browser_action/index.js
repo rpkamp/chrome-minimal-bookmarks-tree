@@ -190,7 +190,7 @@ import dragula from '../../node_modules/dragula/dragula';
       margin: 20,
       maxSpeed: 5,
       scrollWhenOutside: true,
-      autoScroll: () => this.down && drake.dragging,
+      autoScroll: function autoScrollCheck() { return this.down && drake.dragging; },
     });
   });
 
