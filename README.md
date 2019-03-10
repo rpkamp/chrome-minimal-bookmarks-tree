@@ -4,7 +4,7 @@ Minimal Bookmarks Tree is an extension for Google Chrome and can be found in the
 
 ## Development
 
-To work on this project you need [NPMY][npm] and [grunt-cli][grunt-cli].
+To work on this project you need [NPM][npm] and [grunt-cli][grunt-cli].
 Once you have that, run
 
 ```bash
