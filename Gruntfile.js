@@ -1,19 +1,5 @@
 /* global module:false */
 module.exports = function (grunt) {
-  const browsers = [{
-    browserName: "chrome",
-    platform: "OS X 10.12",
-    version: "beta"
-  }, {
-    browserName: "chrome",
-    platform: "OS X 10.12",
-    version: "65.0"
-  }, {
-    browserName: "chrome",
-    platform: "OS X 10.12",
-    version: "51.0"
-  }];
-
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
@@ -33,7 +19,7 @@ module.exports = function (grunt) {
       banner: '/*! <%= pkg.name %> */'
     },
     clean: {
-      pack: ['dist/', 'mbt.zip'],
+      pack: ['mbt.zip'],
       build: ['dist/']
     },
     compress: {
@@ -66,10 +52,25 @@ module.exports = function (grunt) {
             return process.env.SAUCE_LABS_ACCESS_KEY;
           },
           urls: ['http://127.0.0.1:9999/tests/index.html'],
-          build: process.env.CIRCLE_JOB,
           tunnelTimeout: 5,
-          browsers: browsers,
-          tesstname: "MBT QUnit tests"
+          browsers: [
+            {
+              browserName: "chrome",
+              platform: "OS X 10.12",
+              version: "beta"
+            },
+            {
+              browserName: "chrome",
+              platform: "OS X 10.12",
+              version: "65.0"
+            },
+            {
+              browserName: "chrome",
+              platform: "OS X 10.12",
+              version: "51.0"
+            }
+          ],
+          testname: "MBT QUnit tests"
         }
       },
     },
@@ -84,6 +85,7 @@ module.exports = function (grunt) {
     webpack: {
       browserAction: {
         progress: true,
+        mode: 'production',
         entry: './src/browser_action/index.js',
         output: {
           path: path.resolve(__dirname, 'dist/browser_action/'),
@@ -107,6 +109,7 @@ module.exports = function (grunt) {
       },
       optionsPage: {
         progress: true,
+        mode: 'production',
         entry: './src/options/index.js',
         output: {
           path: path.resolve(__dirname, 'dist/options/'),
@@ -130,6 +133,7 @@ module.exports = function (grunt) {
       },
       background: {
         progress: true,
+        mode: 'production',
         entry: './src/background/index.js',
         output: {
           path: path.resolve(__dirname, 'dist/background/'),
@@ -153,6 +157,7 @@ module.exports = function (grunt) {
       },
       tests: {
         progress: true,
+        mode: 'production',
         entry: './tests/src/tests.js',
         output: {
           path: path.resolve(__dirname, 'tests'),
@@ -206,8 +211,8 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('pack', ['test', 'clean:pack', 'build', 'compress']);
-  grunt.registerTask('build', ['clean:build', 'webpack:browserAction', 'webpack:optionsPage', 'webpack:background', 'copy', 'htmlmin', 'cssmin']);
+  grunt.registerTask('pack', ['clean:pack', 'build', 'compress']);
+  grunt.registerTask('build', ['clean:build', 'copy', 'htmlmin', 'cssmin', 'webpack:browserAction', 'webpack:optionsPage', 'webpack:background']);
   grunt.registerTask('build-tests', ['webpack:tests']);
   grunt.registerTask('test', ['lint', 'build-tests', 'connect', 'saucelabs-qunit']);
   grunt.registerTask('lint', ['eslint']);
