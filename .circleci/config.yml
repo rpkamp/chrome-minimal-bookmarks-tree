@@ -69,7 +69,10 @@ workflows:
   version: 2
   main:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              ignore: /.*/
   build_and_deploy:
     jobs:
       - test:
