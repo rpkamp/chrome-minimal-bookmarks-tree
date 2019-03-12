@@ -1,53 +1,42 @@
-version: 2
+version: 2.1
 
-jobs:
-  test:
+executors:
+  node:
     docker:
       - image: circleci/node:10
 
+commands:
+  prepare:
     steps:
       - checkout
-
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
-
       - run: npm install
+      - run:
+          name: Install Grunt
+          command: sudo npm install -g grunt-cli
 
+jobs:
+  test:
+    executor: node
+    steps:
+      - prepare
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
-      - run:
-          name: Install Grunt
-          command: sudo npm install -g grunt-cli
-
       - run:
           name: Run tests
-          command: grunt lint
+          command: grunt test
 
   build:
-    docker:
-      - image: circleci/node:10
-
+    executor: node
     steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-
-      - run: npm install
-
+      - prepare
       - run:
-          name: Install Grunt
-          command: sudo npm install -g grunt-cli
-
-      - run:
-          name: Build
+          name: Pack
           command: grunt pack
-
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
@@ -56,7 +45,6 @@ jobs:
   publish-github-release:
     docker:
       - image: cibuilds/github:0.12
-
     steps:
       - checkout
       - attach_workspace:
@@ -64,25 +52,25 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            CIRCLE_TAG="$(git tag -l --points-at HEAD)"
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ./workspace/mbt.zip
 
 workflows:
   version: 2
   main:
     jobs:
-      - test:
-          filters:
-            tags:
-              ignore: /.*/
-  build_and_deploy:
+      - test
+  tagged:
     jobs:
       - test:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v\d+\.\d+\.\d+$/
       - build:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v\d+\.\d+\.\d+$/
       - publish-github-release:
@@ -90,5 +78,7 @@ workflows:
             - test
             - build
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v\d+\.\d+\.\d+$/
