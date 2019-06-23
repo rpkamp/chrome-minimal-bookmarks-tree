@@ -92,7 +92,11 @@ export function buildTree(
       setElementData(d, 'item-id', child.id);
 
       const bookmark = document.createElement('span');
-      bookmark.innerText = child.title;
+      if (!/^\s*$/.test(child.title)) {
+        bookmark.innerText = child.title;
+      } else {
+        bookmark.innerHTML = '&nbsp;';
+      }
       bookmark.title = `${child.title} [${child.url}]`;
       bookmark.style.backgroundImage = `url("chrome://favicon/${child.url}")`;
       bookmark.className = 'bookmark';
