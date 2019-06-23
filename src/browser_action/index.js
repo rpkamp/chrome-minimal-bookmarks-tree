@@ -29,6 +29,7 @@ import dragula from '../../node_modules/dragula/dragula';
   const zoom = parseInt(settings.get('zoom'), 10);
   const font = settings.get('font', '__default__');
   const hideEmptyFolders = settings.get('hide_empty_folders');
+  const startWithAllFoldersClosed = settings.get('start_with_all_folders_closed');
   const loading = document.querySelector('#loading');
   const bm = document.querySelector('#bookmarks');
 
@@ -36,6 +37,7 @@ import dragula from '../../node_modules/dragula/dragula';
     const otherBookmarks = buildTree(
       bookmarksTree[0].children[1],
       hideEmptyFolders,
+      startWithAllFoldersClosed,
       true,
     );
 
@@ -43,6 +45,7 @@ import dragula from '../../node_modules/dragula/dragula';
     const bookmarksFolder = buildTree(
       bookmarksTree[0],
       hideEmptyFolders,
+      startWithAllFoldersClosed,
       true,
     );
 

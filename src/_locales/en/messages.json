@@ -166,5 +166,8 @@
     },
     "optionFontDefault": {
         "message": "Default"
+    },
+    "optionStartWithAllFoldersClosed": {
+        "message": "Start with all folders closed"
     }
 }

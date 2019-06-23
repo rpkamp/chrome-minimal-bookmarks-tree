@@ -10,6 +10,7 @@ export default class {
       close_old_folder: false,
       open_all_sub: true,
       animation_duration: 200,
+      start_with_all_folders_closed: false,
       hide_empty_folders: false,
       remember_scroll_position: true,
       height: 500,

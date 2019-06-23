@@ -83,6 +83,7 @@ function isFolderEmpty(folder) {
 export function buildTree(
   treeNode,
   hideEmptyFolders,
+  allFoldersClosed,
   topLevel = false,
   visible = true,
 ) {
@@ -105,7 +106,7 @@ export function buildTree(
     if (typeof child === 'undefined') {
       return;
     }
-    isOpen = openFolders.contains(child.id);
+    isOpen = !allFoldersClosed && openFolders.contains(child.id);
     d = document.createElement('li');
 
     if (child.url) { // url
@@ -141,7 +142,7 @@ export function buildTree(
 
         if (child.children && child.children.length) {
           if (isOpen) {
-            children = buildTree(child, hideEmptyFolders, false, isOpen);
+            children = buildTree(child, hideEmptyFolders, allFoldersClosed, false, isOpen);
             d.appendChild(children);
           }
           setElementData(d, 'loaded', isOpen ? '1' : '0');
@@ -229,6 +230,7 @@ export function toggleFolder(elem) {
     const t = buildTree(
       data[0],
       mbtSettings.get('hide_empty_folders'),
+      mbtSettings.get('start_with_all_folders_closed'),
       false,
       false,
     );
