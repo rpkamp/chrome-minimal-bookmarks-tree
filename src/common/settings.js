@@ -1,8 +1,9 @@
 /* global localStorage */
 
 export default class Settings {
-  constructor() {
+  constructor(defaults) {
     this.cache = {};
+    this.defaults = defaults || {};
   }
 
   get(setting) {
@@ -15,6 +16,8 @@ export default class Settings {
     const data = localStorage.getItem(`setting_${setting}`);
     if (data !== null) {
       value = JSON.parse(data);
+    } else if (typeof this.defaults[setting] !== 'undefined') {
+      value = this.defaults[setting];
     }
 
     this.cache[setting] = value;

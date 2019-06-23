@@ -1,6 +1,6 @@
 /* global window, document */
 
-import Settings from '../common/settings';
+import SettingsFactory from '../common/settings_factory';
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
 import {
@@ -16,7 +16,7 @@ import {
   openBookmark,
 } from '../common/functions';
 
-const mbtSettings = new Settings();
+const mbtSettings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
 
 export function setElementDimensions(elem, preferredWidth, preferredHeight, zoom) {
