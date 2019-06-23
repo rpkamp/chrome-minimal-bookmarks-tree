@@ -18,7 +18,7 @@ import {
     dropdowns.forEach((dropdown) => {
       const id = dropdown.getAttribute('id');
       dropdown.value = settings.get(id);
-      if (id === 'font' && dropdown.value !== '__default__') {
+      if (id === 'font') {
         dropdown.style.fontFamily = dropdown.value;
       }
       addEventListenerMulti(dropdown, 'change click keyup', () => {
@@ -27,10 +27,6 @@ import {
           setBrowserActionIcon(dropdown.value);
         }
         if (id === 'font') {
-          if (dropdown.value === '__default__') {
-            dropdown.style.fontFamily = '';
-            return;
-          }
           dropdown.style.fontFamily = dropdown.value;
         }
       });
