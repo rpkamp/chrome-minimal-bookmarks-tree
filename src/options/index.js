@@ -1,6 +1,6 @@
 /* global window,document */
 
-import Settings from '../common/settings';
+import SettingsFactory from '../common/settings_factory';
 import {
   nothing,
   removeClass,
@@ -85,4 +85,4 @@ import {
   });
 
   translateDocument(window.document);
-}(new Settings(), window.chrome));
+}(SettingsFactory.create(), window.chrome));

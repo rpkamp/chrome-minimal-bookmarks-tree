@@ -20,7 +20,7 @@ import {
   openAllBookmarks,
   removeContextMenu,
 } from './functions';
-import Settings from '../common/settings';
+import SettingsFactory from '../common/settings_factory';
 import dragula from '../../node_modules/dragula/dragula';
 
 (function init(settings, chrome) {
@@ -224,4 +224,4 @@ import dragula from '../../node_modules/dragula/dragula';
   if (font !== '__default__') {
     document.querySelector('body').style.fontFamily = font;
   }
-}(new Settings(), window.chrome));
+}(SettingsFactory.create(), window.chrome));
