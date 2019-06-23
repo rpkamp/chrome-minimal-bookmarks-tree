@@ -38,6 +38,27 @@ export function setElementDimensions(tab, selector, preferredWidth, preferredHei
   elem.style.maxHeight = `${preferredHeight}px`;
 }
 
+function isFolderEmpty(folder) {
+  if (!folder.children) {
+    return false;
+  }
+
+  if (folder.children && folder.children.length === 0) {
+    return true;
+  }
+
+  /* eslint-disable */
+  for (folder of folder.children) {
+    if (!isFolderEmpty(folder)) {
+      return false;
+    }
+  }
+  /* eslint-enable */
+
+  // all children, plus their children are empty
+  return true;
+}
+
 export function buildTree(
   treeNode,
   hideEmptyFolders,
@@ -86,7 +107,7 @@ export function buildTree(
       folder.innerText = child.title;
       d.appendChild(folder);
 
-      if (hideEmptyFolders && child.children && !child.children.length) {
+      if (hideEmptyFolders && isFolderEmpty(child)) {
         // we need to add hidden nodes for these
         // otherwise sorting doesn't work properly
         addClass(d, 'hidden');

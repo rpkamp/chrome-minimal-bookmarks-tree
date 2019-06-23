@@ -57,12 +57,7 @@ module.exports = function (grunt) {
             {
               browserName: "chrome",
               platform: "OS X 10.12",
-              version: "beta"
-            },
-            {
-              browserName: "chrome",
-              platform: "OS X 10.12",
-              version: "65.0"
+              version: "74.0"
             },
             {
               browserName: "chrome",
