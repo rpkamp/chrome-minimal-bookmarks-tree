@@ -76,3 +76,7 @@ body {
     margin-top: 2rem;
     font-style: italic;
 }
+
+.default-font {
+    font-family: revert;
+}
