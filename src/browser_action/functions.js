@@ -19,23 +19,44 @@ import {
 const mbtSettings = new Settings();
 const openFolders = new PersistentSet('openfolders');
 
-export function setElementDimensions(tab, selector, preferredWidth, preferredHeight, zoom) {
-  const scale = 1 / (zoom / 100);
-
-  const width = scale * Math.min(
-    tab.width,
-    preferredWidth,
-  );
-
-  const elem = document.querySelector(selector);
+export function setElementDimensions(elem, preferredWidth, preferredHeight, zoom) {
   if (elem === null) {
     return;
   }
 
+  // Not enforced by this extension, but hardcoded in chrome.
+  // So we need to prevent creating a browser action bigger than that, because:
+  //
+  //   1. When height > 800 it will cause duplicate vertical scrollbars
+  //   2. When width > 600 it will cause
+  //      a) the vertical scrollbar to be out of view
+  //      b) a horizonal scrollbar to be shown
+  //
+  // Also see https://stackoverflow.com/questions/6904755/is-there-a-hardcoded-maximum-height-for-chrome-browseraction-popups
+  const browserActionMaxHeight = 600;
+  const browserActionMaxWidth = 800;
+
+  const scale = zoom / 100;
+  const inverseScale = 1 / scale;
+
+  const width = Math.floor(
+    Math.min(
+      inverseScale * browserActionMaxWidth,
+      scale * preferredWidth,
+    ),
+  );
+
+  const height = Math.floor(
+    Math.min(
+      inverseScale * browserActionMaxHeight,
+      scale * preferredHeight,
+    ),
+  );
+
   elem.style.width = `${width}px`;
   elem.style.minWidth = `${width}px`;
   elem.style.maxWidth = `${width}px`;
-  elem.style.maxHeight = `${preferredHeight}px`;
+  elem.style.maxHeight = `${height}px`;
 }
 
 function isFolderEmpty(folder) {
