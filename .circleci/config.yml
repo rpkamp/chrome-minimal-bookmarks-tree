@@ -28,7 +28,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: Run tests
-          command: grunt test
+          command: make test
 
   build:
     executor: node
@@ -36,7 +36,7 @@ jobs:
       - prepare
       - run:
           name: Pack
-          command: grunt pack
+          command: make build
       - persist_to_workspace:
           root: /home/circleci/project
           paths:

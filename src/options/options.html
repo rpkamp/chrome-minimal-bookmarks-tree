@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title data-i18n-key="optionsHeader">Minimal Bookmarks Tree Options</title>
-    <link rel="stylesheet" type="text/css" href="main.css" />
+    <link rel="stylesheet" type="text/css" href="options_css.css" />
 </head>
 <body>
     <div class="container">
@@ -65,6 +65,14 @@
             <label for="font" data-i18n-key="optionFont" class="col-sm-2 col-form-label">Font</label>
             <select id="font" class="form_control">
                 <option value="__default__" data-i18n-key="optionFontDefault" style="font-family: revert;">Default</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <label for="theme" data-i18n-key="optionTheme" class="col-sm-2 col-form-label">Theme</label>
+            <select id="theme" class="form_control">
+                <option value="light" data-i18n-key="optionColorLight">Light</option>
+                <option value="dark" data-i18n-key="optionColorDark">Dark</option>
             </select>
         </div>
 
@@ -175,6 +183,6 @@
         <strong>Like this extension? Buy me a coffee 🙂</strong>
         <a href="https://paypal.me/rpkamp"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="Donate with paypal" /></a>
     </div>
-    <script src="index.js"></script>
+    <script src="options.js"></script>
 </body>
 </html>

@@ -6,14 +6,14 @@
 	"version": "4.9.0",
 	"minimum_chrome_version": "51",
 	"background": {
-		"page": "background/index.html",
+		"page": "background.html",
 		"persistent": false
 	},
 	"omnibox": {
 		"keyword": "bm"
 	},
 	"options_ui": {
-		"page": "options/index.html",
+		"page": "options.html",
 		"chrome_style": true
 	},
 	"permissions": [
@@ -23,7 +23,7 @@
 	],
 	"browser_action": {
 	    "default_title": "Minimal Bookmarks Tree",
-	    "default_popup": "browser_action/index.html",
+	    "default_popup": "browser_action.html",
 		"default_icon": "icons/bookmark32.png"
 	},
 	"icons": {
