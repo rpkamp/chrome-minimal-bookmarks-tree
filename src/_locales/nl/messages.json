@@ -166,5 +166,8 @@
     },
     "optionFontDefault": {
         "message": "Standaard"
+    },
+    "optionStartWithAllFoldersClosed": {
+        "message": "Start met alle mappen gesloten"
     }
 }
