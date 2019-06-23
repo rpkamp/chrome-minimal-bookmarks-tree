@@ -207,10 +207,9 @@ import dragula from '../../node_modules/dragula/dragula';
 
   translateDocument(window.document);
 
-  chrome.tabs.query({ active: true }, (tabs) => {
+  chrome.tabs.query({ active: true }, () => {
     setElementDimensions(
-      tabs[0],
-      '#wrapper',
+      document.querySelector('#wrapper'),
       parseInt(settings.get('width'), 10),
       parseInt(settings.get('height'), 10),
       zoom,
@@ -218,7 +217,7 @@ import dragula from '../../node_modules/dragula/dragula';
   });
 
   if (zoom !== 100) {
-    document.querySelector('html').style.zoom = `${zoom}%`;
+    document.querySelector('body').style.zoom = `${zoom}%`;
   }
 
   if (font !== '__default__') {
