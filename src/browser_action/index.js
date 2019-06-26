@@ -215,7 +215,6 @@ import dragula from '../../node_modules/dragula/dragula';
       document.querySelector('#wrapper'),
       parseInt(settings.get('width'), 10),
       parseInt(settings.get('height'), 10),
-      zoom,
     );
   });
 
