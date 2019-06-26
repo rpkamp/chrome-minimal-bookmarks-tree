@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Settings from '../../src/common/settings';
 
 export default function() {

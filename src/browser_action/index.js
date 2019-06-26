@@ -219,11 +219,17 @@ import dragula from '../../node_modules/dragula/dragula';
     );
   });
 
+  const htmlBodyElement = document.querySelector('body');
+
   if (zoom !== 100) {
-    document.querySelector('body').style.zoom = `${zoom}%`;
+    htmlBodyElement.style.zoom = `${zoom}%`;
   }
 
   if (font !== '__default__') {
-    document.querySelector('body').style.fontFamily = font;
+    htmlBodyElement.style.fontFamily = font;
   }
+
+  const theme = settings.get('theme');
+
+  addClass(htmlBodyElement, `theme--${theme}`);
 }(SettingsFactory.create(), window.chrome));

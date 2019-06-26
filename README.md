@@ -18,7 +18,7 @@ That will install all dependencies required for this project.
 Now you can edit the files in `src/`. When you are happy with your work run
 
 ```bash
-grunt
+make build-dev
 ```
 
 to build a distribution from the sources. This will transpile the ES6 to ES5, compress the CSS,
@@ -27,28 +27,13 @@ in a `dist/` folder in the project.
 You can add now load the extension in Chrome by going to the [chrome extensions page][chrome-extensions],
 tick "Developer mode" and click "Load unpacked extension...". In the file window select the `dist/` directory.
 
-## Grunt options
-The following commands are available for `grunt`:
-
-| option | description |
-| --- | --- |
-| build | transpiles the ES6 sources to ES5, minifies CSS, minifies HTML and copies vendor files to the `dist` directory. |
-| lint | runs es-lint against the codebase |
-| build-tests | transpiles the ES6 test files to ES5 |
-| test | run eslint (`grunt lint`), build the test files (`grunt build-tests`) and run the test files in [Sauce Labs][sauce-labs] |
-| pack | runs tests (`grunt test`), builds the project (`grunt build`), and packs the `dist` directory to `mbt.zip` for distribution |
-
-For example, to run es-lint, type
-
-```bash
-grunt lint
-```
+If you want to build for production mode and pack it up into a zip file run `make build` instead.
 
 ## Running tests locally
 To run the tests locally, first run
 
 ```bash
-grunt build-tests
+make build-dev
 ```
 
 and then point your browser to
@@ -58,27 +43,6 @@ file:///path/to/minimal-bookmarks-tree/tests/index.html
 ```
 
 The tests will run on that webpage.
-
-## Running tests using Sauce Labs
-To test against multiple versions of Chrome on different platforms using [Sauce Labs][sauce-labs],
-you need an account with them. Once you do, make sure you are logged in and find your Access Key
-under "my account".
-
-When you've found the Access Key, run 
-
-```bash
-export SAUCE_LABS_ACCESS_KEY=<your-key-here>
-```
-
-without this `SAUCE_LABS_ACCESS_KEY` in your environment testing with Sauce Labs is not possible.
-
-Once the key is set, you can run
-
-```bash
-grunt test
-```
-
-to run tests in sauce labs.
 
 ## Translations
 

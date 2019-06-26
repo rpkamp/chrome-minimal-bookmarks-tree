@@ -2,8 +2,7 @@
 <html>
     <head>
         <title data-i18n-key="popupTitle">Minimal Bookmarks Tree</title>
-        <link rel="stylesheet" type="text/css" href="main.css" />
-        <link rel="stylesheet" type="text/css" href="dragula.css" />
+        <link rel="stylesheet" type="text/css" href="browser_action_css.css" />
     </head>
     <body>
         <div id="wrapper">
@@ -32,7 +31,7 @@
                     <input type="text" id="folderName" /><br />
                 </div>
                 <div class="row actions">
-                    <button type="button" class="btn blue save" data-i18n-key="bookmarkEditSave">Save</button>
+                    <button type="button" class="btn primary save" data-i18n-key="bookmarkEditSave">Save</button>
                     <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
                 </div>
             </div>
@@ -46,7 +45,7 @@
                     <input type="text" id="bookmarkUrl" /><br />
                 </div>
                 <div class="row actions">
-                    <button type="button" class="btn blue save" data-i18n-key="bookmarkEditSave">Save</button>
+                    <button type="button" class="btn primary save" data-i18n-key="bookmarkEditSave">Save</button>
                     <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
                 </div>
             </div>
@@ -55,11 +54,11 @@
                     <div class="question"></div>
                 </div>
                 <div class="row actions">
-                    <button type="button" class="btn blue confirm" data-i18n-key="confirmationConfirm">Yes</button>
+                    <button type="button" class="btn primary confirm" data-i18n-key="confirmationConfirm">Yes</button>
                     <button type="button" class="btn cancel" data-i18n-key="confirmationDeny">Never mind</button>
                 </div>
             </div>
         </div>
-        <script src="index.js"></script>
+        <script src="browser_action.js"></script>
     </body>
 </html>

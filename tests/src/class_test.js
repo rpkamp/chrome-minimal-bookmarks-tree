@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { hasClass, addClass, removeClass, toggleClass } from '../../src/common/functions';
 
 export default function() {

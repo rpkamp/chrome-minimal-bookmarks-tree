@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { elementIndex } from '../../src/common/functions';
 
 function createNode() {
