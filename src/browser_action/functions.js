@@ -19,7 +19,7 @@ import {
 const mbtSettings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
 
-export function setElementDimensions(elem, preferredWidth, preferredHeight, zoom) {
+export function setElementDimensions(elem, preferredWidth, preferredHeight) {
   if (elem === null) {
     return;
   }
@@ -36,20 +36,17 @@ export function setElementDimensions(elem, preferredWidth, preferredHeight, zoom
   const browserActionMaxHeight = 600;
   const browserActionMaxWidth = 800;
 
-  const scale = zoom / 100;
-  const inverseScale = 1 / scale;
-
   const width = Math.floor(
     Math.min(
-      inverseScale * browserActionMaxWidth,
-      scale * preferredWidth,
+      browserActionMaxWidth,
+      preferredWidth,
     ),
   );
 
   const height = Math.floor(
     Math.min(
-      inverseScale * browserActionMaxHeight,
-      scale * preferredHeight,
+      browserActionMaxHeight,
+      preferredHeight,
     ),
   );
 
