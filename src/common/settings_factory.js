@@ -22,6 +22,7 @@ export default class {
       middle_click_action: 'background',
       super_click_action: 'new',
       font: '__default__',
+      theme: 'light',
     });
   }
 }
