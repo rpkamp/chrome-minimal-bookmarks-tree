@@ -16,6 +16,7 @@ Encore
   .addEntry('browser_action', './src/browser_action/index.js')
   .addEntry('background', './src/background/index.js')
   .addEntry('options', './src/options/index.js')
+  .addEntry('tests', './tests/src/tests.js')
 
   .copyFiles([
     {

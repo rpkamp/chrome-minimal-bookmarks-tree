@@ -16,10 +16,7 @@ build-dev: ## Build extension for development
 
 build: ## Build and package as mbt.zip for Chrome Web Store
 	node_modules/.bin/encore prod
-	rm -f dist/webpack-manifest.json dist/entrypoints.json
+	rm -f dist/webpack-manifest.json dist/entrypoints.json dist/tests.js
 	(cd dist/ && zip -r ../mbt.zip *)
 
-test: build-dev ## Run tests
-	grunt test
-
-.PHONY: install build-dev build test
+.PHONY: install build-dev build

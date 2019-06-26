@@ -13,22 +13,15 @@ commands:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run: npm install
-      - run:
-          name: Install Grunt
-          command: sudo npm install -g grunt-cli
 
 jobs:
   test:
     executor: node
     steps:
       - prepare
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
       - run:
-          name: Run tests
-          command: make test
+          name: Build
+          command: make build-dev
 
   build:
     executor: node
