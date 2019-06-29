@@ -15,7 +15,6 @@ export default class {
       remember_scroll_position: true,
       height: 500,
       width: 300,
-      zoom: 100,
       icon: 'default',
       confirm_bookmark_deletion: true,
       click_action: 'current',
