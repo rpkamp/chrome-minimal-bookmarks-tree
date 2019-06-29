@@ -19,7 +19,7 @@ import {
       const id = dropdown.getAttribute('id');
       dropdown.value = settings.get(id);
       if (id === 'font') {
-        dropdown.style.fontFamily = dropdown.value;
+        dropdown.style.fontFamily = `"${dropdown.value}"`;
       }
       addEventListenerMulti(dropdown, 'change click keyup', () => {
         settings.set(id, dropdown.value);
@@ -27,7 +27,7 @@ import {
           setBrowserActionIcon(dropdown.value);
         }
         if (id === 'font') {
-          dropdown.style.fontFamily = dropdown.value;
+          dropdown.style.fontFamily = `"${dropdown.value}"`;
         }
       });
     });
@@ -38,7 +38,7 @@ import {
     fonts.forEach((font) => {
       const option = window.document.createElement('option');
       option.textContent = font.displayName;
-      option.style.fontFamily = font.displayName;
+      option.style.fontFamily = `"${font.displayName}"`;
       option.textContent = font.displayName;
       fontList.appendChild(option);
     });
