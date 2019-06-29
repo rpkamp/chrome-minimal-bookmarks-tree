@@ -225,7 +225,7 @@ import dragula from '../../node_modules/dragula/dragula';
   }
 
   if (font !== '__default__') {
-    htmlBodyElement.style.fontFamily = font;
+    htmlBodyElement.style.fontFamily = `"${font}"`;
   }
 
   const theme = settings.get('theme');
