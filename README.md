@@ -6,7 +6,7 @@ Minimal Bookmarks Tree is an extension for Google Chrome and can be found in the
 
 ## Development
 
-To work on this project you need [NPM][npm] and [grunt-cli][grunt-cli].
+To work on this project you need [NPM][npm].
 Once you have that, run
 
 ```bash
@@ -65,7 +65,6 @@ Like this extension? Buy me a coffee 🙂
 [![Donate with PayPal](https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg)][donate]
 
 [NPM]: https://www.npmjs.com/
-[grunt-cli]: http://gruntjs.com/getting-started#installing-the-cli
 [chrome-extensions]: chrome://extensions/
 [sauce-labs]: https://saucelabs.com/
 [oneskyapp]: https://minimalbookmarkstree.oneskyapp.com/collaboration/project?id=60763
