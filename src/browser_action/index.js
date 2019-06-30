@@ -70,7 +70,11 @@ import dragula from '../../node_modules/dragula/dragula';
         removeClass(element, 'selected');
       });
 
-      removeContextMenu();
+      if (document.querySelector('#contextMenu').length) {
+        removeContextMenu();
+
+        return nothing(event);
+      }
 
       if (hasClass(event.target.parentNode, 'folder')) {
         toggleFolder(event.target.parentNode);
