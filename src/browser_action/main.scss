@@ -1,6 +1,12 @@
 // This file represents the light theme
 
-$icon-size: 1.3rem;
+$icon-size: 1rem;
+$background-color: #fff;
+$font-color: #000;
+$selected-color: #eee;
+$border-color: #888;
+$primary-button-background: #378de5;
+$primary-button-color: #fff;
 
 @import '~dragula/dist/dragula.css';
 @import 'themes/dark';
@@ -10,8 +16,8 @@ html, body {
   padding: 0;
   overflow: hidden;
   -webkit-user-select: none;
-  background: #fff;
-  color: #000;
+  background: $background-color;
+  color: $font-color;
 }
 
 body {
@@ -31,8 +37,8 @@ span {
   cursor: pointer;
   white-space: nowrap;
   text-decoration: none;
-  padding: 0.5rem 0.25rem 0.25rem 2.25rem;
-  color: #444;
+  padding: 0.4rem 0.25rem 0.25rem 1.8rem;
+  color: lighten($font-color, 27%);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -44,7 +50,7 @@ span {
 }
 
 .selected > span {
-  background-color: #eee;
+  background-color: $selected-color;
 }
 
 ul, li {
@@ -57,17 +63,13 @@ li {
   display: block;
 }
 
-.hidden {
-  display: none;
-}
-
 .folder {
   & > span {
     color: #000;
     background-image: url(folder_closed.png);
     background-position: 0.5rem 0.25rem;
     background-repeat: no-repeat;
-    background-size: $icon-size $icon-size;
+    background-size: $icon-size;
     vertical-align: 0.25rem;
 
     &:hover {
@@ -89,10 +91,10 @@ li {
 .bookmark {
   background-position: 0.5rem 0.25rem;
   background-repeat: no-repeat;
-  background-size: $icon-size $icon-size;
+  background-size: $icon-size;
 
   &:hover {
-    background-color: #eee;
+    background-color: $selected-color;
   }
 }
 
@@ -102,34 +104,33 @@ li {
   overflow: hidden;
 }
 
-.contextMenu, .contextMenu li {
+.contextMenu,
+.contextMenu li {
   margin: 0;
   padding: 0;
 }
 
 .contextMenu {
   position: absolute;
-  background: #eee;
-  border: 1px solid #888;
-  border-radius: 0.5rem;
+  border: 1px solid $border-color;
+  background: $background-color;
   z-index: 10;
-  padding: 0.5rem;
   cursor: pointer;
+  margin: 0.25rem 0;
+  box-shadow: 0 0 1rem $border-color;
 
   hr {
     padding: 0;
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
     border: 0;
-    border-bottom: 1px solid #888;
+    border-bottom: 1px solid $selected-color;
   }
 
   li {
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 1rem;
 
     &:hover {
-      background: #aaa;
-      color: #ffff00;
+      background: $selected-color;
     }
   }
 }
@@ -144,7 +145,7 @@ li {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 #overlay {
@@ -163,50 +164,56 @@ li {
   width: 100%;
   left: 0;
   top: 0;
-  background: rgba(200, 200, 200, 0.95);
-  border-bottom: 1px solid #ccc;
+  background: $background-color;
+  border-bottom: 1px solid $border-color;
   padding: 1rem;
   z-index: 2;
 
   .row {
-    clear: both;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
 
     label {
-      display: block;
+      flex: 1;
       font-weight: bold;
     }
 
     input {
-      display: block;
-      border: 1px solid #ccc;
-      padding: 0.5rem 1rem;
+      flex: 1 1;
+      background: $selected-color;
+      border: 0;
+      outline: none;
+      padding: 0.25rem 0.5rem;
+      font-family: inherit;
+      margin-right: 2rem;
+      border-bottom: 2px solid $background-color;
+
+      &:focus {
+        border-bottom: 2px solid $border-color;
+      }
     }
   }
 
   .question {
     margin-bottom: 2rem;
   }
-
-  .actions {
-  }
 }
 
 .btn {
-  box-shadow: inset 0 1px 0 0 #ffffff;
-  background: linear-gradient(to bottom, #ededed, #dfdfdf);
-  border-radius: 0.5rem;
-  border: 1px solid #dcdcdc;
-  display: inline-block;
-  color: #777777;
-  font-size: 11px;
+  background: $background-color;
+  display: inline-flex;
   font-weight: bold;
-  padding: 0.25rem 0.75rem;
-  text-decoration: none;
-  text-shadow: 1px 1px 0 #fff;
+  padding: 0.5rem 1rem;
   cursor: pointer;
+  font-family: inherit;
+  margin-right: 0.5rem;
+  border: 1px solid $border-color;
+  border-radius: 0.25rem;
+  color: $primary-button-background;
 
   &:hover {
-    background: linear-gradient(to bottom, #dfdfdf, #ededed);
+    background: lighten($primary-button-background, 40%);
   }
 
   &:active {
@@ -215,18 +222,20 @@ li {
   }
 
   &.primary {
-    box-shadow: inset 0 1px 0 0 #bbdaf7;
-    background: linear-gradient(to bottom, #79bbff, #378de5);
-    border: 1px solid #84bbf3;
-    text-shadow: 1px 1px 0 #528ecc;
-    color: #fff;
+    background: $primary-button-background;
+    border: 1px solid $primary-button-background;
+    color: $primary-button-color;
 
     &:hover {
-      background: linear-gradient(to bottom, #378de5, #79bbff);
+      background: lighten($primary-button-background, 10%);
     }
   }
 }
 
 #templates {
+  display: none;
+}
+
+.hidden {
   display: none;
 }
