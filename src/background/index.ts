@@ -1,13 +1,13 @@
-/* global window */
-import SettingsFactory from '../common/settings_factory';
 import { setBrowserActionIcon } from '../common/functions';
 import initialiseOmniboxBookmarksSearch from './omnibox';
+import {SettingsFactory} from "../common/settings";
 
 window.chrome.runtime.onStartup.addListener(() => {
   const settings = SettingsFactory.create();
 
-  if (settings.get('icon') !== null) {
-    setBrowserActionIcon(settings.get('icon'));
+  const icon: any = settings.get('icon');
+  if (typeof icon === 'string') {
+    setBrowserActionIcon(icon);
   }
 });
 

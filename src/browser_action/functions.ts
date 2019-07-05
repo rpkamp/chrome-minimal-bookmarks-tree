@@ -1,8 +1,7 @@
-/* global window, document */
-
-import SettingsFactory from '../common/settings_factory';
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
+import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+import {SettingsFactory} from "../common/settings";
 import {
   nothing,
   getElementData,
@@ -19,7 +18,7 @@ import {
 const mbtSettings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
 
-export function setElementDimensions(elem, preferredWidth, preferredHeight) {
+export function setElementDimensions(elem: HTMLHtmlElement | null, preferredWidth: number, preferredHeight: number) {
   if (elem === null) {
     return;
   }
@@ -36,14 +35,14 @@ export function setElementDimensions(elem, preferredWidth, preferredHeight) {
   const browserActionMaxHeight = 600;
   const browserActionMaxWidth = 800;
 
-  const width = Math.floor(
+  const width: number = Math.floor(
     Math.min(
       browserActionMaxWidth,
       preferredWidth,
     ),
   );
 
-  const height = Math.floor(
+  const height: number = Math.floor(
     Math.min(
       browserActionMaxHeight,
       preferredHeight,
@@ -56,38 +55,38 @@ export function setElementDimensions(elem, preferredWidth, preferredHeight) {
   elem.style.maxHeight = `${height}px`;
 }
 
-function isFolderEmpty(folder) {
-  if (!folder.children) {
+function isFolderEmpty(folder: BookmarkTreeNode) {
+  if (typeof folder.children === 'undefined') {
     return false;
   }
 
-  if (folder.children && folder.children.length === 0) {
+  const children: BookmarkTreeNode[] = folder.children;
+
+  if (children.length === 0) {
     return true;
   }
 
-  /* eslint-disable */
-  for (folder of folder.children) {
+  for (folder of children) {
     if (!isFolderEmpty(folder)) {
       return false;
     }
   }
-  /* eslint-enable */
 
   // all children, plus their children are empty
   return true;
 }
 
 export function buildTree(
-  treeNode,
-  hideEmptyFolders,
-  allFoldersClosed,
-  topLevel = false,
-  visible = true,
+  treeNode: BookmarkTreeNode,
+  hideEmptyFolders: boolean,
+  allFoldersClosed: boolean,
+  topLevel: boolean = false,
+  visible: boolean = true,
 ) {
-  let wrapper;
-  let d;
-  let children;
-  let isOpen;
+  let wrapper: HTMLElement | DocumentFragment;
+  let children: HTMLElement | DocumentFragment;
+  let d: HTMLLIElement;
+  let isOpen: boolean;
 
   if (topLevel) {
     wrapper = document.createDocumentFragment();
@@ -99,14 +98,18 @@ export function buildTree(
     }
   }
 
-  treeNode.children.forEach((child) => {
+  if (typeof treeNode.children === 'undefined') {
+    return wrapper;
+  }
+
+  treeNode.children.forEach((child: BookmarkTreeNode) => {
     if (typeof child === 'undefined') {
       return;
     }
     isOpen = !allFoldersClosed && openFolders.contains(child.id);
     d = document.createElement('li');
 
-    if (child.url) { // url
+    if (child.url) { // bookmark
       setElementData(d, 'url', child.url);
       setElementData(d, 'item-id', child.id);
 
@@ -153,24 +156,28 @@ export function buildTree(
   return wrapper;
 }
 
-export function slideUp(element, duration) {
+export function slideUp(element: HTMLHtmlElement, duration: number): void {
   const animator = new HeightAnimator(element, 0, duration);
   animator.start();
 }
 
-export function slideDown(element, duration) {
+export function slideDown(element: HTMLHtmlElement, duration: number): void {
   const animator = new HeightAnimator(element, 'auto', duration);
   animator.start();
 }
 
-function handleToggleFolder(element) {
-  const animationDuration = parseInt(mbtSettings.get('animation_duration'), 10);
+function handleToggleFolder(element: HTMLHtmlElement): void {
+  const animationDuration = parseInt(<string>mbtSettings.get('animation_duration'), 10);
 
   if (mbtSettings.get('close_old_folder')) {
-    element.parentNode.querySelectorAll('.folder.open').forEach((openFolderElement) => {
+    if (!(element.parentNode instanceof HTMLElement)) {
+      return;
+    }
+
+    element.parentNode.querySelectorAll('.folder.open').forEach((openFolderElement: HTMLElement) => {
       if (openFolderElement !== element) {
         removeClass(openFolderElement, 'open');
-        openFolderElement.querySelectorAll('.sub').forEach((elementToHide) => {
+        openFolderElement.querySelectorAll('.sub').forEach((elementToHide: HTMLHtmlElement) => {
           slideUp(elementToHide, animationDuration);
         });
       }
@@ -179,14 +186,14 @@ function handleToggleFolder(element) {
 
   toggleClass(element, 'open');
   const isOpen = hasClass(element, 'open');
-  const elementToToggle = element.querySelectorAll('.sub')[0];
+  const elementToToggle = <HTMLHtmlElement>element.querySelectorAll('.sub')[0];
   if (isOpen) {
     slideDown(elementToToggle, animationDuration);
   } else {
     slideUp(elementToToggle, animationDuration);
   }
 
-  const id = getElementData(elementToToggle.parentNode, 'item-id');
+  const id = getElementData(<HTMLElement>elementToToggle.parentNode, 'item-id');
   if (mbtSettings.get('close_old_folder')) {
     openFolders.clear();
     if (isOpen) {
@@ -210,13 +217,13 @@ function handleToggleFolder(element) {
   elementToToggle.querySelectorAll('li').forEach((folderToHide) => {
     openFolders.remove(getElementData(folderToHide, 'item-id'));
     removeClass(folderToHide, 'open');
-    folderToHide.querySelectorAll('.sub').forEach((sub) => {
+    folderToHide.querySelectorAll('.sub').forEach((sub: HTMLHtmlElement) => {
       slideUp(sub, animationDuration);
     });
   });
 }
 
-export function toggleFolder(elem) {
+export function toggleFolder(elem): void {
   if (getElementData(elem, 'loaded') === '1') {
     handleToggleFolder(elem);
 
@@ -226,8 +233,8 @@ export function toggleFolder(elem) {
   window.chrome.bookmarks.getSubTree(getElementData(elem, 'item-id'), (data) => {
     const t = buildTree(
       data[0],
-      mbtSettings.get('hide_empty_folders'),
-      mbtSettings.get('start_with_all_folders_closed'),
+      <boolean>mbtSettings.get('hide_empty_folders'),
+      <boolean>mbtSettings.get('start_with_all_folders_closed'),
       false,
       false,
     );
@@ -237,28 +244,33 @@ export function toggleFolder(elem) {
   });
 }
 
-export function openAllBookmarks(folder) {
+export function openAllBookmarks(folder): void {
   window.chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data) => {
     handleOpenAllBookmarks(data[0], true);
     window.close();
   });
 }
 
-export function removeContextMenu() {
+export function removeContextMenu(): void {
   const contextMenu = document.querySelector('#contextMenu');
-  if (!contextMenu) {
+  if (null === contextMenu) {
+    return;
+  }
+
+  if (!(contextMenu.parentNode instanceof HTMLElement)) {
     return;
   }
   contextMenu.parentNode.removeChild(contextMenu);
 }
 
-function contextAction(e, callback) {
+function contextAction(e, callback): boolean {
   removeContextMenu();
   callback.call();
+
   return nothing(e);
 }
 
-function showContextMenu(contextMenu, offset) {
+function showContextMenu(contextMenu, offset): void {
   contextMenu.style.left = -10000;
 
   document.querySelector('body').appendChild(contextMenu);
@@ -283,15 +295,15 @@ function showContextMenu(contextMenu, offset) {
   contextMenu.style.top = `${yCoordinate}px`;
 }
 
-function closePopup(contents) {
+function closePopup(contents): void {
   contents.parentNode.removeChild(contents);
   removeClass(document.querySelector('.selected'), 'selected');
-  document.querySelector('#overlay').style.display = 'none';
+  (document.querySelector('#overlay') as HTMLElement).style.display = 'none';
 }
 
-function showConfirm(question, confirmationCallback) {
+function showConfirm(question, confirmationCallback): void {
   const confirmDialog = document.createElement('div');
-  confirmDialog.innerHTML = document.querySelector('#confirmTemplate').innerHTML;
+  confirmDialog.innerHTML = (document.querySelector('#confirmTemplate') as HTMLElement).innerHTML;
   confirmDialog.setAttribute('id', 'overlayContents');
 
   confirmDialog.querySelector('.question').innerHTML = question;
@@ -306,14 +318,14 @@ function showConfirm(question, confirmationCallback) {
   });
 
   document.querySelector('#overlay').appendChild(confirmDialog);
-  document.querySelector('#overlay').style.display = 'block';
+  (document.querySelector('#overlay') as HTMLElement).style.display = 'block';
 }
 
-export function showContextMenuFolder(folder, offset) {
+export function showContextMenuFolder(folder, offset): void {
   removeContextMenu();
   const contextMenu = document.createElement('ul');
   contextMenu.className = 'contextMenu';
-  contextMenu.innerHTML = document.querySelector('#folderContextMenuTemplate').innerHTML;
+  contextMenu.innerHTML = (document.querySelector('#folderContextMenuTemplate') as HTMLElement).innerHTML;
   contextMenu.setAttribute('id', 'contextMenu');
 
   contextMenu.querySelector('.openAll').addEventListener('click', (event) => {
@@ -334,32 +346,32 @@ export function showContextMenuFolder(folder, offset) {
     const itemId = getElementData(folder, 'item-id');
     contextAction(subEvent, () => {
       const editor = document.createElement('div');
-      editor.innerHTML = document.querySelector('#editFolderTemplate').innerHTML;
+      editor.innerHTML = (document.querySelector('#editFolderTemplate') as HTMLElement).innerHTML;
       editor.setAttribute('id', 'overlayContents');
 
       document.querySelector('#overlay').appendChild(editor);
 
-      document.querySelector('#folderName').value = folder.querySelector('span').innerText;
+      (document.querySelector('#folderName') as HTMLInputElement).value = folder.querySelector('span').innerText;
 
       document.querySelector('.cancel').addEventListener('click', () => {
         closePopup(editor);
       });
       document.querySelector('.save').addEventListener('click', () => {
         window.chrome.bookmarks.update(itemId, {
-          title: document.querySelector('#folderName').value,
+          title: (document.querySelector('#folderName') as HTMLInputElement).value,
         });
-        folder.querySelector('span').innerText = document.querySelector('#folderName').value;
+        folder.querySelector('span').innerText = (document.querySelector('#folderName') as HTMLInputElement).value;
 
         closePopup(editor);
       });
 
-      document.querySelector('#overlay').style.display = 'block';
-      document.querySelector('#folderName').focus();
-      document.querySelector('#folderName').addEventListener('keyup', (event) => {
+      (document.querySelector('#overlay') as HTMLElement).style.display = 'block';
+      (document.querySelector('#folderName') as HTMLElement).focus();
+      document.querySelector('#folderName').addEventListener('keyup', (event: KeyboardEvent) => {
         if (event.keyCode !== 13) {
           return;
         }
-        document.querySelector('.save').click();
+        (document.querySelector('.save') as HTMLElement).click();
       });
     });
   });
@@ -367,14 +379,20 @@ export function showContextMenuFolder(folder, offset) {
   showContextMenu(contextMenu, offset);
 }
 
-export function showContextMenuBookmark(bookmark, offset) {
+type Offset = {
+  x: number;
+  y: number;
+}
+
+export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): void {
   removeContextMenu();
+
   const contextMenu = document.createElement('ul');
   contextMenu.className = 'contextMenu';
   contextMenu.innerHTML = document.querySelector('#bookmarkContextMenuTemplate').innerHTML;
   contextMenu.setAttribute('id', 'contextMenu');
 
-  contextMenu.querySelector('.delete').addEventListener('click', (event) => {
+  contextMenu.querySelector('.delete').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
       if (mbtSettings.get('confirm_bookmark_deletion')) {
         showConfirm(`${window.chrome.i18n.getMessage('deleteBookmark')}<br /><br />${bookmark.querySelector('span').innerText}`, () => {
@@ -389,7 +407,8 @@ export function showContextMenuBookmark(bookmark, offset) {
       }
     });
   });
-  contextMenu.querySelector('.edit').addEventListener('click', (event) => {
+
+  contextMenu.querySelector('.edit').addEventListener('click', (event: MouseEvent) => {
     const itemId = getElementData(bookmark, 'item-id');
     contextAction(event, () => {
       const editor = document.createElement('div');
@@ -398,16 +417,16 @@ export function showContextMenuBookmark(bookmark, offset) {
 
       document.querySelector('#overlay').appendChild(editor);
 
-      document.querySelector('#bookmarkName').value = bookmark.querySelector('span').innerText;
-      document.querySelector('#bookmarkUrl').value = getElementData(bookmark, 'url');
+      (document.querySelector('#bookmarkName') as HTMLInputElement).value = bookmark.querySelector('span').innerText;
+      (document.querySelector('#bookmarkUrl') as HTMLInputElement).value = getElementData(bookmark, 'url');
 
       document.querySelector('.cancel').addEventListener('click', () => {
         closePopup(editor);
       });
       document.querySelector('.save').addEventListener('click', () => {
         const span = bookmark.querySelector('span');
-        const name = document.querySelector('#bookmarkName').value;
-        const url = document.querySelector('#bookmarkUrl').value;
+        const name = (document.querySelector('#bookmarkName') as HTMLInputElement).value;
+        const url = (document.querySelector('#bookmarkUrl') as HTMLInputElement).value;
 
         window.chrome.bookmarks.update(itemId, {
           title: name,
@@ -424,33 +443,33 @@ export function showContextMenuBookmark(bookmark, offset) {
         closePopup(editor);
       });
 
-      document.querySelector('#overlay').style.display = 'block';
-      document.querySelector('#bookmarkName').addEventListener('keyup', (keyEvent) => {
+      (document.querySelector('#overlay') as HTMLElement).style.display = 'block';
+      document.querySelector('#bookmarkName').addEventListener('keyup', (keyEvent: KeyboardEvent) => {
         if (keyEvent.keyCode !== 13) {
           return;
         }
-        document.querySelector('.save').click();
+        (document.querySelector('.save') as HTMLElement).click();
       });
-      document.querySelector('#bookmarkUrl').addEventListener('keyup', (keyEvent) => {
+      document.querySelector('#bookmarkUrl').addEventListener('keyup', (keyEvent: KeyboardEvent) => {
         if (keyEvent.keyCode !== 13) {
           return;
         }
-        document.querySelector('.save').click();
+        (document.querySelector('.save') as HTMLElement).click();
       });
-      document.querySelector('#bookmarkName').focus();
+      (document.querySelector('#bookmarkName') as HTMLElement).focus();
     });
   });
-  contextMenu.querySelector('.open-new').addEventListener('click', (event) => {
+  contextMenu.querySelector('.open-new').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
       openBookmark(getElementData(bookmark, 'url'), 'background');
     });
   });
-  contextMenu.querySelector('.open-new-window').addEventListener('click', (event) => {
+  contextMenu.querySelector('.open-new-window').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
       openBookmark(getElementData(bookmark, 'url'), 'new-window');
     });
   });
-  contextMenu.querySelector('.open-incognito-window').addEventListener('click', (event) => {
+  contextMenu.querySelector('.open-incognito-window').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
       openBookmark(getElementData(bookmark, 'url'), 'new-incognito-window');
     });

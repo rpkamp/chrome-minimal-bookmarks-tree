@@ -1,13 +1,14 @@
-/* global localStorage */
+export default class PersistentSet<T> {
+  private readonly key: string;
+  private elements: Array<T>;
 
-export default class PersistentSet {
-  constructor(key) {
+  constructor(key: string) {
     this.key = key;
     this.elements = [];
     this.load();
   }
 
-  add(id) {
+  add(id: T): void {
     const pos = this.elements.indexOf(id);
     if (pos !== -1) {
       return;
@@ -16,7 +17,7 @@ export default class PersistentSet {
     this.save();
   }
 
-  remove(id) {
+  remove(id: T): void {
     const pos = this.elements.indexOf(id);
     if (pos === -1) {
       return;
@@ -30,18 +31,18 @@ export default class PersistentSet {
     this.save();
   }
 
-  contains(id) {
+  contains(id: T): boolean {
     return this.elements.indexOf(id) > -1;
   }
 
-  load() {
+  load(): void {
     const elements = localStorage.getItem(this.key);
     if (elements !== null) {
       this.elements = JSON.parse(elements);
     }
   }
 
-  save() {
+  save(): void {
     const data = JSON.stringify(this.elements);
     localStorage.setItem(this.key, data);
   }

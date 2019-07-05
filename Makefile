@@ -19,4 +19,7 @@ build: ## Build and package as mbt.zip for Chrome Web Store
 	rm -f dist/webpack-manifest.json dist/entrypoints.json dist/tests.js
 	(cd dist/ && zip -r ../mbt.zip *)
 
-.PHONY: install build-dev build
+test:
+	node_modules/.bin/jest --config=./jest.config.js
+
+.PHONY: install build-dev build test

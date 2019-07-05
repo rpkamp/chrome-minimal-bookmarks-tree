@@ -1,6 +1,5 @@
-/* global window,document,localStorage */
-
 import * as autoScroll from 'dom-autoscroller';
+import * as dragula from '../../node_modules/dragula/dragula';
 import {
   nothing,
   translateDocument,
@@ -20,17 +19,18 @@ import {
   openAllBookmarks,
   removeContextMenu,
 } from './functions';
-import SettingsFactory from '../common/settings_factory';
-import dragula from '../../node_modules/dragula/dragula';
+import BookmarkDestinationArg = chrome.bookmarks.BookmarkDestinationArg;
+import Timeout = NodeJS.Timeout;
+import {SettingsFactory} from "../common/settings";
 
 (function init(settings, chrome) {
-  let scrollTimeout;
-  let initialIndexOfDraggable;
-  const font = settings.get('font', '__default__');
-  const hideEmptyFolders = settings.get('hide_empty_folders');
-  const startWithAllFoldersClosed = settings.get('start_with_all_folders_closed');
-  const loading = document.querySelector('#loading');
-  const bm = document.querySelector('#bookmarks');
+  let scrollTimeout: Timeout | null;
+  let initialIndexOfDraggable: number | null;
+  const font: string = <string>settings.get('font');
+  const hideEmptyFolders: boolean = <boolean>settings.get('hide_empty_folders');
+  const startWithAllFoldersClosed: boolean = <boolean>settings.get('start_with_all_folders_closed');
+  const loading = <HTMLElement>document.querySelector('#loading');
+  const bm = <HTMLElement>document.querySelector('#bookmarks');
 
   chrome.bookmarks.getTree((bookmarksTree) => {
     const otherBookmarks = buildTree(
@@ -50,7 +50,7 @@ import dragula from '../../node_modules/dragula/dragula';
 
     if (bookmarksFolder) {
       bm.appendChild(bookmarksFolder);
-      bm.childNodes.forEach((item) => {
+      bm.childNodes.forEach((item: HTMLElement) => {
         if (item.nodeName !== 'LI') {
           return;
         }
@@ -61,22 +61,22 @@ import dragula from '../../node_modules/dragula/dragula';
       bm.appendChild(otherBookmarks);
     }
 
-    bm.addEventListener('click', (event) => {
-      if (!event.target || event.target.nodeName !== 'SPAN') {
+    bm.addEventListener('click', (event: MouseEvent) => {
+      if (!(event.target instanceof HTMLElement)) {
         return false;
       }
 
-      document.querySelectorAll('.selected').forEach((element) => {
+      if (event.target.nodeName !== 'SPAN') {
+        return false;
+      }
+
+      document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
         removeClass(element, 'selected');
       });
 
-      if (document.querySelector('#contextMenu').length) {
-        removeContextMenu();
+      removeContextMenu();
 
-        return nothing(event);
-      }
-
-      if (hasClass(event.target.parentNode, 'folder')) {
+      if (event.target.parentNode instanceof HTMLElement && hasClass(event.target.parentNode, 'folder')) {
         toggleFolder(event.target.parentNode);
 
         return false;
@@ -92,20 +92,33 @@ import dragula from '../../node_modules/dragula/dragula';
         actionType = 'super_click_action';
       }
 
-      const url = getElementData(event.target.parentNode, 'url');
-      openBookmark(url, settings.get(actionType));
+      if (event.target.parentNode instanceof HTMLElement) {
+        const url = getElementData(event.target.parentNode, 'url');
+        openBookmark(url, String(settings.get(actionType)));
+      }
 
       return nothing(event);
     });
 
-    bm.addEventListener('contextmenu', (event) => {
-      if (!event.target || event.target.nodeName !== 'SPAN') {
+    bm.addEventListener('contextmenu', (event: MouseEvent) => {
+      if (!(event.target instanceof HTMLElement)) {
         return nothing(event);
       }
-      document.querySelectorAll('.selected').forEach((element) => {
+
+      if (event.target.nodeName !== 'SPAN') {
+        return nothing(event);
+      }
+
+      document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
         removeClass(element, 'selected');
       });
+
       removeContextMenu();
+
+      if (!(event.target.parentNode instanceof HTMLElement)) {
+        return nothing(event);
+      }
+
       if (hasClass(event.target.parentNode, 'folder')) {
         showContextMenuFolder(event.target.parentNode, {
           x: event.pageX,
@@ -123,29 +136,35 @@ import dragula from '../../node_modules/dragula/dragula';
       return nothing(event);
     });
 
-    bm.addEventListener('mousedown', (event) => {
-      if (!event.target || event.target.nodeName !== 'SPAN') {
+    bm.addEventListener('mousedown', (event: MouseEvent) => {
+      if (!(event.target instanceof HTMLElement)) {
         return false;
       }
-      document.querySelectorAll('.selected').forEach((element) => {
+
+      if (event.target.nodeName !== 'SPAN') {
+        return false;
+      }
+
+      document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
         removeClass(element, 'selected');
       });
+
       removeContextMenu();
 
-      if (event.button === 1) {
+      if (event.button === 1 && event.target.parentNode instanceof HTMLElement) {
         if (hasClass(event.target.parentNode, 'folder')) {
           openAllBookmarks(event.target.parentNode);
 
           return nothing(event);
         }
         const url = getElementData(event.target.parentNode, 'url');
-        openBookmark(url, settings.get('middle_click_action'));
+        openBookmark(url, String(settings.get('middle_click_action')));
       }
 
       return false;
     });
 
-    bm.style.display = 'block';
+    (bm as HTMLElement).style.display = 'block';
     loading.parentNode.removeChild(loading);
 
     if (settings.get('remember_scroll_position')) {
@@ -171,7 +190,7 @@ import dragula from '../../node_modules/dragula/dragula';
     }).on('drag', (element) => {
       initialIndexOfDraggable = elementIndex(element);
     }).on('drop', (element) => {
-      const options = {
+      const options: BookmarkDestinationArg = {
         index: elementIndex(element),
       };
 
@@ -196,7 +215,9 @@ import dragula from '../../node_modules/dragula/dragula';
       margin: 20,
       maxSpeed: 5,
       scrollWhenOutside: true,
-      autoScroll: function autoScrollCheck() { return this.down && drake.dragging; },
+      autoScroll: function autoScrollCheck() {
+        return this.down && drake.dragging;
+      },
     });
   });
 
@@ -205,9 +226,12 @@ import dragula from '../../node_modules/dragula/dragula';
   document.querySelector('#wrapper').addEventListener('scroll', () => {
     if (settings.get('remember_scroll_position')) {
       clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        localStorage.setItem('scrolltop', document.querySelector('#wrapper').scrollTop);
-      }, 100);
+      scrollTimeout = setTimeout(
+        () => {
+          localStorage.setItem('scrolltop', String(document.querySelector('#wrapper').scrollTop));
+        },
+        100
+      );
     }
   });
 
@@ -216,8 +240,8 @@ import dragula from '../../node_modules/dragula/dragula';
   chrome.tabs.query({ active: true }, () => {
     setElementDimensions(
       document.querySelector('#wrapper'),
-      parseInt(settings.get('width'), 10),
-      parseInt(settings.get('height'), 10),
+      parseInt(<string>settings.get('width'), 10),
+      parseInt(<string>settings.get('height'), 10),
     );
   });
 

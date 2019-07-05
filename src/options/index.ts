@@ -1,12 +1,12 @@
 /* global window,document */
 
-import SettingsFactory from '../common/settings_factory';
 import {
   nothing,
   removeClass,
   setBrowserActionIcon,
   translateDocument,
 } from '../common/functions';
+import {SettingsFactory} from "../common/settings";
 
 (function init(settings, chrome) {
   const addEventListenerMulti = (element, events, callback) => {
@@ -15,9 +15,9 @@ import {
 
   const initDropDowns = () => {
     const dropdowns = window.document.querySelectorAll('select');
-    dropdowns.forEach((dropdown) => {
+    dropdowns.forEach((dropdown: HTMLSelectElement) => {
       const id = dropdown.getAttribute('id');
-      dropdown.value = settings.get(id);
+      dropdown.value = String(settings.get(id));
       if (id === 'font') {
         dropdown.style.fontFamily = `"${dropdown.value}"`;
       }
@@ -47,7 +47,7 @@ import {
   });
 
   const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach((checkbox) => {
+  checkboxes.forEach((checkbox: HTMLInputElement) => {
     const id = checkbox.getAttribute('id');
     if (settings.get(id)) {
       checkbox.setAttribute('checked', 'checked');
@@ -58,9 +58,9 @@ import {
   });
 
   const numericInputs = window.document.querySelectorAll('input[type="number"]');
-  numericInputs.forEach((numericInput) => {
+  numericInputs.forEach((numericInput: HTMLInputElement) => {
     const id = numericInput.getAttribute('id');
-    numericInput.value = settings.get(id);
+    numericInput.value = String(settings.get(id));
     addEventListenerMulti(numericInput, 'change keyup', () => {
       const value = parseInt(numericInput.value, 10);
       const minValue = parseInt(numericInput.getAttribute('min'), 10);
@@ -75,8 +75,8 @@ import {
   });
 
   document.querySelector('.license-toggle').addEventListener('click', (event) => {
-    document.querySelector('#license').style.display = 'block';
-    document.querySelector('.license-toggle').style.display = 'none';
+    (document.querySelector('#license') as HTMLElement).style.display = 'block';
+    (document.querySelector('.license-toggle') as HTMLElement).style.display = 'none';
     return nothing(event);
   });
 

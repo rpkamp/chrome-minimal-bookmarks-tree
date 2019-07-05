@@ -1,14 +1,16 @@
 /* global window,Node */
 
-export function nothing(e) {
+import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+
+export function nothing(e: Event) {
   e.preventDefault();
   e.stopPropagation();
   e.stopImmediatePropagation();
   return false;
 }
 
-export function setBrowserActionIcon(icon) {
-  const iconPaths = {
+export function setBrowserActionIcon(icon: string): void {
+  const iconPaths: { [s: string]: string } = {
     default: '/icons/bookmark48.png',
     star: '/icons/black-star.png',
     star_empty: '/icons/black-open-star.png',
@@ -16,14 +18,18 @@ export function setBrowserActionIcon(icon) {
     white_star_empty: '/icons/white-open-star.png',
   };
 
+  if (!iconPaths.hasOwnProperty(icon)) {
+    return;
+  }
+
   window.chrome.browserAction.setIcon({
     path: iconPaths[icon],
   });
 }
 
-export function translateDocument(document) {
+export function translateDocument(document: Document): void {
   const translatableElements = document.querySelectorAll('[data-i18n-key]');
-  translatableElements.forEach((translatableElement) => {
+  translatableElements.forEach((translatableElement: Element) => {
     const key = translatableElement.getAttribute('data-i18n-key');
     const translation = window.chrome.i18n.getMessage(key);
     if (translation !== '') {
@@ -32,12 +38,13 @@ export function translateDocument(document) {
   });
 }
 
-export function hasClass(element, className) {
+export function hasClass(element: HTMLElement, className: string): boolean {
   const regex = new RegExp(`(^| )${className}( |$)`);
+
   return regex.test(element.className);
 }
 
-export function addClass(element, className) {
+export function addClass(element: HTMLElement, className: string): void {
   if (element.className === '') {
     element.className = className;
   } else {
@@ -45,12 +52,13 @@ export function addClass(element, className) {
   }
 }
 
-export function removeClass(element, className) {
+export function removeClass(element: HTMLElement, className: string): void {
   const regex = new RegExp(`\\b${className}( |$)`, 'g');
+
   element.className = element.className.replace(regex, '').trimRight();
 }
 
-export function toggleClass(element, className) {
+export function toggleClass(element: HTMLElement, className: string): void {
   if (hasClass(element, className)) {
     removeClass(element, className);
   } else {
@@ -58,27 +66,29 @@ export function toggleClass(element, className) {
   }
 }
 
-export function getElementData(element, key) {
+export function getElementData(element: HTMLElement, key: string): string {
   return element.getAttribute(`data-${key}`);
 }
 
-export function setElementData(element, key, value) {
+export function setElementData(element: HTMLElement, key: string, value: string): void {
   element.setAttribute(`data-${key}`, value);
 }
 
-export function getAncestorsWithClass(elem, className) {
+export function getAncestorsWithClass(element: HTMLElement, className: string): HTMLElement[] {
   const parents = [];
-  if (!elem.parentNode || !elem.parentNode.className) {
+
+  if (!(element.parentNode instanceof HTMLElement)) {
     return parents;
   }
-  if (hasClass(elem.parentNode, className)) {
-    parents.push(elem.parentNode);
+
+  if (hasClass(element.parentNode, className)) {
+    parents.push(element.parentNode);
   }
 
-  return parents.concat(getAncestorsWithClass(elem.parentNode, className));
+  return parents.concat(getAncestorsWithClass(element.parentNode, className));
 }
 
-export function elementIndex(element) {
+export function elementIndex(element: HTMLElement): number {
   if (!element || typeof element.parentNode === 'undefined') {
     return null;
   }
@@ -97,7 +107,7 @@ export function elementIndex(element) {
   return -1;
 }
 
-function getAllBookmarksStartingAt(bookmark) {
+function getAllBookmarksStartingAt(bookmark: BookmarkTreeNode): string[] {
   let bookmarks = [];
   if (bookmark.url) {
     bookmarks.push(bookmark.url);
@@ -112,7 +122,7 @@ function getAllBookmarksStartingAt(bookmark) {
   return bookmarks;
 }
 
-export function openBookmark(url, where) {
+export function openBookmark(url: string, where: string): void {
   if (where === 'new') {
     window.chrome.tabs.create({ url, active: true });
     return;
@@ -137,12 +147,12 @@ export function openBookmark(url, where) {
   window.close();
 }
 
-export function handleOpenAllBookmarks(startingBookmark, startWithNewTab) {
+export function handleOpenAllBookmarks(startingBookmark: BookmarkTreeNode, startWithNewTab: boolean): void {
   const bookmarks = getAllBookmarksStartingAt(startingBookmark);
 
   openBookmark(bookmarks[0], startWithNewTab ? 'background' : 'current');
 
-  bookmarks.slice(1).forEach((bookmark) => {
+  bookmarks.slice(1).forEach((bookmark: string) => {
     openBookmark(bookmark, 'background');
   });
 }

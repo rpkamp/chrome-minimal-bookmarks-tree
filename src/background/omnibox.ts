@@ -1,16 +1,17 @@
-/* global window */
 import { handleOpenAllBookmarks } from '../common/functions';
+import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+import SuggestResult = chrome.omnibox.SuggestResult;
 
 /**
  * Hook into the chrome omnibox API to let people search
  * for bookmarks and bookmark folders.
  */
 export default function () {
-  let defaultSuggestionContent = '';
-  const folderDescription = window.chrome.i18n.getMessage('omniboxFolderDescription');
-  const defaultSuggestion = window.chrome.i18n.getMessage('omniboxDefaultSuggestion');
+  let defaultSuggestionContent: string = '';
+  const folderDescription: string = window.chrome.i18n.getMessage('omniboxFolderDescription');
+  const defaultSuggestion: string = window.chrome.i18n.getMessage('omniboxDefaultSuggestion');
 
-  function setDefaultSuggestion(suggestion) {
+  function setDefaultSuggestion(suggestion): void {
     if (suggestion.description === '' && suggestion.description === '') {
       return;
     }
@@ -25,23 +26,24 @@ export default function () {
     });
   }
 
-  function removeDefaultSuggestion() {
+  function removeDefaultSuggestion(): void {
     defaultSuggestionContent = '';
     window.chrome.omnibox.setDefaultSuggestion({
       description: defaultSuggestion,
     });
   }
 
-  function quoteAmpersands(text) {
+  function quoteAmpersands(text: string): string {
     return text.replace(/&/g, '&amp;');
   }
 
-  function createHighlighter(searchTerm) {
+  function createHighlighter(searchTerm: string): Function {
     const expression = new RegExp(`(${searchTerm.replace(/([.?*+^$[\]\\(){}|-])/g, '$1')})`, 'gi');
+
     return haystack => haystack.replace(expression, '<match>$1</match>');
   }
 
-  function bookmarkOrFolderToSuggestion(bookmark, highlighter) {
+  function bookmarkOrFolderToSuggestion(bookmark: BookmarkTreeNode, highlighter: Function): SuggestResult {
     if (bookmark.url) {
       return {
         description: `${quoteAmpersands(highlighter(bookmark.title))} <url>${quoteAmpersands(bookmark.url)}</url>`,
@@ -55,14 +57,18 @@ export default function () {
     };
   }
 
-  function handleOmniboxInputEntered(input) {
+  function handleOmniboxInputEntered(input: string): void {
     if (input === '') {
       return;
     }
 
     if (/^https?:\/\//i.test(input)) {
       window.chrome.tabs.query({ active: true }, (tab) => {
-        window.chrome.tabs.update(tab.id, { url: input });
+        if (typeof tab[0] === 'undefined' || typeof tab[0].id === 'undefined') {
+          return;
+        }
+
+        window.chrome.tabs.update(tab[0].id, { url: input });
       });
       return;
     }
@@ -78,7 +84,7 @@ export default function () {
     throw new Error('Unable to handle input as it does not start with http://, https:// or bmfolder:');
   }
 
-  window.chrome.omnibox.onInputChanged.addListener((input, suggest) => {
+  window.chrome.omnibox.onInputChanged.addListener((input: string, suggest: Function) => {
     window.chrome.bookmarks.search(input, (bookmarksAndFolders) => {
       const highlighter = createHighlighter(input);
       const suggestions = bookmarksAndFolders.map(
@@ -96,7 +102,7 @@ export default function () {
     });
   });
 
-  window.chrome.omnibox.onInputEntered.addListener((input) => {
+  window.chrome.omnibox.onInputEntered.addListener((input: string) => {
     try {
       handleOmniboxInputEntered(input);
       return;
