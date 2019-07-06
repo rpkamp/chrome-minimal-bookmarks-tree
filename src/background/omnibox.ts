@@ -1,40 +1,33 @@
 import { handleOpenAllBookmarks } from '../common/functions';
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 import SuggestResult = chrome.omnibox.SuggestResult;
+import Suggestion = chrome.omnibox.Suggestion;
 
 /**
  * Hook into the chrome omnibox API to let people search
  * for bookmarks and bookmark folders.
  */
 export default function () {
-  let defaultSuggestionContent: string = '';
-  const folderDescription: string = window.chrome.i18n.getMessage('omniboxFolderDescription');
-  const defaultSuggestion: string = window.chrome.i18n.getMessage('omniboxDefaultSuggestion');
+  let currentDefaultSuggestion: SuggestResult | null = null;
+  const folderDescription: string = chrome.i18n.getMessage('omniboxFolderDescription');
+  const defaultSuggestion: Suggestion = {
+    description: chrome.i18n.getMessage('omniboxDefaultSuggestion')
+  };
 
-  function setDefaultSuggestion(suggestion): void {
-    if (suggestion.description === '' && suggestion.description === '') {
+  function setDefaultSuggestion(suggestion: SuggestResult): void {
+    if (suggestion.description === '') {
       return;
     }
 
-    if (suggestion.description === '') {
-      suggestion.description = suggestion.content;
-    }
-
-    defaultSuggestionContent = suggestion.content;
-    window.chrome.omnibox.setDefaultSuggestion({
-      description: suggestion.description,
+    currentDefaultSuggestion = suggestion;
+    chrome.omnibox.setDefaultSuggestion({
+      description: suggestion.description
     });
   }
 
   function removeDefaultSuggestion(): void {
-    defaultSuggestionContent = '';
-    window.chrome.omnibox.setDefaultSuggestion({
-      description: defaultSuggestion,
-    });
-  }
-
-  function quoteAmpersands(text: string): string {
-    return text.replace(/&/g, '&amp;');
+    currentDefaultSuggestion = null;
+    chrome.omnibox.setDefaultSuggestion(defaultSuggestion);
   }
 
   function createHighlighter(searchTerm: string): Function {
@@ -43,7 +36,9 @@ export default function () {
     return haystack => haystack.replace(expression, '<match>$1</match>');
   }
 
-  function bookmarkOrFolderToSuggestion(bookmark: BookmarkTreeNode, highlighter: Function): SuggestResult {
+  function createSuggestionResult(bookmark: BookmarkTreeNode, highlighter: Function): SuggestResult {
+    const quoteAmpersands = text => text.replace(/&/g, '&amp;');
+
     if (bookmark.url) {
       return {
         description: `${quoteAmpersands(highlighter(bookmark.title))} <url>${quoteAmpersands(bookmark.url)}</url>`,
@@ -57,64 +52,56 @@ export default function () {
     };
   }
 
-  function handleOmniboxInputEntered(input: string): void {
-    if (input === '') {
-      return;
-    }
+  function handleOmniboxInputEntered(suggestionContent: string): Promise<boolean> {
+    return new Promise((resolve: Function, reject: Function) => {
+      if (suggestionContent === '') {
+        reject();
+      }
 
-    if (/^https?:\/\//i.test(input)) {
-      window.chrome.tabs.query({ active: true }, (tab) => {
-        if (typeof tab[0] === 'undefined' || typeof tab[0].id === 'undefined') {
-          return;
-        }
+      if (/^https?:\/\//i.test(suggestionContent)) {
+        chrome.tabs.query({ active: true }, (tab) => {
+          if (typeof tab[0] === 'undefined' || typeof tab[0].id === 'undefined') {
+            reject();
+          }
 
-        window.chrome.tabs.update(tab[0].id, { url: input });
-      });
-      return;
-    }
+          chrome.tabs.update(tab[0].id, { url: suggestionContent });
+          resolve(true);
+        });
+        return;
+      }
 
-    const matches = input.match(/^bmfolder:(\d+)$/);
-    if (matches) {
-      window.chrome.bookmarks.getSubTree(matches[1], (data) => {
-        handleOpenAllBookmarks(data[0], false);
-      });
-      return;
-    }
+      const matches = suggestionContent.match(/^bmfolder:(\d+)$/);
+      if (matches) {
+        chrome.bookmarks.getSubTree(matches[1], (data: BookmarkTreeNode[]) => {
+          handleOpenAllBookmarks(data[0], false);
+          resolve(true);
+        });
+        return;
+      }
 
-    throw new Error('Unable to handle input as it does not start with http://, https:// or bmfolder:');
+      reject();
+    });
   }
 
-  window.chrome.omnibox.onInputChanged.addListener((input: string, suggest: Function) => {
-    window.chrome.bookmarks.search(input, (bookmarksAndFolders) => {
+  chrome.omnibox.onInputChanged.addListener((input: string, suggest: Function) => {
+    chrome.bookmarks.search(input, (bookmarksAndFolders: BookmarkTreeNode[]) => {
       const highlighter = createHighlighter(input);
       const suggestions = bookmarksAndFolders.map(
-        bookmarkOrFolder => bookmarkOrFolderToSuggestion(bookmarkOrFolder, highlighter),
+        bookmarkOrFolder => createSuggestionResult(bookmarkOrFolder, highlighter),
       );
 
       removeDefaultSuggestion();
       if (suggestions.length > 0) {
-        setDefaultSuggestion({
-          description: suggestions[0].description,
-          content: suggestions[0].content,
-        });
+        setDefaultSuggestion(suggestions[0]);
         suggest(suggestions.slice(1));
       }
     });
   });
 
-  window.chrome.omnibox.onInputEntered.addListener((input: string) => {
-    try {
-      handleOmniboxInputEntered(input);
-      return;
-    } catch (e) {
-      // ignore error, see if the default suggestions
-      // will trigger anything
-    }
-
-    try {
-      handleOmniboxInputEntered(defaultSuggestionContent);
-    } catch (e) {
-      // ignore error
-    }
+  chrome.omnibox.onInputEntered.addListener((suggestionContent: string) => {
+    handleOmniboxInputEntered(suggestionContent)
+      .catch(() => {
+        handleOmniboxInputEntered(currentDefaultSuggestion.content)
+      });
   });
 }
