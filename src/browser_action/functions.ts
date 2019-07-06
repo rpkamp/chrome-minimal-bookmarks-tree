@@ -1,7 +1,7 @@
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
 import {SettingsFactory} from "../common/settings";
-import {getAncestorsWithClass, getElementData, nothing, setElementData,} from '../common/functions';
+import {nothing,} from '../common/functions';
 import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
@@ -64,6 +64,14 @@ function isFolderEmpty(folder: BookmarkTreeNode) {
 
   // all children, plus their children are empty
   return true;
+}
+
+export function getElementData(element: Element, key: string): string {
+  return element.getAttribute(`data-${key}`);
+}
+
+export function setElementData(element: Element, key: string, value: string): void {
+  element.setAttribute(`data-${key}`, value);
 }
 
 export function buildTree(
@@ -154,6 +162,20 @@ export function slideUp(element: HTMLHtmlElement, duration: number): void {
 export function slideDown(element: HTMLHtmlElement, duration: number): void {
   const animator = new HeightAnimator(element, 'auto', duration);
   animator.start();
+}
+
+export function getAncestorsWithClass(element: Element, className: string): HTMLElement[] {
+  const parents = [];
+
+  if (!(element.parentNode instanceof Element)) {
+    return parents;
+  }
+
+  if (element.parentNode.classList.contains(className)) {
+    parents.push(element.parentNode);
+  }
+
+  return parents.concat(getAncestorsWithClass(element.parentNode, className));
 }
 
 function handleToggleFolder(element: HTMLHtmlElement): void {
@@ -469,4 +491,23 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
   });
   bookmark.classList.add('selected');
   showContextMenu(contextMenu, offset);
+}
+
+export function elementIndex(element: Element): number {
+  if (!element || typeof element.parentNode === 'undefined') {
+    return null;
+  }
+  const parent = element.parentNode;
+  const children = parent.childNodes;
+  let i = 0;
+  for (let j = 0; j < children.length; j++) {
+    if (children[j].nodeType === Node.TEXT_NODE) {
+      continue;
+    }
+    if (element === children[j]) {
+      return i;
+    }
+    i++;
+  }
+  return -1;
 }

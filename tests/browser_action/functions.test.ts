@@ -1,4 +1,4 @@
-import { elementIndex } from '../../../src/common/functions';
+import {elementIndex} from "../../src/browser_action/functions";
 
 function createNode() {
   const ul = document.createElement('ul');

@@ -3,9 +3,7 @@ import * as dragula from '../../node_modules/dragula/dragula';
 import {
   nothing,
   translateDocument,
-  getElementData,
-  elementIndex,
-} from '../common/functions';
+  } from '../common/functions';
 import {
   buildTree,
   setElementDimensions,
@@ -13,7 +11,7 @@ import {
   showContextMenuFolder,
   showContextMenuBookmark,
   openAllBookmarks,
-  removeContextMenu,
+  removeContextMenu, getElementData, elementIndex,
 } from './functions';
 import BookmarkDestinationArg = chrome.bookmarks.BookmarkDestinationArg;
 import Timeout = NodeJS.Timeout;
