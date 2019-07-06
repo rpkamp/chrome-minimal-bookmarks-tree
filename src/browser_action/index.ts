@@ -3,9 +3,6 @@ import * as dragula from '../../node_modules/dragula/dragula';
 import {
   nothing,
   translateDocument,
-  hasClass,
-  addClass,
-  removeClass,
   getElementData,
   elementIndex,
   openBookmark,
@@ -54,7 +51,7 @@ import {SettingsFactory} from "../common/settings";
         if (item.nodeName !== 'LI') {
           return;
         }
-        addClass(item, 'nosort');
+        item.classList.add('nosort');
       });
     }
     if (otherBookmarks) {
@@ -71,12 +68,12 @@ import {SettingsFactory} from "../common/settings";
       }
 
       document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
-        removeClass(element, 'selected');
+        element.classList.remove('selected');
       });
 
       removeContextMenu();
 
-      if (event.target.parentNode instanceof HTMLElement && hasClass(event.target.parentNode, 'folder')) {
+      if (event.target.parentNode instanceof HTMLElement && event.target.parentNode.classList.contains('folder')) {
         toggleFolder(event.target.parentNode);
 
         return false;
@@ -110,7 +107,7 @@ import {SettingsFactory} from "../common/settings";
       }
 
       document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
-        removeClass(element, 'selected');
+        element.classList.remove('selected');
       });
 
       removeContextMenu();
@@ -119,7 +116,7 @@ import {SettingsFactory} from "../common/settings";
         return nothing(event);
       }
 
-      if (hasClass(event.target.parentNode, 'folder')) {
+      if (event.target.parentNode.classList.contains('folder')) {
         showContextMenuFolder(event.target.parentNode, {
           x: event.pageX,
           y: event.pageY,
@@ -146,13 +143,13 @@ import {SettingsFactory} from "../common/settings";
       }
 
       document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
-        removeClass(element, 'selected');
+        element.classList.remove('selected');
       });
 
       removeContextMenu();
 
       if (event.button === 1 && event.target.parentNode instanceof HTMLElement) {
-        if (hasClass(event.target.parentNode, 'folder')) {
+        if (event.target.parentNode.classList.contains('folder')) {
           openAllBookmarks(event.target.parentNode);
 
           return nothing(event);
@@ -177,14 +174,14 @@ import {SettingsFactory} from "../common/settings";
     }
 
     const drake = dragula([bm], {
-      isContainer: element => hasClass(element, 'sub'),
-      moves: element => !hasClass(element, 'nosort'),
+      isContainer: element => element.classList.contains('sub'),
+      moves: element => !element.classList.contains('nosort'),
       accepts: (element, target) => {
         if (element.parentNode.getAttribute('id') === 'bookmarks' && elementIndex(element) === 0) {
           return false;
         }
 
-        return (hasClass(element, 'folder') || hasClass(target, 'sub'));
+        return element.classList.contains('folder') || target.classList.contains('sub');
       },
       revertOnSpill: true,
     }).on('drag', (element) => {
@@ -253,5 +250,5 @@ import {SettingsFactory} from "../common/settings";
 
   const theme = settings.get('theme');
 
-  addClass(htmlBodyElement, `theme--${theme}`);
+  htmlBodyElement.classList.add(`theme--${theme}`);
 }(SettingsFactory.create(), window.chrome));

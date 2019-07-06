@@ -2,7 +2,6 @@
 
 import {
   nothing,
-  removeClass,
   setBrowserActionIcon,
   translateDocument,
 } from '../common/functions';
@@ -42,7 +41,7 @@ import {SettingsFactory} from "../common/settings";
       option.textContent = font.displayName;
       fontList.appendChild(option);
     });
-    removeClass(fontList.parentElement, 'hidden');
+    fontList.parentElement.classList.remove('hidden');
     initDropDowns();
   });
 

@@ -6,11 +6,7 @@ import {
   nothing,
   getElementData,
   setElementData,
-  toggleClass,
   getAncestorsWithClass,
-  addClass,
-  hasClass,
-  removeClass,
   handleOpenAllBookmarks,
   openBookmark,
 } from '../common/functions';
@@ -124,9 +120,9 @@ export function buildTree(
       bookmark.className = 'bookmark';
       d.appendChild(bookmark);
     } else { // folder
-      addClass(d, 'folder');
+      d.classList.add('folder');
       if (isOpen) {
-        addClass(d, 'open');
+        d.classList.add('open');
       }
 
       const folder = document.createElement('span');
@@ -136,7 +132,7 @@ export function buildTree(
       if (hideEmptyFolders && isFolderEmpty(child)) {
         // we need to add hidden nodes for these
         // otherwise sorting doesn't work properly
-        addClass(d, 'hidden');
+        d.classList.add('hidden');
       } else {
         setElementData(d, 'item-id', child.id);
 
@@ -176,7 +172,7 @@ function handleToggleFolder(element: HTMLHtmlElement): void {
 
     element.parentNode.querySelectorAll('.folder.open').forEach((openFolderElement: HTMLElement) => {
       if (openFolderElement !== element) {
-        removeClass(openFolderElement, 'open');
+        openFolderElement.classList.remove('open');
         openFolderElement.querySelectorAll('.sub').forEach((elementToHide: HTMLHtmlElement) => {
           slideUp(elementToHide, animationDuration);
         });
@@ -184,8 +180,8 @@ function handleToggleFolder(element: HTMLHtmlElement): void {
     });
   }
 
-  toggleClass(element, 'open');
-  const isOpen = hasClass(element, 'open');
+  element.classList.toggle('open');
+  const isOpen = element.classList.contains('open');
   const elementToToggle = <HTMLHtmlElement>element.querySelectorAll('.sub')[0];
   if (isOpen) {
     slideDown(elementToToggle, animationDuration);
@@ -216,7 +212,7 @@ function handleToggleFolder(element: HTMLHtmlElement): void {
   openFolders.remove(id);
   elementToToggle.querySelectorAll('li').forEach((folderToHide) => {
     openFolders.remove(getElementData(folderToHide, 'item-id'));
-    removeClass(folderToHide, 'open');
+    folderToHide.classList.remove('open');
     folderToHide.querySelectorAll('.sub').forEach((sub: HTMLHtmlElement) => {
       slideUp(sub, animationDuration);
     });
@@ -297,7 +293,10 @@ function showContextMenu(contextMenu, offset): void {
 
 function closePopup(contents): void {
   contents.parentNode.removeChild(contents);
-  removeClass(document.querySelector('.selected'), 'selected');
+  const selected = document.querySelector('.selected');
+  if (null !== selected) {
+    selected.classList.remove('selected');
+  }
   (document.querySelector('#overlay') as HTMLElement).style.display = 'none';
 }
 
@@ -375,7 +374,7 @@ export function showContextMenuFolder(folder, offset): void {
       });
     });
   });
-  addClass(folder, 'selected');
+  folder.classList.add('selected');
   showContextMenu(contextMenu, offset);
 }
 
@@ -474,6 +473,6 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
       openBookmark(getElementData(bookmark, 'url'), 'new-incognito-window');
     });
   });
-  addClass(bookmark, 'selected');
+  bookmark.classList.add('selected');
   showContextMenu(contextMenu, offset);
 }

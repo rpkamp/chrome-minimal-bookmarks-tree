@@ -38,34 +38,6 @@ export function translateDocument(document: Document): void {
   });
 }
 
-export function hasClass(element: HTMLElement, className: string): boolean {
-  const regex = new RegExp(`(^| )${className}( |$)`);
-
-  return regex.test(element.className);
-}
-
-export function addClass(element: HTMLElement, className: string): void {
-  if (element.className === '') {
-    element.className = className;
-  } else {
-    element.className += ` ${className}`;
-  }
-}
-
-export function removeClass(element: HTMLElement, className: string): void {
-  const regex = new RegExp(`\\b${className}( |$)`, 'g');
-
-  element.className = element.className.replace(regex, '').trimRight();
-}
-
-export function toggleClass(element: HTMLElement, className: string): void {
-  if (hasClass(element, className)) {
-    removeClass(element, className);
-  } else {
-    addClass(element, className);
-  }
-}
-
 export function getElementData(element: HTMLElement, key: string): string {
   return element.getAttribute(`data-${key}`);
 }
@@ -74,21 +46,21 @@ export function setElementData(element: HTMLElement, key: string, value: string)
   element.setAttribute(`data-${key}`, value);
 }
 
-export function getAncestorsWithClass(element: HTMLElement, className: string): HTMLElement[] {
+export function getAncestorsWithClass(element: Element, className: string): HTMLElement[] {
   const parents = [];
 
-  if (!(element.parentNode instanceof HTMLElement)) {
+  if (!(element.parentNode instanceof Element)) {
     return parents;
   }
 
-  if (hasClass(element.parentNode, className)) {
+  if (element.parentNode.classList.contains(className)) {
     parents.push(element.parentNode);
   }
 
   return parents.concat(getAncestorsWithClass(element.parentNode, className));
 }
 
-export function elementIndex(element: HTMLElement): number {
+export function elementIndex(element: Element): number {
   if (!element || typeof element.parentNode === 'undefined') {
     return null;
   }
