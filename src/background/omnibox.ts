@@ -1,7 +1,7 @@
-import { handleOpenAllBookmarks } from '../common/functions';
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 import SuggestResult = chrome.omnibox.SuggestResult;
 import Suggestion = chrome.omnibox.Suggestion;
+import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
 
 /**
  * Hook into the chrome omnibox API to let people search
@@ -59,21 +59,15 @@ export default function () {
       }
 
       if (/^https?:\/\//i.test(suggestionContent)) {
-        chrome.tabs.query({ active: true }, (tab) => {
-          if (typeof tab[0] === 'undefined' || typeof tab[0].id === 'undefined') {
-            reject();
-          }
-
-          chrome.tabs.update(tab[0].id, { url: suggestionContent });
-          resolve(true);
-        });
+        BookmarkOpener.open(suggestionContent, BookmarkOpeningDisposition.activeTab);
+        resolve(true);
         return;
       }
 
       const matches = suggestionContent.match(/^bmfolder:(\d+)$/);
       if (matches) {
         chrome.bookmarks.getSubTree(matches[1], (data: BookmarkTreeNode[]) => {
-          handleOpenAllBookmarks(data[0], false);
+          BookmarkOpener.openAll(data[0], false);
           resolve(true);
         });
         return;

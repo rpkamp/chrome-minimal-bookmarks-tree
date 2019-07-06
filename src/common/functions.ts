@@ -1,6 +1,7 @@
 /* global window,Node */
 
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+import {BookmarkOpener, BookmarkOpeningDisposition} from "./BookmarkOpener";
 
 export function nothing(e: Event) {
   e.preventDefault();
@@ -77,54 +78,4 @@ export function elementIndex(element: Element): number {
     i++;
   }
   return -1;
-}
-
-function getAllBookmarksStartingAt(bookmark: BookmarkTreeNode): string[] {
-  let bookmarks = [];
-  if (bookmark.url) {
-    bookmarks.push(bookmark.url);
-  }
-
-  if (bookmark.children) {
-    bookmark.children.forEach((child) => {
-      bookmarks = bookmarks.concat(getAllBookmarksStartingAt(child));
-    });
-  }
-
-  return bookmarks;
-}
-
-export function openBookmark(url: string, where: string): void {
-  if (where === 'new') {
-    window.chrome.tabs.create({ url, active: true });
-    return;
-  }
-
-  if (where === 'background') {
-    window.chrome.tabs.create({ url, active: false });
-    return;
-  }
-
-  if (where === 'new-window') {
-    window.chrome.windows.create({ url });
-    return;
-  }
-
-  if (where === 'new-incognito-window') {
-    window.chrome.windows.create({ url, incognito: true });
-    return;
-  }
-
-  window.chrome.tabs.update({ url, active: true });
-  window.close();
-}
-
-export function handleOpenAllBookmarks(startingBookmark: BookmarkTreeNode, startWithNewTab: boolean): void {
-  const bookmarks = getAllBookmarksStartingAt(startingBookmark);
-
-  openBookmark(bookmarks[0], startWithNewTab ? 'background' : 'current');
-
-  bookmarks.slice(1).forEach((bookmark: string) => {
-    openBookmark(bookmark, 'background');
-  });
 }

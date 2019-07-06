@@ -1,15 +1,9 @@
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
-import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 import {SettingsFactory} from "../common/settings";
-import {
-  nothing,
-  getElementData,
-  setElementData,
-  getAncestorsWithClass,
-  handleOpenAllBookmarks,
-  openBookmark,
-} from '../common/functions';
+import {getAncestorsWithClass, getElementData, nothing, setElementData,} from '../common/functions';
+import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
+import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
 const mbtSettings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
@@ -241,8 +235,8 @@ export function toggleFolder(elem): void {
 }
 
 export function openAllBookmarks(folder): void {
-  window.chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data) => {
-    handleOpenAllBookmarks(data[0], true);
+  window.chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data: BookmarkTreeNode[]) => {
+    BookmarkOpener.openAll(data[0], true);
     window.close();
   });
 }
@@ -460,17 +454,17 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
   });
   contextMenu.querySelector('.open-new').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
-      openBookmark(getElementData(bookmark, 'url'), 'background');
+      BookmarkOpener.open(getElementData(bookmark, 'url'), BookmarkOpeningDisposition.backgroundTab);
     });
   });
   contextMenu.querySelector('.open-new-window').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
-      openBookmark(getElementData(bookmark, 'url'), 'new-window');
+      BookmarkOpener.open(getElementData(bookmark, 'url'), BookmarkOpeningDisposition.newWindow);
     });
   });
   contextMenu.querySelector('.open-incognito-window').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
-      openBookmark(getElementData(bookmark, 'url'), 'new-incognito-window');
+      BookmarkOpener.open(getElementData(bookmark, 'url'), BookmarkOpeningDisposition.newIncognitoWindow);
     });
   });
   bookmark.classList.add('selected');

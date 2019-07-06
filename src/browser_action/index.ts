@@ -5,7 +5,6 @@ import {
   translateDocument,
   getElementData,
   elementIndex,
-  openBookmark,
 } from '../common/functions';
 import {
   buildTree,
@@ -19,6 +18,37 @@ import {
 import BookmarkDestinationArg = chrome.bookmarks.BookmarkDestinationArg;
 import Timeout = NodeJS.Timeout;
 import {SettingsFactory} from "../common/settings";
+import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
+
+function openBookmark(url: string, where: string): void {
+  let disposition: BookmarkOpeningDisposition;
+
+  let closeWindow: boolean = true;
+
+  switch (where) {
+    case 'new':
+      disposition = BookmarkOpeningDisposition.foregroundTab;
+      break;
+    case 'background':
+      disposition = BookmarkOpeningDisposition.backgroundTab;
+      closeWindow = false;
+      break;
+    case 'new-window':
+      disposition = BookmarkOpeningDisposition.newWindow;
+      break;
+    case 'new-incognito-window':
+      disposition = BookmarkOpeningDisposition.newIncognitoWindow;
+      break;
+    default:
+      disposition = BookmarkOpeningDisposition.activeTab;
+  }
+
+  BookmarkOpener.open(url, disposition);
+
+  if (closeWindow) {
+    window.close();
+  }
+}
 
 (function init(settings, chrome) {
   let scrollTimeout: Timeout | null;
@@ -234,13 +264,11 @@ import {SettingsFactory} from "../common/settings";
 
   translateDocument(window.document);
 
-  chrome.tabs.query({ active: true }, () => {
-    setElementDimensions(
-      document.querySelector('#wrapper'),
-      parseInt(<string>settings.get('width'), 10),
-      parseInt(<string>settings.get('height'), 10),
-    );
-  });
+  setElementDimensions(
+    document.querySelector('#wrapper'),
+    parseInt(<string>settings.get('width'), 10),
+    parseInt(<string>settings.get('height'), 10),
+  );
 
   const htmlBodyElement = document.querySelector('body');
 
