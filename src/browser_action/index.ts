@@ -279,4 +279,4 @@ function openBookmark(url: string, where: string): void {
   const theme = settings.get('theme');
 
   htmlBodyElement.classList.add(`theme--${theme}`);
-}(SettingsFactory.create(), window.chrome));
+}(SettingsFactory.create(), chrome));

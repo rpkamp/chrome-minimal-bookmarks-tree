@@ -23,7 +23,7 @@ export function setBrowserActionIcon(icon: string): void {
     return;
   }
 
-  window.chrome.browserAction.setIcon({
+  chrome.browserAction.setIcon({
     path: iconPaths[icon],
   });
 }
@@ -32,7 +32,7 @@ export function translateDocument(document: Document): void {
   const translatableElements = document.querySelectorAll('[data-i18n-key]');
   translatableElements.forEach((translatableElement: Element) => {
     const key = translatableElement.getAttribute('data-i18n-key');
-    const translation = window.chrome.i18n.getMessage(key);
+    const translation = chrome.i18n.getMessage(key);
     if (translation !== '') {
       translatableElement.innerHTML = translation;
     }

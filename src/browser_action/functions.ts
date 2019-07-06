@@ -220,7 +220,7 @@ export function toggleFolder(elem): void {
     return;
   }
 
-  window.chrome.bookmarks.getSubTree(getElementData(elem, 'item-id'), (data) => {
+  chrome.bookmarks.getSubTree(getElementData(elem, 'item-id'), (data) => {
     const t = buildTree(
       data[0],
       <boolean>mbtSettings.get('hide_empty_folders'),
@@ -235,7 +235,7 @@ export function toggleFolder(elem): void {
 }
 
 export function openAllBookmarks(folder): void {
-  window.chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data: BookmarkTreeNode[]) => {
+  chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data: BookmarkTreeNode[]) => {
     BookmarkOpener.openAll(data[0], true);
     window.close();
   });
@@ -328,8 +328,8 @@ export function showContextMenuFolder(folder, offset): void {
   });
   contextMenu.querySelector('.delete').addEventListener('click', (event) => {
     contextAction(event, () => {
-      showConfirm(`${window.chrome.i18n.getMessage('deleteBookmark')}<br /><br />${folder.querySelector('span').innerText}`, () => {
-        window.chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
+      showConfirm(`${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${folder.querySelector('span').innerText}`, () => {
+        chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
           folder.parentNode.removeChild(folder);
         });
       });
@@ -350,7 +350,7 @@ export function showContextMenuFolder(folder, offset): void {
         closePopup(editor);
       });
       document.querySelector('.save').addEventListener('click', () => {
-        window.chrome.bookmarks.update(itemId, {
+        chrome.bookmarks.update(itemId, {
           title: (document.querySelector('#folderName') as HTMLInputElement).value,
         });
         folder.querySelector('span').innerText = (document.querySelector('#folderName') as HTMLInputElement).value;
@@ -388,13 +388,13 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
   contextMenu.querySelector('.delete').addEventListener('click', (event: MouseEvent) => {
     contextAction(event, () => {
       if (mbtSettings.get('confirm_bookmark_deletion')) {
-        showConfirm(`${window.chrome.i18n.getMessage('deleteBookmark')}<br /><br />${bookmark.querySelector('span').innerText}`, () => {
-          window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
+        showConfirm(`${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${bookmark.querySelector('span').innerText}`, () => {
+          chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
             bookmark.parentNode.removeChild(bookmark);
           });
         });
       } else {
-        window.chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
+        chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
           bookmark.parentNode.removeChild(bookmark);
         });
       }
@@ -421,7 +421,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
         const name = (document.querySelector('#bookmarkName') as HTMLInputElement).value;
         const url = (document.querySelector('#bookmarkUrl') as HTMLInputElement).value;
 
-        window.chrome.bookmarks.update(itemId, {
+        chrome.bookmarks.update(itemId, {
           title: name,
           url,
         });

@@ -80,4 +80,4 @@ import {SettingsFactory} from "../common/settings";
   });
 
   translateDocument(window.document);
-}(SettingsFactory.create(), window.chrome));
+}(SettingsFactory.create(), chrome));
