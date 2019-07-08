@@ -112,11 +112,11 @@ function getAllBookmarksStartingAt(bookmark) {
   return bookmarks;
 }
 
-const execScript = ((code) => {
+const execScript = `(code) => {
   const script = document.createElement('script');
   script.textContent = code;
   document.head.appendChild(script).remove();
-}).toString();
+}`;
 
 export function openBookmark(url, where) {
   if (where === 'new') {
@@ -142,11 +142,13 @@ export function openBookmark(url, where) {
   // Detects bookmarklet
   const bookmarklet = /^javascript:(.*)/i.exec(url);
   if (bookmarklet && bookmarklet[1]) {
-    // Run bookmarklet in selected webpage's context
-    window.chrome.tabs.executeScript(tab.id, {
-      code: `(${execScript})(${
-        JSON.stringify(decodeURIComponent(bookmarklet[1]))
-      })`,
+    window.chrome.tabs.query({ active: true }, (tab) => {
+      // Run bookmarklet in selected webpage's context
+      window.chrome.tabs.executeScript(tab.id, {
+        code: `(${execScript})(${
+          JSON.stringify(decodeURIComponent(bookmarklet[1]))
+        })`,
+      });
     });
   } else {
     window.chrome.tabs.update({ url, active: true });

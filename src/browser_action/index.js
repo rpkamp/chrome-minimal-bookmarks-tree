@@ -87,7 +87,7 @@ import dragula from '../../node_modules/dragula/dragula';
       }
 
       let actionType = 'click_action';
-      
+
       if (event.ctrlKey || event.metaKey) {
         actionType = 'super_click_action';
       }

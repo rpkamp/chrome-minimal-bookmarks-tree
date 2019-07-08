@@ -18,6 +18,7 @@
 	},
 	"permissions": [
 		"bookmarks",
+		"activeTab",
 		"chrome://favicon/",
 		"http://*/",
 		"https://*/",
