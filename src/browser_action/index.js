@@ -1,5 +1,6 @@
 /* global window,document,localStorage */
 
+import * as autoScroll from 'dom-autoscroller';
 import {
   nothing,
   translateDocument,
@@ -19,29 +20,23 @@ import {
   openAllBookmarks,
   removeContextMenu,
 } from './functions';
-import Settings from '../common/settings';
+import SettingsFactory from '../common/settings_factory';
 import dragula from '../../node_modules/dragula/dragula';
 
 (function init(settings, chrome) {
   let scrollTimeout;
   let initialIndexOfDraggable;
-  const zoom = parseInt(settings.get('zoom'), 10);
+  const font = settings.get('font', '__default__');
   const hideEmptyFolders = settings.get('hide_empty_folders');
+  const startWithAllFoldersClosed = settings.get('start_with_all_folders_closed');
   const loading = document.querySelector('#loading');
   const bm = document.querySelector('#bookmarks');
-
-  const execScript = ((code) => {
-    const head = document.querySelector('head');
-    const script = document.createElement('script');
-    script.textContent = code;
-    head.appendChild(script);
-    head.removeChild(script);
-  }).toString();
 
   chrome.bookmarks.getTree((bookmarksTree) => {
     const otherBookmarks = buildTree(
       bookmarksTree[0].children[1],
       hideEmptyFolders,
+      startWithAllFoldersClosed,
       true,
     );
 
@@ -49,6 +44,7 @@ import dragula from '../../node_modules/dragula/dragula';
     const bookmarksFolder = buildTree(
       bookmarksTree[0],
       hideEmptyFolders,
+      startWithAllFoldersClosed,
       true,
     );
 
@@ -74,7 +70,11 @@ import dragula from '../../node_modules/dragula/dragula';
         removeClass(element, 'selected');
       });
 
-      removeContextMenu();
+      if (document.querySelector('#contextMenu').length) {
+        removeContextMenu();
+
+        return nothing(event);
+      }
 
       if (hasClass(event.target.parentNode, 'folder')) {
         toggleFolder(event.target.parentNode);
@@ -87,22 +87,6 @@ import dragula from '../../node_modules/dragula/dragula';
       }
 
       let actionType = 'click_action';
-
-      chrome.tabs.query({ active: true }, (tab) => {
-        // Detects bookmarklet
-        const bookmarklet = /^javascript:(.*)/i.exec(url);
-        if (bookmarklet && bookmarklet[1]) {
-          // Run bookmarklet in selected webpage's context
-          chrome.tabs.executeScript(tab.id, {
-            code: `(${execScript})(${
-              JSON.stringify(decodeURIComponent(bookmarklet[1]))
-            })`,
-          });
-        } else {
-          chrome.tabs.update(tab.id, { url });
-        }
-        window.close();
-      });
       
       if (event.ctrlKey || event.metaKey) {
         actionType = 'super_click_action';
@@ -173,7 +157,7 @@ import dragula from '../../node_modules/dragula/dragula';
       }
     }
 
-    dragula([bm], {
+    const drake = dragula([bm], {
       isContainer: element => hasClass(element, 'sub'),
       moves: element => !hasClass(element, 'nosort'),
       accepts: (element, target) => {
@@ -205,6 +189,15 @@ import dragula from '../../node_modules/dragula/dragula';
 
       chrome.bookmarks.move(getElementData(element, 'item-id'), options);
     });
+
+    autoScroll([
+      document.querySelector('#wrapper'),
+    ], {
+      margin: 20,
+      maxSpeed: 5,
+      scrollWhenOutside: true,
+      autoScroll: function autoScrollCheck() { return this.down && drake.dragging; },
+    });
   });
 
   document.addEventListener('contextmenu', () => false);
@@ -220,17 +213,21 @@ import dragula from '../../node_modules/dragula/dragula';
 
   translateDocument(window.document);
 
-  chrome.tabs.query({ active: true }, (tabs) => {
+  chrome.tabs.query({ active: true }, () => {
     setElementDimensions(
-      tabs[0],
-      '#wrapper',
+      document.querySelector('#wrapper'),
       parseInt(settings.get('width'), 10),
       parseInt(settings.get('height'), 10),
-      zoom,
     );
   });
 
-  if (zoom !== 100) {
-    document.querySelector('html').style.zoom = `${zoom}%`;
+  const htmlBodyElement = document.querySelector('body');
+
+  if (font !== '__default__') {
+    htmlBodyElement.style.fontFamily = `"${font}"`;
   }
-}(new Settings(), window.chrome));
+
+  const theme = settings.get('theme');
+
+  addClass(htmlBodyElement, `theme--${theme}`);
+}(SettingsFactory.create(), window.chrome));

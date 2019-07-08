@@ -1,3 +1,4 @@
+/* eslint-disable */
 import PersistentSet from '../../src/browser_action/PersistentSet';
 
 export default function() {

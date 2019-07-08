@@ -1,16 +1,50 @@
 /* global window,document */
 
-import Settings from '../common/settings';
+import SettingsFactory from '../common/settings_factory';
 import {
   nothing,
+  removeClass,
   setBrowserActionIcon,
   translateDocument,
 } from '../common/functions';
 
-(function init(settings) {
+(function init(settings, chrome) {
   const addEventListenerMulti = (element, events, callback) => {
     events.split(' ').forEach(event => element.addEventListener(event, callback, false));
   };
+
+  const initDropDowns = () => {
+    const dropdowns = window.document.querySelectorAll('select');
+    dropdowns.forEach((dropdown) => {
+      const id = dropdown.getAttribute('id');
+      dropdown.value = settings.get(id);
+      if (id === 'font') {
+        dropdown.style.fontFamily = `"${dropdown.value}"`;
+      }
+      addEventListenerMulti(dropdown, 'change click keyup', () => {
+        settings.set(id, dropdown.value);
+        if (id === 'icon') {
+          setBrowserActionIcon(dropdown.value);
+        }
+        if (id === 'font') {
+          dropdown.style.fontFamily = `"${dropdown.value}"`;
+        }
+      });
+    });
+  };
+
+  const fontList = window.document.querySelector('#font');
+  chrome.fontSettings.getFontList((fonts) => {
+    fonts.forEach((font) => {
+      const option = window.document.createElement('option');
+      option.textContent = font.displayName;
+      option.style.fontFamily = `"${font.displayName}"`;
+      option.textContent = font.displayName;
+      fontList.appendChild(option);
+    });
+    removeClass(fontList.parentElement, 'hidden');
+    initDropDowns();
+  });
 
   const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach((checkbox) => {
@@ -23,18 +57,6 @@ import {
     });
   });
 
-  const dropdowns = window.document.querySelectorAll('select');
-  dropdowns.forEach((dropdown) => {
-    const id = dropdown.getAttribute('id');
-    dropdown.value = settings.get(id);
-    addEventListenerMulti(dropdown, 'change click keyup', () => {
-      settings.set(id, dropdown.value);
-      if (id === 'icon') {
-        setBrowserActionIcon(dropdown.value);
-      }
-    });
-  });
-
   const numericInputs = window.document.querySelectorAll('input[type="number"]');
   numericInputs.forEach((numericInput) => {
     const id = numericInput.getAttribute('id');
@@ -43,7 +65,7 @@ import {
       const value = parseInt(numericInput.value, 10);
       const minValue = parseInt(numericInput.getAttribute('min'), 10);
       const maxValue = parseInt(numericInput.getAttribute('max'), 10);
-      if (isNaN(value) || value < minValue || value > maxValue) {
+      if (Number.isNaN(value) || value < minValue || value > maxValue) {
         numericInput.style.border = '1px solid red';
         return;
       }
@@ -59,4 +81,4 @@ import {
   });
 
   translateDocument(window.document);
-}(new Settings()));
+}(SettingsFactory.create(), window.chrome));

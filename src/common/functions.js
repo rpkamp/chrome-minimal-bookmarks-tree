@@ -112,6 +112,12 @@ function getAllBookmarksStartingAt(bookmark) {
   return bookmarks;
 }
 
+const execScript = ((code) => {
+  const script = document.createElement('script');
+  script.textContent = code;
+  document.head.appendChild(script).remove();
+}).toString();
+
 export function openBookmark(url, where) {
   if (where === 'new') {
     window.chrome.tabs.create({ url, active: true });
@@ -123,7 +129,28 @@ export function openBookmark(url, where) {
     return;
   }
 
-  window.chrome.tabs.update({ url, active: true });
+  if (where === 'new-window') {
+    window.chrome.windows.create({ url });
+    return;
+  }
+
+  if (where === 'new-incognito-window') {
+    window.chrome.windows.create({ url, incognito: true });
+    return;
+  }
+
+  // Detects bookmarklet
+  const bookmarklet = /^javascript:(.*)/i.exec(url);
+  if (bookmarklet && bookmarklet[1]) {
+    // Run bookmarklet in selected webpage's context
+    window.chrome.tabs.executeScript(tab.id, {
+      code: `(${execScript})(${
+        JSON.stringify(decodeURIComponent(bookmarklet[1]))
+      })`,
+    });
+  } else {
+    window.chrome.tabs.update({ url, active: true });
+  }
   window.close();
 }
 

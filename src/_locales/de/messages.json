@@ -1,25 +1,4 @@
 {
-    "optionConfirmBookmarkDeletion": {
-        "message": "Lesezeichen l\u00f6schen best\u00e4tigen"
-    },
-    "optionClickAction": {
-        "message": "Bei einem Klick \u00f6ffnen Lesezeichen in"
-    },
-    "optionMiddleClickAction": {
-        "message": "Bei einem mittlerem Klick \u00f6ffnen Lesezeichen in"
-    },
-    "optionSuperClickAction": {
-        "message": "Bei einem Strg\/Option + Klick \u00f6ffnen Lesezeichen in"
-    },
-    "optionClickActionCurrent": {
-        "message": "Aktueller Tab"
-    },
-    "optionClickActionNew": {
-        "message": "Neuer Tab"
-    },
-    "optionClickActionBackground": {
-        "message": "Hintengrund Tab"
-    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Optionen"
     },
@@ -73,9 +52,6 @@
     },
     "optionAnimationSpeedVeryFast": {
         "message": "Super schnell"
-    },
-    "optionZoomLevel": {
-        "message": "Zoom Stufe"
     },
     "optionPreferredHeight": {
         "message": "Bevorzugte H\u00f6he"
@@ -154,5 +130,41 @@
     },
     "omniboxDefaultSuggestion": {
         "message": "Suche nach Lesezeichen und Ordner"
+    },
+    "optionConfirmBookmarkDeletion": {
+        "message": "Lesezeichen l\u00f6schen best\u00e4tigen"
+    },
+    "optionClickAction": {
+        "message": "Bei einem Klick \u00f6ffnen Lesezeichen in"
+    },
+    "optionMiddleClickAction": {
+        "message": "Bei einem mittlerem Klick \u00f6ffnen Lesezeichen in"
+    },
+    "optionSuperClickAction": {
+        "message": "Bei einem Strg\/Option + Klick \u00f6ffnen Lesezeichen in"
+    },
+    "optionClickActionCurrent": {
+        "message": "Aktueller Tab"
+    },
+    "optionClickActionNew": {
+        "message": "Neuer Tab"
+    },
+    "optionClickActionBackground": {
+        "message": "Hintengrund Tab"
+    },
+    "optionClickActionNewWindow": {
+        "message": "neuem Fenster"
+    },
+    "optionClickActionNewIncognitoWindow": {
+        "message": "neuem Inkognito-Fenster"
+    },
+    "optionFont": {
+        "message": "Schriftart"
+    },
+    "optionFontDefault": {
+        "message": "Standard"
+    },
+    "optionStartWithAllFoldersClosed": {
+        "message": "Beginnen mit allen Ordnern geschlossen"
     }
 }

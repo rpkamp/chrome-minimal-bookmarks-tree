@@ -1,25 +1,4 @@
 {
-    "optionConfirmBookmarkDeletion": {
-        "message": "Vraag bevestiging bij verwijderen bladwijzer"
-    },
-    "optionClickAction": {
-        "message": "Bij klik, open bladwijzer in"
-    },
-    "optionMiddleClickAction": {
-        "message": "Bij middelklik, open bladwijzer in"
-    },
-    "optionSuperClickAction": {
-        "message": "Bij ctrl\/option + klik, open bladwijzer in"
-    },
-    "optionClickActionCurrent": {
-        "message": "Huidige tab"
-    },
-    "optionClickActionNew": {
-        "message": "Nieuwe tab"
-    },
-    "optionClickActionBackground": {
-        "message": "Nieuw tab, in de achtergrond"
-    },
     "optionsHeader": {
         "message": "Minimal Bookmarks Tree Opties"
     },
@@ -73,9 +52,6 @@
     },
     "optionAnimationSpeedVeryFast": {
         "message": "Heel snel"
-    },
-    "optionZoomLevel": {
-        "message": "Zoomniveau"
     },
     "optionPreferredHeight": {
         "message": "Voorkeurshoogte"
@@ -154,5 +130,41 @@
     },
     "omniboxDefaultSuggestion": {
         "message": "Zoek naar bladwijzers en mappen"
+    },
+    "optionConfirmBookmarkDeletion": {
+        "message": "Vraag bevestiging bij verwijderen bladwijzer"
+    },
+    "optionClickAction": {
+        "message": "Bij klik, open bladwijzer in"
+    },
+    "optionMiddleClickAction": {
+        "message": "Bij middelklik, open bladwijzer in"
+    },
+    "optionSuperClickAction": {
+        "message": "Bij ctrl\/option + klik, open bladwijzer in"
+    },
+    "optionClickActionCurrent": {
+        "message": "Huidige tab"
+    },
+    "optionClickActionNew": {
+        "message": "Nieuwe tab"
+    },
+    "optionClickActionBackground": {
+        "message": "Nieuw tab, in de achtergrond"
+    },
+    "optionClickActionNewWindow": {
+        "message": "Nieuw venster"
+    },
+    "optionClickActionNewIncognitoWindow": {
+        "message": "Nieuw incognitovenster"
+    },
+    "optionFont": {
+        "message": "Lettertype"
+    },
+    "optionFontDefault": {
+        "message": "Standaard"
+    },
+    "optionStartWithAllFoldersClosed": {
+        "message": "Start met alle mappen gesloten"
     }
 }

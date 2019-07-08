@@ -1,6 +1,6 @@
 /* global window, document */
 
-import Settings from '../common/settings';
+import SettingsFactory from '../common/settings_factory';
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
 import {
@@ -13,28 +13,42 @@ import {
   hasClass,
   removeClass,
   handleOpenAllBookmarks,
+  openBookmark,
 } from '../common/functions';
 
-const mbtSettings = new Settings();
+const mbtSettings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
 
-export function setElementDimensions(tab, selector, preferredWidth, preferredHeight, zoom) {
-  const scale = 1 / (zoom / 100);
-
-  const width = scale * Math.min(
-    tab.width - 100,
-    preferredWidth,
-  );
-
-  const height = scale * Math.min(
-    tab.height - 100,
-    preferredHeight,
-  );
-
-  const elem = document.querySelector(selector);
+export function setElementDimensions(elem, preferredWidth, preferredHeight) {
   if (elem === null) {
     return;
   }
+
+  // Not enforced by this extension, but hardcoded in chrome.
+  // So we need to prevent creating a browser action bigger than that, because:
+  //
+  //   1. When height > 800 it will cause duplicate vertical scrollbars
+  //   2. When width > 600 it will cause
+  //      a) the vertical scrollbar to be out of view
+  //      b) a horizonal scrollbar to be shown
+  //
+  // Also see https://stackoverflow.com/questions/6904755/is-there-a-hardcoded-maximum-height-for-chrome-browseraction-popups
+  const browserActionMaxHeight = 600;
+  const browserActionMaxWidth = 800;
+
+  const width = Math.floor(
+    Math.min(
+      browserActionMaxWidth,
+      preferredWidth,
+    ),
+  );
+
+  const height = Math.floor(
+    Math.min(
+      browserActionMaxHeight,
+      preferredHeight,
+    ),
+  );
 
   elem.style.width = `${width}px`;
   elem.style.minWidth = `${width}px`;
@@ -42,9 +56,31 @@ export function setElementDimensions(tab, selector, preferredWidth, preferredHei
   elem.style.maxHeight = `${height}px`;
 }
 
+function isFolderEmpty(folder) {
+  if (!folder.children) {
+    return false;
+  }
+
+  if (folder.children && folder.children.length === 0) {
+    return true;
+  }
+
+  /* eslint-disable */
+  for (folder of folder.children) {
+    if (!isFolderEmpty(folder)) {
+      return false;
+    }
+  }
+  /* eslint-enable */
+
+  // all children, plus their children are empty
+  return true;
+}
+
 export function buildTree(
   treeNode,
   hideEmptyFolders,
+  allFoldersClosed,
   topLevel = false,
   visible = true,
 ) {
@@ -67,7 +103,7 @@ export function buildTree(
     if (typeof child === 'undefined') {
       return;
     }
-    isOpen = openFolders.contains(child.id);
+    isOpen = !allFoldersClosed && openFolders.contains(child.id);
     d = document.createElement('li');
 
     if (child.url) { // url
@@ -75,7 +111,11 @@ export function buildTree(
       setElementData(d, 'item-id', child.id);
 
       const bookmark = document.createElement('span');
-      bookmark.innerText = child.title;
+      if (!/^\s*$/.test(child.title)) {
+        bookmark.innerText = child.title;
+      } else {
+        bookmark.innerHTML = '&nbsp;';
+      }
       bookmark.title = `${child.title} [${child.url}]`;
       bookmark.style.backgroundImage = `url("chrome://favicon/${child.url}")`;
       bookmark.className = 'bookmark';
@@ -90,7 +130,7 @@ export function buildTree(
       folder.innerText = child.title;
       d.appendChild(folder);
 
-      if (hideEmptyFolders && child.children && !child.children.length) {
+      if (hideEmptyFolders && isFolderEmpty(child)) {
         // we need to add hidden nodes for these
         // otherwise sorting doesn't work properly
         addClass(d, 'hidden');
@@ -99,7 +139,7 @@ export function buildTree(
 
         if (child.children && child.children.length) {
           if (isOpen) {
-            children = buildTree(child, hideEmptyFolders, false, isOpen);
+            children = buildTree(child, hideEmptyFolders, allFoldersClosed, false, isOpen);
             d.appendChild(children);
           }
           setElementData(d, 'loaded', isOpen ? '1' : '0');
@@ -187,6 +227,7 @@ export function toggleFolder(elem) {
     const t = buildTree(
       data[0],
       mbtSettings.get('hide_empty_folders'),
+      mbtSettings.get('start_with_all_folders_closed'),
       false,
       false,
     );
@@ -397,6 +438,21 @@ export function showContextMenuBookmark(bookmark, offset) {
         document.querySelector('.save').click();
       });
       document.querySelector('#bookmarkName').focus();
+    });
+  });
+  contextMenu.querySelector('.open-new').addEventListener('click', (event) => {
+    contextAction(event, () => {
+      openBookmark(getElementData(bookmark, 'url'), 'background');
+    });
+  });
+  contextMenu.querySelector('.open-new-window').addEventListener('click', (event) => {
+    contextAction(event, () => {
+      openBookmark(getElementData(bookmark, 'url'), 'new-window');
+    });
+  });
+  contextMenu.querySelector('.open-incognito-window').addEventListener('click', (event) => {
+    contextAction(event, () => {
+      openBookmark(getElementData(bookmark, 'url'), 'new-incognito-window');
     });
   });
   addClass(bookmark, 'selected');

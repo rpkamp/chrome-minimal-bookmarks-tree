@@ -1,0 +1,77 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: circleci/node:10
+
+commands:
+  prepare:
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run: npm install
+
+jobs:
+  test:
+    executor: node
+    steps:
+      - prepare
+      - run:
+          name: Build
+          command: make build-dev
+
+  build:
+    executor: node
+    steps:
+      - prepare
+      - run:
+          name: Pack
+          command: make build
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - mbt.zip
+
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.12
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./workspace
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ./workspace/mbt.zip
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test
+  tagged:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+      - build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+      - publish-github-release:
+          requires:
+            - test
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/

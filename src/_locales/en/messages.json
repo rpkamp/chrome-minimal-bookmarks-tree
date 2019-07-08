@@ -53,9 +53,6 @@
     "optionAnimationSpeedVeryFast": {
         "message": "Super fast"
     },
-    "optionZoomLevel": {
-        "message": "Zoom level"
-    },
     "optionPreferredHeight": {
         "message": "Preferred height"
     },
@@ -154,5 +151,20 @@
     },
     "optionClickActionBackground": {
         "message": "Background tab"
+    },
+    "optionClickActionNewWindow": {
+        "message": "New Window"
+    },
+    "optionClickActionNewIncognitoWindow": {
+        "message": "New Incognito Window"
+    },
+    "optionFont": {
+        "message": "Font"
+    },
+    "optionFontDefault": {
+        "message": "Default"
+    },
+    "optionStartWithAllFoldersClosed": {
+        "message": "Start with all folders closed"
     }
 }
