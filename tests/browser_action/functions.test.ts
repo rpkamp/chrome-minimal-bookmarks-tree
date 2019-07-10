@@ -22,19 +22,19 @@ function createNode() {
 test('detect index of element 0 in list', () => {
   const node = createNode();
 
-  expect(elementIndex(node.querySelector('.first'))).toBe(0);
+  expect(elementIndex(node.querySelector('.first') as HTMLElement)).toBe(0);
 });
 
 test('detect index of element 1 in list', () => {
   const node = createNode();
 
-  expect(elementIndex(node.querySelector('.second'))).toBe(1);
+  expect(elementIndex(node.querySelector('.second') as HTMLElement)).toBe(1);
 });
 
 test('detect index of element 2 in list', () => {
   const node = createNode();
 
-  expect(elementIndex(node.querySelector('.third'))).toBe(2);
+  expect(elementIndex(node.querySelector('.third') as HTMLElement)).toBe(2);
 });
 
 test('detect index of element in container with mixed nodes', () => {

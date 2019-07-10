@@ -16,6 +16,10 @@ import {SettingsFactory} from "../common/settings";
     const dropdowns = window.document.querySelectorAll('select');
     dropdowns.forEach((dropdown: HTMLSelectElement) => {
       const id = dropdown.getAttribute('id');
+      if (null === id) {
+        return;
+      }
+
       dropdown.value = String(settings.get(id));
       if (id === 'font') {
         dropdown.style.fontFamily = `"${dropdown.value}"`;
@@ -33,24 +37,31 @@ import {SettingsFactory} from "../common/settings";
   };
 
   const fontList = window.document.querySelector('#font');
-  chrome.fontSettings.getFontList((fonts) => {
-    fonts.forEach((font) => {
-      const option = window.document.createElement('option');
-      option.textContent = font.displayName;
-      option.style.fontFamily = `"${font.displayName}"`;
-      option.textContent = font.displayName;
-      fontList.appendChild(option);
+  if (null !== fontList) {
+    chrome.fontSettings.getFontList((fonts) => {
+      fonts.forEach((font) => {
+        const option = window.document.createElement('option');
+        option.textContent = font.displayName;
+        option.style.fontFamily = `"${font.displayName}"`;
+        option.textContent = font.displayName;
+        fontList.appendChild(option);
+      });
+      (fontList.parentElement as HTMLElement).classList.remove('hidden');
+      initDropDowns();
     });
-    fontList.parentElement.classList.remove('hidden');
-    initDropDowns();
-  });
+  }
 
   const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach((checkbox: HTMLInputElement) => {
     const id = checkbox.getAttribute('id');
+    if (null === id) {
+      return;
+    }
+
     if (settings.get(id)) {
       checkbox.setAttribute('checked', 'checked');
     }
+
     addEventListenerMulti(checkbox, 'click keyup', () => {
       settings.set(id, checkbox.checked);
     });
@@ -59,11 +70,15 @@ import {SettingsFactory} from "../common/settings";
   const numericInputs = window.document.querySelectorAll('input[type="number"]');
   numericInputs.forEach((numericInput: HTMLInputElement) => {
     const id = numericInput.getAttribute('id');
+    if (null === id) {
+      return;
+    }
+
     numericInput.value = String(settings.get(id));
     addEventListenerMulti(numericInput, 'change keyup', () => {
       const value = parseInt(numericInput.value, 10);
-      const minValue = parseInt(numericInput.getAttribute('min'), 10);
-      const maxValue = parseInt(numericInput.getAttribute('max'), 10);
+      const minValue = parseInt(numericInput.getAttribute('min') || '100', 10);
+      const maxValue = parseInt(numericInput.getAttribute('max') || '100', 10);
       if (Number.isNaN(value) || value < minValue || value > maxValue) {
         numericInput.style.border = '1px solid red';
         return;
@@ -73,7 +88,7 @@ import {SettingsFactory} from "../common/settings";
     });
   });
 
-  document.querySelector('.license-toggle').addEventListener('click', (event) => {
+  (document.querySelector('.license-toggle') as HTMLElement).addEventListener('click', (event) => {
     (document.querySelector('#license') as HTMLElement).style.display = 'block';
     (document.querySelector('.license-toggle') as HTMLElement).style.display = 'none';
     return nothing(event);

@@ -50,7 +50,7 @@ export interface Settings {
  * Exported for testing only
  */
 export class CachedSettings implements Settings {
-  cache: { [s: string]: Setting; };
+  cache: { [s: string]: Setting | null; };
   inner: Settings;
 
   constructor(inner) {

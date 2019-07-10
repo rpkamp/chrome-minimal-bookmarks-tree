@@ -95,6 +95,10 @@ export default function () {
   chrome.omnibox.onInputEntered.addListener((suggestionContent: string) => {
     handleOmniboxInputEntered(suggestionContent)
       .catch(() => {
+        if (null === currentDefaultSuggestion) {
+          return;
+        }
+
         handleOmniboxInputEntered(currentDefaultSuggestion.content)
       });
   });

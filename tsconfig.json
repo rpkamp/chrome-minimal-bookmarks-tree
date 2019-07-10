@@ -3,5 +3,6 @@
     "src/**/*"
   ],
   "compilerOptions": {
+    "strictNullChecks": true
   }
 }

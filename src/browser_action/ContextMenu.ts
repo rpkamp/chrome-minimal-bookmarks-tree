@@ -55,7 +55,7 @@ export class ContextMenu {
 
         contextMenu.style.left = '-10000px';
 
-        document.querySelector('body').appendChild(contextMenu);
+        document.body.appendChild(contextMenu);
 
         const contextClientRect = contextMenu.getBoundingClientRect();
 
@@ -93,7 +93,7 @@ export class ContextMenu {
     }
 
     destroy() {
-        if (null === this.element) {
+        if (null === this.element || null === this.element.parentNode) {
             return;
         }
 

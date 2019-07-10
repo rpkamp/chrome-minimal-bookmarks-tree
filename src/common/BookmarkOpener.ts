@@ -51,7 +51,7 @@ export class BookmarkOpener {
   }
 
   private static getAllBookmarkUrlsInFolder(bookmark: BookmarkTreeNode): string[] {
-    let bookmarks = [];
+    let bookmarks: string[] = [];
     if (bookmark.url) {
       bookmarks.push(bookmark.url);
     }

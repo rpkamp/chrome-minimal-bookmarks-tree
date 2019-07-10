@@ -70,7 +70,12 @@ function isFolderEmpty(folder: BookmarkTreeNode) {
 }
 
 export function getElementData(element: Element, key: string): string {
-  return element.getAttribute(`data-${key}`);
+  const data = element.getAttribute(`data-${key}`);
+  if (null === data) {
+    throw new Error('Element does not have data in key "' + key + '"');
+  }
+
+  return data;
 }
 
 export function setElementData(element: Element, key: string, value: string): void {
@@ -167,8 +172,8 @@ export function slideDown(element: HTMLHtmlElement, duration: number): void {
   animator.start();
 }
 
-export function getAncestorsWithClass(element: Element, className: string): HTMLElement[] {
-  const parents = [];
+export function getAncestorsWithClass(element: Element, className: string): Element[] {
+  const parents: Element[] = [];
 
   if (!(element.parentNode instanceof Element)) {
     return parents;
@@ -271,7 +276,7 @@ export function elementIndex(element: Element): number {
     return -1;
   }
 
-  return Array.from(element.parentNode.childNodes).filter(
+  return <number>Array.from(element.parentNode.childNodes).filter(
     (elem) => elem.nodeType !== Node.TEXT_NODE
   ).indexOf(element);
 }
@@ -300,6 +305,8 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
       folder.classList.remove('selected');
 
       const itemId = getElementData(folder, 'item-id');
+      const name = (folder.querySelector('span') as HTMLElement).innerText;
+
       switch (event.action) {
         case 'openAll':
           openAllBookmarks(itemId);
@@ -308,11 +315,11 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
         case 'delete':
           const deleteFolder = () => {
             chrome.bookmarks.removeTree(itemId, () => {
-              folder.parentNode.removeChild(folder);
+              (folder.parentNode as Element).removeChild(folder);
             });
           };
           new ConfirmDialog(
-            `${chrome.i18n.getMessage('deleteBookmarkFolder')}<br /><br />${folder.querySelector('span').innerText}`,
+            `${chrome.i18n.getMessage('deleteBookmarkFolder')}<br /><br />${name}`,
             () => { deleteFolder() }
           ).show(window);
           break;
@@ -323,12 +330,12 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
               {
                 id: 'name',
                 label: chrome.i18n.getMessage('bookmarkEditName'),
-                value: folder.querySelector('span').innerText
+                value: name
               }
             ],
             (data) => {
               chrome.bookmarks.update(itemId, {title: data.name}, () => {
-                folder.querySelector('span').innerText = data.name;
+                (folder.querySelector('span') as HTMLElement).innerText = data.name;
               })
             }
           ).show(window);
@@ -359,7 +366,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
 
       const url = getElementData(bookmark, 'url');
       const itemId = getElementData(bookmark, 'item-id');
-      const name = bookmark.querySelector('span').innerText;
+      const name = (bookmark.querySelector('span') as HTMLElement).innerText;
 
       switch (event.action) {
         case 'edit':
@@ -378,7 +385,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
             ],
             (data) => {
               chrome.bookmarks.update(itemId, {title: data.name, url: data.url}, () => {
-                bookmark.querySelector('span').innerText = data.name;
+                (bookmark.querySelector('span') as HTMLElement).innerText = data.name;
                 setElementData(bookmark, 'url', data.url);
               })
             }
@@ -388,7 +395,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
         case 'delete':
           const deleteBookmark = () => {
             chrome.bookmarks.remove(itemId, () => {
-              bookmark.parentNode.removeChild(bookmark);
+              (bookmark.parentNode as HTMLElement).removeChild(bookmark);
             });
           };
           if (settings.get('confirm_bookmark_deletion')) {

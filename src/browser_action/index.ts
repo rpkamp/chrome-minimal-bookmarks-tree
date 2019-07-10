@@ -1,12 +1,10 @@
 import { translateDocument } from '../common/functions';
 import { buildTree, setElementDimensions } from './functions';
-import Timeout = NodeJS.Timeout;
 import {SettingsFactory} from '../common/settings';
 import {clickHandler, contextMenuHandler, mouseDownHandler} from './handlers';
 import {initDragDrop} from "./drag_drop";
 
 (function init(settings, chrome) {
-  let scrollTimeout: Timeout | null;
   const hideEmptyFolders: boolean = <boolean>settings.get('hide_empty_folders');
   const startWithAllFoldersClosed: boolean = <boolean>settings.get('start_with_all_folders_closed');
   const loading = <HTMLElement>document.querySelector('#loading');
@@ -14,6 +12,14 @@ import {initDragDrop} from "./drag_drop";
   const wrapper = <HTMLElement>document.querySelector('#bookmarks');
 
   chrome.bookmarks.getTree((bookmarksTree) => {
+    if (typeof bookmarksTree[0] === 'undefined') {
+      return;
+    }
+
+    if (typeof bookmarksTree[0].children === 'undefined') {
+      return;
+    }
+
     const otherBookmarks = buildTree(
       bookmarksTree[0].children[1],
       hideEmptyFolders,
@@ -50,7 +56,7 @@ import {initDragDrop} from "./drag_drop";
     }
 
     (bm as HTMLElement).style.display = 'block';
-    loading.parentNode.removeChild(loading);
+    (loading.parentNode as HTMLElement).removeChild(loading);
   });
 
   bm.addEventListener('click', (event) => clickHandler(event));
@@ -60,9 +66,10 @@ import {initDragDrop} from "./drag_drop";
   initDragDrop(bm, wrapper);
 
   if (settings.get('remember_scroll_position')) {
+    let scrollTimeout: number | undefined;
     wrapper.addEventListener('scroll', () => {
       clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => { localStorage.setItem('scrolltop', String(wrapper.scrollTop)); }, 100);
+      scrollTimeout = <number><any>setTimeout(() => { localStorage.setItem('scrolltop', String(wrapper.scrollTop)); }, 100);
     });
   }
 
