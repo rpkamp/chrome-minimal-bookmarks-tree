@@ -10,55 +10,6 @@
             <ul id="bookmarks">
             </ul>
         </div>
-        <div id="overlay"></div>
-        <div id="templates">
-            <div id="folderContextMenuTemplate">
-                <li class="openAll" data-i18n-key="popupOpenAll">Open all</li>
-                <li class="edit" data-i18n-key="popupEditFolder">Edit ...</li>
-                <li class="delete" data-i18n-key="popupDeleteFolder">Delete</li>
-            </div>
-            <div id="bookmarkContextMenuTemplate">
-                <li class="edit" data-i18n-key="popupEditBookmark">Edit ...</li>
-                <li class="delete" data-i18n-key="popupDeleteBookmark">Delete</li>
-                <hr />
-                <li class="open-new" data-i18n-key="popupOpenBookmark">Open in new tab</li>
-                <li class="open-new-window" data-i18n-key="popupOpenBookmark">Open in new window</li>
-                <li class="open-incognito-window" data-i18n-key="popupOpenBookmark">Open in incognito window</li>
-            </div>
-            <div id="editFolderTemplate">
-                <div class="row">
-                    <label for="folderName" data-i18n-key="bookmarkEditName">Name</label>
-                    <input type="text" id="folderName" /><br />
-                </div>
-                <div class="row actions">
-                    <button type="button" class="btn primary save" data-i18n-key="bookmarkEditSave">Save</button>
-                    <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
-                </div>
-            </div>
-            <div id="editBookmarkTemplate">
-                <div class="row">
-                    <label for="bookmarkName" data-i18n-key="bookmarkEditName">Name</label>
-                    <input type="text" id="bookmarkName" /><br />
-                </div>
-                <div class="row">
-                    <label for="bookmarkUrl" data-i18n-key="bookmarkEditUrl">URL</label>
-                    <input type="text" id="bookmarkUrl" /><br />
-                </div>
-                <div class="row actions">
-                    <button type="button" class="btn primary save" data-i18n-key="bookmarkEditSave">Save</button>
-                    <button type="button" class="btn cancel" data-i18n-key="bookmarkEditCancel">Cancel</button>
-                </div>
-            </div>
-            <div id="confirmTemplate">
-                <div class="row">
-                    <div class="question"></div>
-                </div>
-                <div class="row actions">
-                    <button type="button" class="btn primary confirm" data-i18n-key="confirmationConfirm">Yes</button>
-                    <button type="button" class="btn cancel" data-i18n-key="confirmationDeny">Never mind</button>
-                </div>
-            </div>
-        </div>
         <script src="browser_action.js"></script>
     </body>
 </html>

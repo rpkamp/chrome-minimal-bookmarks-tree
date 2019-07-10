@@ -1,12 +1,15 @@
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
-import {SettingsFactory} from "../common/settings";
-import {nothing,} from '../common/functions';
-import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
+import {SettingsFactory} from '../common/settings';
+import {BookmarkOpener, BookmarkOpeningDisposition} from '../common/BookmarkOpener';
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+import {ContextMenu, ContextMenuEvent, ContextMenuSeparator, ContextMenuTextItem, Offset} from './ContextMenu';
+import {ConfirmDialog, EditDialog} from './Dialog';
 
 const mbtSettings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
+
+let contextMenu: ContextMenu | null = null;
 
 export function setElementDimensions(elem: HTMLHtmlElement | null, preferredWidth: number, preferredHeight: number) {
   if (elem === null) {
@@ -256,241 +259,11 @@ export function toggleFolder(elem): void {
   });
 }
 
-export function openAllBookmarks(folder): void {
-  chrome.bookmarks.getSubTree(getElementData(folder, 'item-id'), (data: BookmarkTreeNode[]) => {
+export function openAllBookmarks(folderId: string): void {
+  chrome.bookmarks.getSubTree(folderId, (data: BookmarkTreeNode[]) => {
     BookmarkOpener.openAll(data[0], true);
     window.close();
   });
-}
-
-export function removeContextMenu(): void {
-  const contextMenu = document.querySelector('#contextMenu');
-  if (null === contextMenu) {
-    return;
-  }
-
-  if (!(contextMenu.parentNode instanceof HTMLElement)) {
-    return;
-  }
-  contextMenu.parentNode.removeChild(contextMenu);
-}
-
-function contextAction(e, callback): boolean {
-  removeContextMenu();
-  callback.call();
-
-  return nothing(e);
-}
-
-function showContextMenu(contextMenu, offset): void {
-  contextMenu.style.left = -10000;
-
-  document.querySelector('body').appendChild(contextMenu);
-
-  const contextClientRect = contextMenu.getBoundingClientRect();
-
-  let yCoordinate = offset.y;
-  const windowHeight = window.innerHeight;
-  const contextHeight = contextClientRect.height;
-  if (yCoordinate > windowHeight - contextHeight) {
-    yCoordinate = windowHeight - contextHeight - 15;
-  }
-
-  let xCoordinate = offset.x;
-  const windowWidth = window.innerWidth;
-  const contextWidth = contextClientRect.width;
-  if (xCoordinate > windowWidth - contextWidth) {
-    xCoordinate = windowWidth - contextWidth - 15;
-  }
-
-  contextMenu.style.left = `${xCoordinate}px`;
-  contextMenu.style.top = `${yCoordinate}px`;
-}
-
-function closePopup(contents): void {
-  contents.parentNode.removeChild(contents);
-  const selected = document.querySelector('.selected');
-  if (null !== selected) {
-    selected.classList.remove('selected');
-  }
-  (document.querySelector('#overlay') as HTMLElement).style.display = 'none';
-}
-
-function showConfirm(question, confirmationCallback): void {
-  const confirmDialog = document.createElement('div');
-  confirmDialog.innerHTML = (document.querySelector('#confirmTemplate') as HTMLElement).innerHTML;
-  confirmDialog.setAttribute('id', 'overlayContents');
-
-  confirmDialog.querySelector('.question').innerHTML = question;
-
-  confirmDialog.querySelector('.confirm').addEventListener('click', () => {
-    confirmationCallback();
-    closePopup(confirmDialog);
-  });
-
-  confirmDialog.querySelector('.cancel').addEventListener('click', () => {
-    closePopup(confirmDialog);
-  });
-
-  document.querySelector('#overlay').appendChild(confirmDialog);
-  (document.querySelector('#overlay') as HTMLElement).style.display = 'block';
-}
-
-export function showContextMenuFolder(folder, offset): void {
-  removeContextMenu();
-  const contextMenu = document.createElement('ul');
-  contextMenu.className = 'contextMenu';
-  contextMenu.innerHTML = (document.querySelector('#folderContextMenuTemplate') as HTMLElement).innerHTML;
-  contextMenu.setAttribute('id', 'contextMenu');
-
-  contextMenu.querySelector('.openAll').addEventListener('click', (event) => {
-    contextAction(event, () => {
-      openAllBookmarks(folder);
-    });
-  });
-  contextMenu.querySelector('.delete').addEventListener('click', (event) => {
-    contextAction(event, () => {
-      showConfirm(`${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${folder.querySelector('span').innerText}`, () => {
-        chrome.bookmarks.removeTree(getElementData(folder, 'item-id'), () => {
-          folder.parentNode.removeChild(folder);
-        });
-      });
-    });
-  });
-  contextMenu.querySelector('.edit').addEventListener('click', (subEvent) => {
-    const itemId = getElementData(folder, 'item-id');
-    contextAction(subEvent, () => {
-      const editor = document.createElement('div');
-      editor.innerHTML = (document.querySelector('#editFolderTemplate') as HTMLElement).innerHTML;
-      editor.setAttribute('id', 'overlayContents');
-
-      document.querySelector('#overlay').appendChild(editor);
-
-      (document.querySelector('#folderName') as HTMLInputElement).value = folder.querySelector('span').innerText;
-
-      document.querySelector('.cancel').addEventListener('click', () => {
-        closePopup(editor);
-      });
-      document.querySelector('.save').addEventListener('click', () => {
-        chrome.bookmarks.update(itemId, {
-          title: (document.querySelector('#folderName') as HTMLInputElement).value,
-        });
-        folder.querySelector('span').innerText = (document.querySelector('#folderName') as HTMLInputElement).value;
-
-        closePopup(editor);
-      });
-
-      (document.querySelector('#overlay') as HTMLElement).style.display = 'block';
-      (document.querySelector('#folderName') as HTMLElement).focus();
-      document.querySelector('#folderName').addEventListener('keyup', (event: KeyboardEvent) => {
-        if (event.keyCode !== 13) {
-          return;
-        }
-        (document.querySelector('.save') as HTMLElement).click();
-      });
-    });
-  });
-  folder.classList.add('selected');
-  showContextMenu(contextMenu, offset);
-}
-
-type Offset = {
-  x: number;
-  y: number;
-}
-
-export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): void {
-  removeContextMenu();
-
-  const contextMenu = document.createElement('ul');
-  contextMenu.className = 'contextMenu';
-  contextMenu.innerHTML = document.querySelector('#bookmarkContextMenuTemplate').innerHTML;
-  contextMenu.setAttribute('id', 'contextMenu');
-
-  contextMenu.querySelector('.delete').addEventListener('click', (event: MouseEvent) => {
-    contextAction(event, () => {
-      if (mbtSettings.get('confirm_bookmark_deletion')) {
-        showConfirm(`${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${bookmark.querySelector('span').innerText}`, () => {
-          chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
-            bookmark.parentNode.removeChild(bookmark);
-          });
-        });
-      } else {
-        chrome.bookmarks.remove(getElementData(bookmark, 'item-id'), () => {
-          bookmark.parentNode.removeChild(bookmark);
-        });
-      }
-    });
-  });
-
-  contextMenu.querySelector('.edit').addEventListener('click', (event: MouseEvent) => {
-    const itemId = getElementData(bookmark, 'item-id');
-    contextAction(event, () => {
-      const editor = document.createElement('div');
-      editor.innerHTML = document.querySelector('#editBookmarkTemplate').innerHTML;
-      editor.setAttribute('id', 'overlayContents');
-
-      document.querySelector('#overlay').appendChild(editor);
-
-      (document.querySelector('#bookmarkName') as HTMLInputElement).value = bookmark.querySelector('span').innerText;
-      (document.querySelector('#bookmarkUrl') as HTMLInputElement).value = getElementData(bookmark, 'url');
-
-      document.querySelector('.cancel').addEventListener('click', () => {
-        closePopup(editor);
-      });
-      document.querySelector('.save').addEventListener('click', () => {
-        const span = bookmark.querySelector('span');
-        const name = (document.querySelector('#bookmarkName') as HTMLInputElement).value;
-        const url = (document.querySelector('#bookmarkUrl') as HTMLInputElement).value;
-
-        chrome.bookmarks.update(itemId, {
-          title: name,
-          url,
-        });
-
-        span.innerText = name;
-        span.setAttribute(
-          'title',
-          `${name} [${url}]`,
-        );
-        setElementData(bookmark, 'url', url);
-
-        closePopup(editor);
-      });
-
-      (document.querySelector('#overlay') as HTMLElement).style.display = 'block';
-      document.querySelector('#bookmarkName').addEventListener('keyup', (keyEvent: KeyboardEvent) => {
-        if (keyEvent.keyCode !== 13) {
-          return;
-        }
-        (document.querySelector('.save') as HTMLElement).click();
-      });
-      document.querySelector('#bookmarkUrl').addEventListener('keyup', (keyEvent: KeyboardEvent) => {
-        if (keyEvent.keyCode !== 13) {
-          return;
-        }
-        (document.querySelector('.save') as HTMLElement).click();
-      });
-      (document.querySelector('#bookmarkName') as HTMLElement).focus();
-    });
-  });
-  contextMenu.querySelector('.open-new').addEventListener('click', (event: MouseEvent) => {
-    contextAction(event, () => {
-      BookmarkOpener.open(getElementData(bookmark, 'url'), BookmarkOpeningDisposition.backgroundTab);
-    });
-  });
-  contextMenu.querySelector('.open-new-window').addEventListener('click', (event: MouseEvent) => {
-    contextAction(event, () => {
-      BookmarkOpener.open(getElementData(bookmark, 'url'), BookmarkOpeningDisposition.newWindow);
-    });
-  });
-  contextMenu.querySelector('.open-incognito-window').addEventListener('click', (event: MouseEvent) => {
-    contextAction(event, () => {
-      BookmarkOpener.open(getElementData(bookmark, 'url'), BookmarkOpeningDisposition.newIncognitoWindow);
-    });
-  });
-  bookmark.classList.add('selected');
-  showContextMenu(contextMenu, offset);
 }
 
 export function elementIndex(element: Element): number {
@@ -510,4 +283,146 @@ export function elementIndex(element: Element): number {
     i++;
   }
   return -1;
+}
+
+function destroyContextMenu() {
+  if (null === contextMenu) {
+    return;
+  }
+
+  contextMenu.destroy();
+  contextMenu = null;
+}
+
+export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void {
+  destroyContextMenu();
+
+  folder.classList.add('selected');
+  contextMenu = new ContextMenu(
+    [
+      new ContextMenuTextItem('openAll', chrome.i18n.getMessage('popupOpenAll')),
+      new ContextMenuTextItem('edit', chrome.i18n.getMessage('popupEditFolder')),
+      new ContextMenuTextItem('delete', chrome.i18n.getMessage('popupDeleteFolder')),
+    ],
+    (event: ContextMenuEvent) => {
+      destroyContextMenu();
+      folder.classList.remove('selected');
+
+      const itemId = getElementData(folder, 'item-id');
+      switch (event.action) {
+        case 'openAll':
+          openAllBookmarks(itemId);
+          break;
+
+        case 'delete':
+          const deleteFolder = () => {
+            chrome.bookmarks.removeTree(itemId, () => {
+              folder.parentNode.removeChild(folder);
+            });
+          };
+          new ConfirmDialog(
+            `${chrome.i18n.getMessage('deleteBookmarkFolder')}<br /><br />${folder.querySelector('span').innerText}`,
+            () => { deleteFolder() }
+          ).show(window);
+          break;
+
+        case 'edit':
+          new EditDialog(
+            [
+              {
+                id: 'name',
+                label: chrome.i18n.getMessage('bookmarkEditName'),
+                value: folder.querySelector('span').innerText
+              }
+            ],
+            (data) => {
+              chrome.bookmarks.update(itemId, {title: data.name}, () => {
+                folder.querySelector('span').innerText = data.name;
+              })
+            }
+          ).show(window);
+          break;
+      }
+    }
+  );
+
+  contextMenu.show(window, offset);
+}
+
+export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): void {
+  destroyContextMenu();
+
+  bookmark.classList.add('selected');
+  contextMenu = new ContextMenu(
+    [
+      new ContextMenuTextItem('edit', chrome.i18n.getMessage('popupEditBookmark')),
+      new ContextMenuTextItem('delete', chrome.i18n.getMessage('popupDeleteBookmark')),
+      new ContextMenuSeparator(),
+      new ContextMenuTextItem('newTab', chrome.i18n.getMessage('popupOpenNewTab')),
+      new ContextMenuTextItem('newWindow', chrome.i18n.getMessage('popupOpenNewWindow')),
+      new ContextMenuTextItem('newIncognitoWindow', chrome.i18n.getMessage('popupOpenNewIncognitoWindow')),
+    ],
+    (event) => {
+      destroyContextMenu();
+      bookmark.classList.remove('selected');
+
+      const url = getElementData(bookmark, 'url');
+      const itemId = getElementData(bookmark, 'item-id');
+      const name = bookmark.querySelector('span').innerText;
+
+      switch (event.action) {
+        case 'edit':
+          new EditDialog(
+            [
+              {
+                id: 'name',
+                label: chrome.i18n.getMessage('bookmarkEditName'),
+                value: name
+              },
+              {
+                id: 'url',
+                label: chrome.i18n.getMessage('bookmarkEditUrl'),
+                value: url
+              }
+            ],
+            (data) => {
+              chrome.bookmarks.update(itemId, {title: data.name, url: data.url}, () => {
+                bookmark.querySelector('span').innerText = data.name;
+                setElementData(bookmark, 'url', data.url);
+              })
+            }
+          ).show(window);
+          break;
+
+        case 'delete':
+          const deleteBookmark = () => {
+            chrome.bookmarks.remove(itemId, () => {
+              bookmark.parentNode.removeChild(bookmark);
+            });
+          };
+          if (mbtSettings.get('confirm_bookmark_deletion')) {
+            new ConfirmDialog(
+              `${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${name}`,
+              () => { deleteBookmark() }
+            ).show(window);
+          } else {
+            deleteBookmark();
+          }
+          break;
+
+        case 'newTab':
+          BookmarkOpener.open(url, BookmarkOpeningDisposition.foregroundTab);
+          break;
+
+        case 'newWindow':
+          BookmarkOpener.open(url, BookmarkOpeningDisposition.newWindow);
+          break;
+
+        case 'newIncognitoWindow':
+          BookmarkOpener.open(url, BookmarkOpeningDisposition.newIncognitoWindow);
+          break;
+      }
+    });
+
+  contextMenu.show(window, offset);
 }

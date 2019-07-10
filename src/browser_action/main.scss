@@ -8,8 +8,15 @@ $border-color: #888;
 $primary-button-background: #378de5;
 $primary-button-color: #fff;
 
+$dialog-background-color: $background-color;
+$dialog-color: $font-color;
+
 @import '~dragula/dist/dragula.css';
 @import 'themes/dark';
+
+*, :after, :before{
+  box-sizing: border-box;
+}
 
 html, body {
   margin: 0;
@@ -148,26 +155,17 @@ li {
   border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-#overlay {
+#dialog {
   position: absolute;
-  background: rgba(0, 0, 0, 0.1);
-  top: 0;
   left: 0;
+  top: 0;
   bottom: 0;
   right: 0;
-  z-index: 1;
-  display: none;
-}
-
-#overlayContents {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  top: 0;
-  background: $background-color;
-  border-bottom: 1px solid $border-color;
+  background: $dialog-background-color;
+  color: $dialog-color;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
   padding: 1rem;
-  z-index: 2;
+  margin: 3px;
 
   .row {
     display: flex;
@@ -186,17 +184,12 @@ li {
       outline: none;
       padding: 0.25rem 0.5rem;
       font-family: inherit;
-      margin-right: 2rem;
       border-bottom: 2px solid $background-color;
 
       &:focus {
         border-bottom: 2px solid $border-color;
       }
     }
-  }
-
-  .question {
-    margin-bottom: 2rem;
   }
 }
 

@@ -11,7 +11,8 @@ import {
   showContextMenuFolder,
   showContextMenuBookmark,
   openAllBookmarks,
-  removeContextMenu, getElementData, elementIndex,
+  getElementData,
+  elementIndex,
 } from './functions';
 import BookmarkDestinationArg = chrome.bookmarks.BookmarkDestinationArg;
 import Timeout = NodeJS.Timeout;
@@ -99,8 +100,6 @@ function openBookmark(url: string, where: string): void {
         element.classList.remove('selected');
       });
 
-      removeContextMenu();
-
       if (event.target.parentNode instanceof HTMLElement && event.target.parentNode.classList.contains('folder')) {
         toggleFolder(event.target.parentNode);
 
@@ -138,8 +137,6 @@ function openBookmark(url: string, where: string): void {
         element.classList.remove('selected');
       });
 
-      removeContextMenu();
-
       if (!(event.target.parentNode instanceof HTMLElement)) {
         return nothing(event);
       }
@@ -174,11 +171,9 @@ function openBookmark(url: string, where: string): void {
         element.classList.remove('selected');
       });
 
-      removeContextMenu();
-
       if (event.button === 1 && event.target.parentNode instanceof HTMLElement) {
         if (event.target.parentNode.classList.contains('folder')) {
-          openAllBookmarks(event.target.parentNode);
+          openAllBookmarks(getElementData(event.target.parentNode, 'item-id'));
 
           return nothing(event);
         }

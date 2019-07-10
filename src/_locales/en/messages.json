@@ -166,5 +166,17 @@
     },
     "optionStartWithAllFoldersClosed": {
         "message": "Start with all folders closed"
+    },
+    "popupOpenNewTab": {
+        "message": "Open in new tab"
+    },
+    "popupOpenNewWindow": {
+        "message": "Open in new window"
+    },
+    "popupOpenNewIncognitoWindow": {
+        "message": "Open in incognito window"
+    },
+    "deleteBookmarkFolder": {
+        "message": "Are you sure you want to delete this bookmark folder?"
     }
 }

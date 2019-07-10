@@ -8,7 +8,7 @@ import {
 import {SettingsFactory} from "../common/settings";
 
 (function init(settings, chrome) {
-  const addEventListenerMulti = (element, events, callback) => {
+  const addEventListenerMulti = (element: Element, events: string, callback: EventListenerOrEventListenerObject) => {
     events.split(' ').forEach(event => element.addEventListener(event, callback, false));
   };
 
