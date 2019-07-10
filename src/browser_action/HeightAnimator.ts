@@ -4,18 +4,18 @@
  * YAGNI.
  */
 export default class HeightAnimator {
-  element: HTMLHtmlElement;
+  element: HTMLElement;
   duration : number = 1;
   initialHeight : number = 0;
   delta : number = 0;
   targetHeight : number = 0;
   startTime : number | null = 0;
 
-  constructor(element : HTMLHtmlElement, targetHeight : number | string, duration : number) {
+  constructor(element: HTMLElement, targetHeight: number | string, duration: number) {
     this.element = element;
     this.duration = duration;
     if (targetHeight === 'auto' && duration > 0) {
-      this.targetHeight = Array.prototype.reduce.call(
+      this.targetHeight = <number>Array.prototype.reduce.call(
         element.childNodes,
         (carry, child) => carry + (child.offsetHeight || 0),
         0,
@@ -34,7 +34,7 @@ export default class HeightAnimator {
     });
   }
 
-  animateFrame(timestamp : number) {
+  animateFrame(timestamp: number) {
     this.startTime = this.startTime || timestamp;
 
     const progress = (timestamp - this.startTime) / this.duration;

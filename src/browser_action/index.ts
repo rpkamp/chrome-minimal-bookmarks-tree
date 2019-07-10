@@ -37,11 +37,11 @@ import {initDragDrop} from "./drag_drop";
 
     if (bookmarksFolder) {
       bm.appendChild(bookmarksFolder);
-      bm.childNodes.forEach((item: HTMLElement) => {
+      bm.childNodes.forEach((item: ChildNode) => {
         if (item.nodeName !== 'LI') {
           return;
         }
-        item.classList.add('nosort');
+        (item as Element).classList.add('nosort');
       });
     }
     if (otherBookmarks) {

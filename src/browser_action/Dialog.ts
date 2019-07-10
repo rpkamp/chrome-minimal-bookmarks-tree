@@ -118,7 +118,7 @@ export class EditDialog implements Dialog {
         window,
         chrome.i18n.getMessage('bookmarkEditSave'),
         () => {
-          const data = {};
+          const data: { [s: string]: string } = {};
           this.inputs.forEach((input) => {
             data[input.id] = input.value;
           });

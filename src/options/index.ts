@@ -1,5 +1,3 @@
-/* global window,document */
-
 import {
   nothing,
   setBrowserActionIcon,
@@ -51,7 +49,7 @@ import {SettingsFactory} from "../common/settings";
     });
   }
 
-  const checkboxes = window.document.querySelectorAll('input[type="checkbox"]');
+  const checkboxes = <HTMLInputElement[]><any>window.document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach((checkbox: HTMLInputElement) => {
     const id = checkbox.getAttribute('id');
     if (null === id) {
@@ -67,7 +65,7 @@ import {SettingsFactory} from "../common/settings";
     });
   });
 
-  const numericInputs = window.document.querySelectorAll('input[type="number"]');
+  const numericInputs = <HTMLInputElement[]><any>window.document.querySelectorAll('input[type="number"]');
   numericInputs.forEach((numericInput: HTMLInputElement) => {
     const id = numericInput.getAttribute('id');
     if (null === id) {

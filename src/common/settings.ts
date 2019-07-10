@@ -1,5 +1,3 @@
-/* global localStorage */
-
 type Setting = string | number | boolean;
 
 /**
@@ -53,7 +51,7 @@ export class CachedSettings implements Settings {
   cache: { [s: string]: Setting | null; };
   inner: Settings;
 
-  constructor(inner) {
+  constructor(inner: Settings) {
     this.cache = {};
     this.inner = inner;
   }
@@ -84,7 +82,7 @@ export class CachedSettings implements Settings {
 export class LocalStorageSettings implements Settings {
   defaults: { [s: string]: Setting; };
 
-  constructor(defaults) {
+  constructor(defaults: { [s: string]: Setting; }) {
     this.defaults = defaults || {};
   }
 

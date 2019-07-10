@@ -162,12 +162,12 @@ export function buildTree(
   return wrapper;
 }
 
-export function slideUp(element: HTMLHtmlElement, duration: number): void {
+export function slideUp(element: HTMLElement, duration: number): void {
   const animator = new HeightAnimator(element, 0, duration);
   animator.start();
 }
 
-export function slideDown(element: HTMLHtmlElement, duration: number): void {
+export function slideDown(element: HTMLElement, duration: number): void {
   const animator = new HeightAnimator(element, 'auto', duration);
   animator.start();
 }
@@ -186,7 +186,7 @@ export function getAncestorsWithClass(element: Element, className: string): Elem
   return parents.concat(getAncestorsWithClass(element.parentNode, className));
 }
 
-function handleToggleFolder(element: HTMLHtmlElement): void {
+function handleToggleFolder(element: HTMLElement): void {
   const animationDuration = parseInt(<string>settings.get('animation_duration'), 10);
 
   if (settings.get('close_old_folder')) {
@@ -194,11 +194,11 @@ function handleToggleFolder(element: HTMLHtmlElement): void {
       return;
     }
 
-    element.parentNode.querySelectorAll('.folder.open').forEach((openFolderElement: HTMLElement) => {
+    element.parentNode.querySelectorAll('.folder.open').forEach((openFolderElement: Element) => {
       if (openFolderElement !== element) {
         openFolderElement.classList.remove('open');
-        openFolderElement.querySelectorAll('.sub').forEach((elementToHide: HTMLHtmlElement) => {
-          slideUp(elementToHide, animationDuration);
+        openFolderElement.querySelectorAll('.sub').forEach((elementToHide: Element) => {
+          slideUp(<HTMLElement>elementToHide, animationDuration);
         });
       }
     });
@@ -237,20 +237,20 @@ function handleToggleFolder(element: HTMLHtmlElement): void {
   elementToToggle.querySelectorAll('li').forEach((folderToHide) => {
     openFolders.remove(getElementData(folderToHide, 'item-id'));
     folderToHide.classList.remove('open');
-    folderToHide.querySelectorAll('.sub').forEach((sub: HTMLHtmlElement) => {
-      slideUp(sub, animationDuration);
+    folderToHide.querySelectorAll('.sub').forEach((sub: Element) => {
+      slideUp(<HTMLElement>sub, animationDuration);
     });
   });
 }
 
-export function toggleFolder(elem): void {
-  if (getElementData(elem, 'loaded') === '1') {
-    handleToggleFolder(elem);
+export function toggleFolder(element: HTMLElement): void {
+  if (getElementData(element, 'loaded') === '1') {
+    handleToggleFolder(element);
 
     return;
   }
 
-  chrome.bookmarks.getSubTree(getElementData(elem, 'item-id'), (data) => {
+  chrome.bookmarks.getSubTree(getElementData(element, 'item-id'), (data) => {
     const t = buildTree(
       data[0],
       <boolean>settings.get('hide_empty_folders'),
@@ -258,9 +258,9 @@ export function toggleFolder(elem): void {
       false,
       false,
     );
-    elem.appendChild(t);
-    setElementData(elem, 'loaded', '1');
-    handleToggleFolder(elem);
+    element.appendChild(t);
+    setElementData(element, 'loaded', '1');
+    handleToggleFolder(element);
   });
 }
 
@@ -333,7 +333,7 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
                 value: name
               }
             ],
-            (data) => {
+            (data: { [s: string]: string }) => {
               chrome.bookmarks.update(itemId, {title: data.name}, () => {
                 (folder.querySelector('span') as HTMLElement).innerText = data.name;
               })
@@ -360,7 +360,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
       new ContextMenuTextItem('newWindow', chrome.i18n.getMessage('popupOpenNewWindow')),
       new ContextMenuTextItem('newIncognitoWindow', chrome.i18n.getMessage('popupOpenNewIncognitoWindow')),
     ],
-    (event) => {
+    (event: ContextMenuEvent) => {
       destroyContextMenu();
       bookmark.classList.remove('selected');
 
@@ -383,7 +383,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
                 value: url
               }
             ],
-            (data) => {
+            (data: { [s: string]: string }) => {
               chrome.bookmarks.update(itemId, {title: data.name, url: data.url}, () => {
                 (bookmark.querySelector('span') as HTMLElement).innerText = data.name;
                 setElementData(bookmark, 'url', data.url);

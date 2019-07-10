@@ -30,14 +30,14 @@ export default function () {
     chrome.omnibox.setDefaultSuggestion(defaultSuggestion);
   }
 
-  function createHighlighter(searchTerm: string): Function {
+  function createHighlighter(searchTerm: string): (haystack: string) => string {
     const expression = new RegExp(`(${searchTerm.replace(/([.?*+^$[\]\\(){}|-])/g, '$1')})`, 'gi');
 
-    return haystack => haystack.replace(expression, '<match>$1</match>');
+    return (haystack: string) => haystack.replace(expression, '<match>$1</match>');
   }
 
   function createSuggestionResult(bookmark: BookmarkTreeNode, highlighter: Function): SuggestResult {
-    const quoteAmpersands = text => text.replace(/&/g, '&amp;');
+    const quoteAmpersands = (text: string) => text.replace(/&/g, '&amp;');
 
     if (bookmark.url) {
       return {

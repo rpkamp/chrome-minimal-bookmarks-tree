@@ -53,7 +53,7 @@ export function clickHandler(event: MouseEvent) {
     return false;
   }
 
-  document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
+  document.querySelectorAll('.selected').forEach((element: Element) => {
     element.classList.remove('selected');
   });
 
@@ -91,7 +91,7 @@ export function contextMenuHandler(event: MouseEvent) {
     return nothing(event);
   }
 
-  document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
+  document.querySelectorAll('.selected').forEach((element: Element) => {
     element.classList.remove('selected');
   });
 
@@ -125,7 +125,7 @@ export function mouseDownHandler(event: MouseEvent) {
     return false;
   }
 
-  document.querySelectorAll('.selected').forEach((element: HTMLElement) => {
+  document.querySelectorAll('.selected').forEach((element: Element) => {
     element.classList.remove('selected');
   });
 

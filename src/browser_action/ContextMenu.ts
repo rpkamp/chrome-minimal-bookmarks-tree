@@ -41,7 +41,7 @@ export class ContextMenuSeparator implements ContextMenuItem {
 
 export class ContextMenu {
     items: ContextMenuItem[];
-    element: HTMLUListElement | null;
+    element: HTMLUListElement | null = null;
     callback: Function;
 
     constructor(items: ContextMenuItem[], callback: Function) {
