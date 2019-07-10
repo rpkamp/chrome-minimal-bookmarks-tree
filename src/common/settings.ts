@@ -7,8 +7,11 @@ type Setting = string | number | boolean;
  * for MBT
  */
 export class SettingsFactory {
+  static settings: Settings | null = null;
+
   static create(): Settings {
-    return new CachedSettings(
+    if (null === this.settings) {
+      this.settings = new CachedSettings(
         new LocalStorageSettings({
           close_old_folder: false,
           open_all_sub: true,
@@ -26,7 +29,10 @@ export class SettingsFactory {
           font: '__default__',
           theme: 'light',
         })
-    );
+      )
+    }
+
+    return this.settings;
   }
 }
 

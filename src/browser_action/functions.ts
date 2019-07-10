@@ -6,27 +6,27 @@ import {ContextMenu, ContextMenuEvent, ContextMenuSeparator, ContextMenuTextItem
 import {ConfirmDialog, EditDialog} from './Dialog';
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
-const mbtSettings = SettingsFactory.create();
+const settings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
 
 let contextMenu: ContextMenu | null = null;
 
-export function setElementDimensions(elem: HTMLHtmlElement | null, preferredWidth: number, preferredHeight: number) {
-  if (elem === null) {
+// Not enforced by this extension, but hardcoded in chrome.
+// So we need to prevent creating a browser action bigger than that, because:
+//
+//   1. When height > 800 it will cause duplicate vertical scrollbars
+//   2. When width > 600 it will cause
+//      a) the vertical scrollbar to be out of view
+//      b) a horizonal scrollbar to be shown
+//
+// Also see https://stackoverflow.com/questions/6904755/is-there-a-hardcoded-maximum-height-for-chrome-browseraction-popups
+const browserActionMaxHeight = 600;
+const browserActionMaxWidth = 800;
+
+export function setElementDimensions(element: HTMLElement | null, preferredWidth: number, preferredHeight: number) {
+  if (null === element) {
     return;
   }
-
-  // Not enforced by this extension, but hardcoded in chrome.
-  // So we need to prevent creating a browser action bigger than that, because:
-  //
-  //   1. When height > 800 it will cause duplicate vertical scrollbars
-  //   2. When width > 600 it will cause
-  //      a) the vertical scrollbar to be out of view
-  //      b) a horizonal scrollbar to be shown
-  //
-  // Also see https://stackoverflow.com/questions/6904755/is-there-a-hardcoded-maximum-height-for-chrome-browseraction-popups
-  const browserActionMaxHeight = 600;
-  const browserActionMaxWidth = 800;
 
   const width: number = Math.floor(
     Math.min(
@@ -42,10 +42,10 @@ export function setElementDimensions(elem: HTMLHtmlElement | null, preferredWidt
     ),
   );
 
-  elem.style.width = `${width}px`;
-  elem.style.minWidth = `${width}px`;
-  elem.style.maxWidth = `${width}px`;
-  elem.style.maxHeight = `${height}px`;
+  element.style.width = `${width}px`;
+  element.style.minWidth = `${width}px`;
+  element.style.maxWidth = `${width}px`;
+  element.style.maxHeight = `${height}px`;
 }
 
 function isFolderEmpty(folder: BookmarkTreeNode) {
@@ -182,9 +182,9 @@ export function getAncestorsWithClass(element: Element, className: string): HTML
 }
 
 function handleToggleFolder(element: HTMLHtmlElement): void {
-  const animationDuration = parseInt(<string>mbtSettings.get('animation_duration'), 10);
+  const animationDuration = parseInt(<string>settings.get('animation_duration'), 10);
 
-  if (mbtSettings.get('close_old_folder')) {
+  if (settings.get('close_old_folder')) {
     if (!(element.parentNode instanceof HTMLElement)) {
       return;
     }
@@ -209,7 +209,7 @@ function handleToggleFolder(element: HTMLHtmlElement): void {
   }
 
   const id = getElementData(<HTMLElement>elementToToggle.parentNode, 'item-id');
-  if (mbtSettings.get('close_old_folder')) {
+  if (settings.get('close_old_folder')) {
     openFolders.clear();
     if (isOpen) {
       openFolders.add(id);
@@ -248,8 +248,8 @@ export function toggleFolder(elem): void {
   chrome.bookmarks.getSubTree(getElementData(elem, 'item-id'), (data) => {
     const t = buildTree(
       data[0],
-      <boolean>mbtSettings.get('hide_empty_folders'),
-      <boolean>mbtSettings.get('start_with_all_folders_closed'),
+      <boolean>settings.get('hide_empty_folders'),
+      <boolean>settings.get('start_with_all_folders_closed'),
       false,
       false,
     );
@@ -276,7 +276,7 @@ export function elementIndex(element: Element): number {
   ).indexOf(element);
 }
 
-function destroyContextMenu() {
+export function destroyContextMenu() {
   if (null === contextMenu) {
     return;
   }
@@ -391,7 +391,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
               bookmark.parentNode.removeChild(bookmark);
             });
           };
-          if (mbtSettings.get('confirm_bookmark_deletion')) {
+          if (settings.get('confirm_bookmark_deletion')) {
             new ConfirmDialog(
               `${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${name}`,
               () => { deleteBookmark() }
