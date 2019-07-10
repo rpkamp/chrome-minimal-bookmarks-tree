@@ -10,7 +10,7 @@ Encore
   .setOutputPath('dist/')
   .setPublicPath('/')
 
-  .addStyleEntry('browser_action_css', './src/browser_action/main.scss')
+  .addStyleEntry('browser_action_css', './src/browser_action/styles/main.scss')
   .addStyleEntry('options_css', './src/options/main.scss')
 
   .addEntry('browser_action', './src/browser_action/index.ts')

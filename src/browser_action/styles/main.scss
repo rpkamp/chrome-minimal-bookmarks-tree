@@ -11,8 +11,8 @@ $primary-button-color: #fff;
 $dialog-background-color: $background-color;
 $dialog-color: $font-color;
 
-@import '~dragula/dist/dragula.css';
-@import 'themes/dark';
+@import '../../../node_modules/dragula/dist/dragula.css';
+@import 'dark';
 
 *, :after, :before{
   box-sizing: border-box;
