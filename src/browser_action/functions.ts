@@ -2,9 +2,9 @@ import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
 import {SettingsFactory} from '../common/settings';
 import {BookmarkOpener, BookmarkOpeningDisposition} from '../common/BookmarkOpener';
-import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 import {ContextMenu, ContextMenuEvent, ContextMenuSeparator, ContextMenuTextItem, Offset} from './ContextMenu';
 import {ConfirmDialog, EditDialog} from './Dialog';
+import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 
 const mbtSettings = SettingsFactory.create();
 const openFolders = new PersistentSet('openfolders');
@@ -267,22 +267,13 @@ export function openAllBookmarks(folderId: string): void {
 }
 
 export function elementIndex(element: Element): number {
-  if (!element || typeof element.parentNode === 'undefined') {
-    return null;
+  if (!(element.parentNode instanceof Element)) {
+    return -1;
   }
-  const parent = element.parentNode;
-  const children = parent.childNodes;
-  let i = 0;
-  for (let j = 0; j < children.length; j++) {
-    if (children[j].nodeType === Node.TEXT_NODE) {
-      continue;
-    }
-    if (element === children[j]) {
-      return i;
-    }
-    i++;
-  }
-  return -1;
+
+  return Array.from(element.parentNode.childNodes).filter(
+    (elem) => elem.nodeType !== Node.TEXT_NODE
+  ).indexOf(element);
 }
 
 function destroyContextMenu() {

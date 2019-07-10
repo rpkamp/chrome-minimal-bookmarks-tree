@@ -210,9 +210,12 @@ function openBookmark(url: string, where: string): void {
     }).on('drag', (element) => {
       initialIndexOfDraggable = elementIndex(element);
     }).on('drop', (element) => {
-      const options: BookmarkDestinationArg = {
-        index: elementIndex(element),
-      };
+      const index = elementIndex(element);
+      if (-1 === index) {
+        return;
+      }
+
+      const options: BookmarkDestinationArg = {index};
 
       if (options.index > initialIndexOfDraggable) {
         // we need to compensate for the original element that was
