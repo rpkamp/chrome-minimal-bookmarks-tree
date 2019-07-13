@@ -53,6 +53,9 @@
     "optionAnimationSpeedVeryFast": {
         "message": "Super schnell"
     },
+    "optionZoomLevel": {
+        "message": "Zoom Stufe"
+    },
     "optionPreferredHeight": {
         "message": "Bevorzugte H\u00f6he"
     },
@@ -166,5 +169,17 @@
     },
     "optionStartWithAllFoldersClosed": {
         "message": "Beginnen mit allen Ordnern geschlossen"
+    },
+    "popupOpenNewTab": {
+        "message": "In Neuer Tab \u00f6ffnen"
+    },
+    "popupOpenNewWindow": {
+        "message": "In Neuem Venster \u00f6ffnen"
+    },
+    "popupOpenNewIncognitoWindow": {
+        "message": "Im neuem Inkognito-Fenster \u00f6ffnen"
+    },
+    "deleteBookmarkFolder": {
+        "message": "Wollen Sie diesen Ordner wirklich l\u00f6schen?"
     }
 }
