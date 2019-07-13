@@ -8,7 +8,7 @@ import {
 } from "./functions";
 import {nothing} from "../common/functions";
 import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
-import {SettingsFactory} from "../common/settings";
+import {SettingsFactory} from "../common/settings/SettingsFactory";
 
 function openBookmark(url: string, where: string): void {
   let disposition: BookmarkOpeningDisposition;
@@ -76,7 +76,7 @@ export function clickHandler(event: MouseEvent) {
   if (event.target.parentNode instanceof HTMLElement) {
     const url = getElementData(event.target.parentNode, 'url');
     const settings = SettingsFactory.create();
-    openBookmark(url, String(settings.get(actionType)));
+    openBookmark(url, settings.getString(actionType));
   }
 
   return nothing(event);
@@ -140,5 +140,5 @@ export function mouseDownHandler(event: MouseEvent) {
 
   const url = getElementData(event.target.parentNode, 'url');
   const settings = SettingsFactory.create();
-  openBookmark(url, String(settings.get('middle_click_action')));
+  openBookmark(url, settings.getString('middle_click_action'));
 }

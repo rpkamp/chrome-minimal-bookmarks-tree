@@ -1,6 +1,6 @@
 import HeightAnimator from './HeightAnimator';
 import PersistentSet from './PersistentSet';
-import {SettingsFactory} from '../common/settings';
+import {SettingsFactory} from '../common/settings/SettingsFactory';
 import {BookmarkOpener, BookmarkOpeningDisposition} from '../common/BookmarkOpener';
 import {ContextMenu, ContextMenuEvent, ContextMenuSeparator, ContextMenuTextItem, Offset} from './ContextMenu';
 import {ConfirmDialog, EditDialog} from './Dialog';
@@ -187,9 +187,9 @@ export function getAncestorsWithClass(element: Element, className: string): Elem
 }
 
 function handleToggleFolder(element: HTMLElement): void {
-  const animationDuration = parseInt(<string>settings.get('animation_duration'), 10);
+  const animationDuration = settings.getNumber('animation_duration');
 
-  if (settings.get('close_old_folder')) {
+  if (settings.isEnabled('close_old_folder')) {
     if (!(element.parentNode instanceof HTMLElement)) {
       return;
     }
@@ -214,7 +214,7 @@ function handleToggleFolder(element: HTMLElement): void {
   }
 
   const id = getElementData(<HTMLElement>elementToToggle.parentNode, 'item-id');
-  if (settings.get('close_old_folder')) {
+  if (settings.isEnabled('close_old_folder')) {
     openFolders.clear();
     if (isOpen) {
       openFolders.add(id);
@@ -253,8 +253,8 @@ export function toggleFolder(element: HTMLElement): void {
   chrome.bookmarks.getSubTree(getElementData(element, 'item-id'), (data) => {
     const t = buildTree(
       data[0],
-      <boolean>settings.get('hide_empty_folders'),
-      <boolean>settings.get('start_with_all_folders_closed'),
+      settings.isEnabled('hide_empty_folders'),
+      settings.isEnabled('start_with_all_folders_closed'),
       false,
       false,
     );
@@ -398,7 +398,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
               (bookmark.parentNode as HTMLElement).removeChild(bookmark);
             });
           };
-          if (settings.get('confirm_bookmark_deletion')) {
+          if (settings.isEnabled('confirm_bookmark_deletion')) {
             new ConfirmDialog(
               `${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${name}`,
               () => { deleteBookmark() }

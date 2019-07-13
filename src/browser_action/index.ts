@@ -1,12 +1,12 @@
 import { translateDocument } from '../common/functions';
 import { buildTree, setElementDimensions } from './functions';
-import {SettingsFactory} from '../common/settings';
+import {SettingsFactory} from '../common/settings/SettingsFactory';
 import {clickHandler, contextMenuHandler, mouseDownHandler} from './handlers';
 import {initDragDrop} from "./drag_drop";
 
 (function init(settings, chrome) {
-  const hideEmptyFolders: boolean = <boolean>settings.get('hide_empty_folders');
-  const startWithAllFoldersClosed: boolean = <boolean>settings.get('start_with_all_folders_closed');
+  const hideEmptyFolders: boolean = settings.isEnabled('hide_empty_folders');
+  const startWithAllFoldersClosed: boolean = settings.isEnabled('start_with_all_folders_closed');
   const loading = <HTMLElement>document.querySelector('#loading');
   const bm = <HTMLElement>document.querySelector('#bookmarks');
   const wrapper = <HTMLElement>document.querySelector('#bookmarks');
@@ -48,7 +48,7 @@ import {initDragDrop} from "./drag_drop";
       bm.appendChild(otherBookmarks);
     }
 
-    if (settings.get('remember_scroll_position')) {
+    if (settings.isEnabled('remember_scroll_position')) {
       const scrolltop = localStorage.getItem('scrolltop');
       if (null !== scrolltop) {
         setTimeout(() => { wrapper.scrollTop = parseInt(scrolltop, 10); }, 100);
@@ -65,7 +65,7 @@ import {initDragDrop} from "./drag_drop";
 
   initDragDrop(bm, wrapper);
 
-  if (settings.get('remember_scroll_position')) {
+  if (settings.isEnabled('remember_scroll_position')) {
     let scrollTimeout: number | undefined;
     wrapper.addEventListener('scroll', () => {
       clearTimeout(scrollTimeout);
@@ -79,14 +79,14 @@ import {initDragDrop} from "./drag_drop";
 
   setElementDimensions(
     wrapper,
-    parseInt(<string>settings.get('width'), 10),
-    parseInt(<string>settings.get('height'), 10),
+    settings.getNumber('width'),
+    settings.getNumber('height'),
   );
 
-  const font: string = <string>settings.get('font');
+  const font: string = settings.getString('font');
   if (font !== '__default__') {
     document.body.style.fontFamily = `"${font}"`;
   }
 
-  document.body.classList.add(`theme--${settings.get('theme')}`);
+  document.body.classList.add(`theme--${settings.getString('theme')}`);
 }(SettingsFactory.create(), chrome));

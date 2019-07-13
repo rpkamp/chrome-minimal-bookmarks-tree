@@ -3,7 +3,7 @@ import {
   setBrowserActionIcon,
   translateDocument,
 } from '../common/functions';
-import {SettingsFactory} from "../common/settings";
+import {SettingsFactory} from "../common/settings/SettingsFactory";
 
 (function init(settings, chrome) {
   const addEventListenerMulti = (element: Element, events: string, callback: EventListenerOrEventListenerObject) => {
@@ -18,7 +18,7 @@ import {SettingsFactory} from "../common/settings";
         return;
       }
 
-      dropdown.value = String(settings.get(id));
+      dropdown.value = settings.getString(id);
       if (id === 'font') {
         dropdown.style.fontFamily = `"${dropdown.value}"`;
       }
@@ -56,7 +56,7 @@ import {SettingsFactory} from "../common/settings";
       return;
     }
 
-    if (settings.get(id)) {
+    if (settings.isEnabled(id)) {
       checkbox.setAttribute('checked', 'checked');
     }
 
@@ -72,7 +72,7 @@ import {SettingsFactory} from "../common/settings";
       return;
     }
 
-    numericInput.value = String(settings.get(id));
+    numericInput.value = settings.getString(id);
     addEventListenerMulti(numericInput, 'change keyup', () => {
       const value = parseInt(numericInput.value, 10);
       const minValue = parseInt(numericInput.getAttribute('min') || '100', 10);
