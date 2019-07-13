@@ -38,5 +38,6 @@ export class DialogRenderer {
     }
 
     document.body.removeChild(this.wrapper);
+    this.wrapper = null;
   }
 }

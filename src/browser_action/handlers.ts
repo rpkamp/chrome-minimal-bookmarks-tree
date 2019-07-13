@@ -1,14 +1,22 @@
 import {
-  destroyContextMenu,
   getElementData,
   openAllBookmarks,
-  showContextMenuBookmark,
-  showContextMenuFolder,
   toggleFolder
 } from "./functions";
 import {nothing} from "../common/functions";
 import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
 import {SettingsFactory} from "../common/settings/SettingsFactory";
+import {ChromeTranslator} from "../common/translator/ChromeTranslator";
+import {DialogRenderer} from "./DialogRenderer";
+import {ContextMenuFactory} from "./ContextMenuFactory";
+import {ContextMenuRenderer} from "./ContextMenuRenderer";
+import {WindowLocationCalculator} from "./location_calculator/WindowLocationCalculator";
+
+const settings = SettingsFactory.create();
+const translator = new ChromeTranslator();
+const dialogRenderer = new DialogRenderer(document, translator);
+const contextMenuFactory = new ContextMenuFactory(translator, dialogRenderer, settings);
+const contextMenuRenderer = new ContextMenuRenderer(document, new WindowLocationCalculator(window));
 
 function openBookmark(url: string, where: string): void {
   let disposition: BookmarkOpeningDisposition;
@@ -40,8 +48,11 @@ function openBookmark(url: string, where: string): void {
 }
 
 export function clickHandler(event: MouseEvent) {
-  if (window.document.querySelector('.contextMenu') instanceof HTMLElement) {
-    destroyContextMenu();
+  // @TODO: This should use ContextMenuRenderer.clear()
+  const elem = window.document.querySelector('.contextMenu');
+  if (elem instanceof HTMLElement && elem.parentNode instanceof HTMLElement) {
+    elem.parentNode.removeChild(elem);
+
     return;
   }
 
@@ -100,18 +111,30 @@ export function contextMenuHandler(event: MouseEvent) {
   }
 
   if (event.target.parentNode.classList.contains('folder')) {
-    showContextMenuFolder(event.target.parentNode, {
-      x: event.pageX,
-      y: event.pageY,
-    });
+    const folder = event.target.parentNode;
+    folder.classList.add('selected');
+
+    contextMenuRenderer.render(
+      contextMenuFactory.forFolder(folder),
+      {
+        x: event.pageX,
+        y: event.pageY,
+      }
+    );
 
     return nothing(event);
   }
 
-  showContextMenuBookmark(event.target.parentNode, {
-    x: event.pageX,
-    y: event.pageY,
-  });
+  const bookmark = event.target.parentNode;
+  bookmark.classList.add('selected');
+
+  contextMenuRenderer.render(
+    contextMenuFactory.forBookmark(bookmark),
+    {
+      x: event.pageX,
+      y: event.pageY,
+    }
+  );
 
   return nothing(event);
 }
