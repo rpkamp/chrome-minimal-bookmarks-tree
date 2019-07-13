@@ -62,4 +62,3 @@ test('detect correct index of element in container with useless text nodes', () 
 
   expect(elementIndex(second)).toBe(1);
 });
-

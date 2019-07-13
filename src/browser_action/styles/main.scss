@@ -168,17 +168,17 @@ li {
   margin: 3px;
 
   .row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 
     label {
-      flex: 1;
+      display: block;
       font-weight: bold;
+      margin-bottom: 0.25rem;
     }
 
     input {
-      flex: 1 1;
+      display: block;
+      width: 100%;
       background: $selected-color;
       border: 0;
       outline: none;

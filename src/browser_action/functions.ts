@@ -3,10 +3,14 @@ import PersistentSet from './PersistentSet';
 import {SettingsFactory} from '../common/settings/SettingsFactory';
 import {BookmarkOpener, BookmarkOpeningDisposition} from '../common/BookmarkOpener';
 import {ContextMenu, ContextMenuEvent, ContextMenuSeparator, ContextMenuTextItem, Offset} from './ContextMenu';
-import {ConfirmDialog, EditDialog} from './Dialog';
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+import {ConfirmDialog} from "./dialog/ConfirmDialog";
+import {EditDialog} from "./dialog/EditDialog";
+import {DialogRenderer} from "./DialogRenderer";
+import {ChromeTranslator} from "../common/translator/ChromeTranslator";
 
 const settings = SettingsFactory.create();
+const dialogRenderer = new DialogRenderer(document, new ChromeTranslator());
 const openFolders = new PersistentSet('openfolders');
 
 let contextMenu: ContextMenu | null = null;
@@ -318,27 +322,31 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
               (folder.parentNode as Element).removeChild(folder);
             });
           };
-          new ConfirmDialog(
-            `${chrome.i18n.getMessage('deleteBookmarkFolder')}<br /><br />${name}`,
-            () => { deleteFolder() }
-          ).show(window);
+          dialogRenderer.render(
+            new ConfirmDialog(
+              `${chrome.i18n.getMessage('deleteBookmarkFolder')}<br /><br />${name}`,
+              deleteFolder
+            )
+          );
           break;
 
         case 'edit':
-          new EditDialog(
-            [
-              {
-                id: 'name',
-                label: chrome.i18n.getMessage('bookmarkEditName'),
-                value: name
+          dialogRenderer.render(
+            new EditDialog(
+              [
+                {
+                  id: 'name',
+                  label: chrome.i18n.getMessage('bookmarkEditName'),
+                  value: name
+                }
+              ],
+              (data: { [s: string]: string }) => {
+                chrome.bookmarks.update(itemId, {title: data.name}, () => {
+                  (folder.querySelector('span') as HTMLElement).innerText = data.name;
+                })
               }
-            ],
-            (data: { [s: string]: string }) => {
-              chrome.bookmarks.update(itemId, {title: data.name}, () => {
-                (folder.querySelector('span') as HTMLElement).innerText = data.name;
-              })
-            }
-          ).show(window);
+            )
+          );
           break;
       }
     }
@@ -370,26 +378,28 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
 
       switch (event.action) {
         case 'edit':
-          new EditDialog(
-            [
-              {
-                id: 'name',
-                label: chrome.i18n.getMessage('bookmarkEditName'),
-                value: name
-              },
-              {
-                id: 'url',
-                label: chrome.i18n.getMessage('bookmarkEditUrl'),
-                value: url
+          dialogRenderer.render(
+            new EditDialog(
+              [
+                {
+                  id: 'name',
+                  label: chrome.i18n.getMessage('bookmarkEditName'),
+                  value: name
+                },
+                {
+                  id: 'url',
+                  label: chrome.i18n.getMessage('bookmarkEditUrl'),
+                  value: url
+                }
+              ],
+              (data: { [s: string]: string }) => {
+                chrome.bookmarks.update(itemId, {title: data.name, url: data.url}, () => {
+                  (bookmark.querySelector('span') as HTMLElement).innerText = data.name;
+                  setElementData(bookmark, 'url', data.url);
+                })
               }
-            ],
-            (data: { [s: string]: string }) => {
-              chrome.bookmarks.update(itemId, {title: data.name, url: data.url}, () => {
-                (bookmark.querySelector('span') as HTMLElement).innerText = data.name;
-                setElementData(bookmark, 'url', data.url);
-              })
-            }
-          ).show(window);
+            )
+          );
           break;
 
         case 'delete':
@@ -399,10 +409,12 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
             });
           };
           if (settings.isEnabled('confirm_bookmark_deletion')) {
-            new ConfirmDialog(
-              `${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${name}`,
-              () => { deleteBookmark() }
-            ).show(window);
+            dialogRenderer.render(
+              new ConfirmDialog(
+                `${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${name}`,
+                deleteBookmark
+              )
+            );
           } else {
             deleteBookmark();
           }
