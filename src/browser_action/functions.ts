@@ -10,7 +10,8 @@ import {DialogRenderer} from "./DialogRenderer";
 import {ChromeTranslator} from "../common/translator/ChromeTranslator";
 
 const settings = SettingsFactory.create();
-const dialogRenderer = new DialogRenderer(document, new ChromeTranslator());
+const translator = new ChromeTranslator();
+const dialogRenderer = new DialogRenderer(document, translator);
 const openFolders = new PersistentSet('openfolders');
 
 let contextMenu: ContextMenu | null = null;
@@ -300,9 +301,9 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
   folder.classList.add('selected');
   contextMenu = new ContextMenu(
     [
-      new ContextMenuTextItem('openAll', chrome.i18n.getMessage('popupOpenAll')),
-      new ContextMenuTextItem('edit', chrome.i18n.getMessage('popupEditFolder')),
-      new ContextMenuTextItem('delete', chrome.i18n.getMessage('popupDeleteFolder')),
+      new ContextMenuTextItem('openAll', translator.translate('popupOpenAll')),
+      new ContextMenuTextItem('edit', translator.translate('popupEditFolder')),
+      new ContextMenuTextItem('delete', translator.translate('popupDeleteFolder')),
     ],
     (event: ContextMenuEvent) => {
       destroyContextMenu();
@@ -324,7 +325,7 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
           };
           dialogRenderer.render(
             new ConfirmDialog(
-              `${chrome.i18n.getMessage('deleteBookmarkFolder')}<br /><br />${name}`,
+              `${translator.translate('deleteBookmarkFolder')}<br /><br />${name}`,
               deleteFolder
             )
           );
@@ -336,7 +337,7 @@ export function showContextMenuFolder(folder: HTMLElement, offset: Offset): void
               [
                 {
                   id: 'name',
-                  label: chrome.i18n.getMessage('bookmarkEditName'),
+                  label: translator.translate('bookmarkEditName'),
                   value: name
                 }
               ],
@@ -361,12 +362,12 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
   bookmark.classList.add('selected');
   contextMenu = new ContextMenu(
     [
-      new ContextMenuTextItem('edit', chrome.i18n.getMessage('popupEditBookmark')),
-      new ContextMenuTextItem('delete', chrome.i18n.getMessage('popupDeleteBookmark')),
+      new ContextMenuTextItem('edit', translator.translate('popupEditBookmark')),
+      new ContextMenuTextItem('delete', translator.translate('popupDeleteBookmark')),
       new ContextMenuSeparator(),
-      new ContextMenuTextItem('newTab', chrome.i18n.getMessage('popupOpenNewTab')),
-      new ContextMenuTextItem('newWindow', chrome.i18n.getMessage('popupOpenNewWindow')),
-      new ContextMenuTextItem('newIncognitoWindow', chrome.i18n.getMessage('popupOpenNewIncognitoWindow')),
+      new ContextMenuTextItem('newTab', translator.translate('popupOpenNewTab')),
+      new ContextMenuTextItem('newWindow', translator.translate('popupOpenNewWindow')),
+      new ContextMenuTextItem('newIncognitoWindow', translator.translate('popupOpenNewIncognitoWindow')),
     ],
     (event: ContextMenuEvent) => {
       destroyContextMenu();
@@ -383,12 +384,12 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
               [
                 {
                   id: 'name',
-                  label: chrome.i18n.getMessage('bookmarkEditName'),
+                  label: translator.translate('bookmarkEditName'),
                   value: name
                 },
                 {
                   id: 'url',
-                  label: chrome.i18n.getMessage('bookmarkEditUrl'),
+                  label: translator.translate('bookmarkEditUrl'),
                   value: url
                 }
               ],
@@ -411,7 +412,7 @@ export function showContextMenuBookmark(bookmark: HTMLElement, offset: Offset): 
           if (settings.isEnabled('confirm_bookmark_deletion')) {
             dialogRenderer.render(
               new ConfirmDialog(
-                `${chrome.i18n.getMessage('deleteBookmark')}<br /><br />${name}`,
+                `${translator.translate('deleteBookmark')}<br /><br />${name}`,
                 deleteBookmark
               )
             );

@@ -2,16 +2,18 @@ import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 import SuggestResult = chrome.omnibox.SuggestResult;
 import Suggestion = chrome.omnibox.Suggestion;
 import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
+import {ChromeTranslator} from "../common/translator/ChromeTranslator";
 
 /**
  * Hook into the chrome omnibox API to let people search
  * for bookmarks and bookmark folders.
  */
 export default function () {
+  const translator = new ChromeTranslator();
   let currentDefaultSuggestion: SuggestResult | null = null;
-  const folderDescription: string = chrome.i18n.getMessage('omniboxFolderDescription');
+  const folderDescription: string = translator.translate('omniboxFolderDescription');
   const defaultSuggestion: Suggestion = {
-    description: chrome.i18n.getMessage('omniboxDefaultSuggestion')
+    description: translator.translate('omniboxDefaultSuggestion')
   };
 
   function setDefaultSuggestion(suggestion: SuggestResult): void {

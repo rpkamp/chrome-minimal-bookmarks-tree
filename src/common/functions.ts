@@ -1,3 +1,7 @@
+import {ChromeTranslator} from "./translator/ChromeTranslator";
+
+const translator = new ChromeTranslator();
+
 export function nothing(e: Event) {
   e.preventDefault();
   e.stopPropagation();
@@ -32,7 +36,7 @@ export function translateDocument(document: Document): void {
       return;
     }
 
-    const translation = chrome.i18n.getMessage(key);
+    const translation = translator.translate(key);
     if (translation !== '') {
       translatableElement.innerHTML = translation;
     }
