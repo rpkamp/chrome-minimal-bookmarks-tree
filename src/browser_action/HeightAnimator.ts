@@ -14,7 +14,8 @@ export default class HeightAnimator {
   constructor(element: HTMLElement, targetHeight: number | string, duration: number) {
     this.element = element;
     this.duration = duration;
-    if (targetHeight === 'auto' && duration > 0) {
+    console.log(targetHeight);
+    if (targetHeight === 'auto') {
       this.targetHeight = <number>Array.prototype.reduce.call(
         element.childNodes,
         (carry, child) => carry + (child.offsetHeight || 0),
