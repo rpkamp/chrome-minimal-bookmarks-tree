@@ -49,10 +49,10 @@ export class ContextMenuFactory {
                     (bookmark.querySelector('span') as HTMLElement).innerText = data.name;
                     bookmark.dataset.url = data.url;
                   });
-                  bookmark.classList.remove('selected');
                 }
               )
             );
+            bookmark.classList.remove('selected');
           }
         ),
         new ContextMenuTextItem(
@@ -81,21 +81,18 @@ export class ContextMenuFactory {
           this.translator.translate('popupOpenNewTab'),
           () => {
             BookmarkOpener.open(url, BookmarkOpeningDisposition.foregroundTab);
-            bookmark.classList.remove('selected');
           }
         ),
         new ContextMenuTextItem(
           this.translator.translate('popupOpenNewWindow'),
           () => {
             BookmarkOpener.open(url, BookmarkOpeningDisposition.newWindow);
-            bookmark.classList.remove('selected');
           }
         ),
         new ContextMenuTextItem(
           this.translator.translate('popupOpenNewIncognitoWindow'),
           () => {
             BookmarkOpener.open(url, BookmarkOpeningDisposition.newIncognitoWindow);
-            bookmark.classList.remove('selected');
           }
         ),
       ]
@@ -112,7 +109,6 @@ export class ContextMenuFactory {
           this.translator.translate('popupOpenAll'),
           () => {
             Utils.openAllBookmarks(itemId);
-            folder.classList.remove('selected');
           }
         ),
         new ContextMenuTextItem(
@@ -131,10 +127,10 @@ export class ContextMenuFactory {
                   chrome.bookmarks.update(itemId, {title: data.name}, () => {
                     (folder.querySelector('span') as HTMLElement).innerText = data.name;
                   });
-                  folder.classList.remove('selected');
                 }
               )
             );
+            folder.classList.remove('selected');
           }
         ),
         new ContextMenuTextItem(
