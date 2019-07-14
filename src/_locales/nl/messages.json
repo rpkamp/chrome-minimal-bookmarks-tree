@@ -53,6 +53,9 @@
     "optionAnimationSpeedVeryFast": {
         "message": "Heel snel"
     },
+    "optionZoomLevel": {
+        "message": "Zoomniveau"
+    },
     "optionPreferredHeight": {
         "message": "Voorkeurshoogte"
     },
@@ -166,5 +169,17 @@
     },
     "optionStartWithAllFoldersClosed": {
         "message": "Start met alle mappen gesloten"
+    },
+    "popupOpenNewTab": {
+        "message": "In nieuwe tab openen"
+    },
+    "popupOpenNewWindow": {
+        "message": "In nieuw venster openen"
+    },
+    "popupOpenNewIncognitoWindow": {
+        "message": "In nieuw incognitovenster openen"
+    },
+    "deleteBookmarkFolder": {
+        "message": "Weet u zeker dat u deze map wilt verwijderen?"
     }
 }

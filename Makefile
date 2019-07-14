@@ -1,3 +1,5 @@
+ONESKY_PROJECT_ID=60763
+
 help: ## Show help
 	@echo
 	@echo "Usage: make [target]"
@@ -19,4 +21,15 @@ build: ## Build and package as mbt.zip for Chrome Web Store
 	rm -f dist/webpack-manifest.json dist/entrypoints.json dist/tests.js
 	(cd dist/ && zip -r ../mbt.zip *)
 
-.PHONY: install build-dev build
+test:
+	node_modules/.bin/jest --config=./jest.config.js
+
+translations-download:
+	bash scripts/translations-download.sh ${ONESKY_PROJECT_ID} nl messages.json src/_locales/nl/messages.json
+	bash scripts/translations-download.sh ${ONESKY_PROJECT_ID} de messages.json src/_locales/de/messages.json
+	bash scripts/translations-download.sh ${ONESKY_PROJECT_ID} en messages.json src/_locales/en/messages.json
+
+translations-upload:
+	bash scripts/translations-upload.sh ${ONESKY_PROJECT_ID} en src/_locales/en/messages.json
+
+.PHONY: install build-dev build test translations-download translations-upload

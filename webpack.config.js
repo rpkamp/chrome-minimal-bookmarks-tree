@@ -10,13 +10,12 @@ Encore
   .setOutputPath('dist/')
   .setPublicPath('/')
 
-  .addStyleEntry('browser_action_css', './src/browser_action/main.scss')
+  .addStyleEntry('browser_action_css', './src/browser_action/styles/main.scss')
   .addStyleEntry('options_css', './src/options/main.scss')
 
-  .addEntry('browser_action', './src/browser_action/index.js')
-  .addEntry('background', './src/background/index.js')
-  .addEntry('options', './src/options/index.js')
-  .addEntry('tests', './tests/src/tests.js')
+  .addEntry('browser_action', './src/browser_action/index.ts')
+  .addEntry('background', './src/background/index.ts')
+  .addEntry('options', './src/options/index.ts')
 
   .copyFiles([
     {
@@ -50,7 +49,7 @@ Encore
   ])
 
   .enableSassLoader()
-  .enableEslintLoader()
+  .enableTypeScriptLoader()
 
   .enableSourceMaps(!Encore.isProduction())
   .cleanupOutputBeforeBuild()

@@ -24,7 +24,7 @@
         "message": "Star"
     },
     "optionIconOpenStar": {
-         "message": "Open star"
+        "message": "Open star"
     },
     "optionIconWhiteStar": {
         "message": "White Star"
@@ -53,6 +53,9 @@
     "optionAnimationSpeedVeryFast": {
         "message": "Super fast"
     },
+    "optionZoomLevel": {
+        "message": "Zoom level"
+    },
     "optionPreferredHeight": {
         "message": "Preferred height"
     },
@@ -72,10 +75,10 @@
         "message": "Max width and height are enforced by Chrome, not by Minimal Bookmarks Tree."
     },
     "optionWidthHeightOptimization": {
-        "message": "Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width/height fields above."
+        "message": "Minimal Bookmarks Tree will try its best to fit on the screen, and scale down if it thinks there isn't enough room. If becomes too large, enter smaller values in the width\/height fields above."
     },
     "optionSavedAutomatically": {
-        "message": "Settings are saved automatically when you click/select them."
+        "message": "Settings are saved automatically when you click\/select them."
     },
     "optionShowLicense": {
         "message": "Show license"
@@ -141,7 +144,7 @@
         "message": "On middle click, open bookmark in"
     },
     "optionSuperClickAction": {
-        "message": "On ctrl/option + click, open bookmark in"
+        "message": "On ctrl\/option + click, open bookmark in"
     },
     "optionClickActionCurrent": {
         "message": "Current tab"
@@ -166,5 +169,17 @@
     },
     "optionStartWithAllFoldersClosed": {
         "message": "Start with all folders closed"
+    },
+    "popupOpenNewTab": {
+        "message": "Open in new tab"
+    },
+    "popupOpenNewWindow": {
+        "message": "Open in new window"
+    },
+    "popupOpenNewIncognitoWindow": {
+        "message": "Open in incognito window"
+    },
+    "deleteBookmarkFolder": {
+        "message": "Are you sure you want to delete this bookmark folder?"
     }
 }

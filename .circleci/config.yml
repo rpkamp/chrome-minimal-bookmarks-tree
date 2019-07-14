@@ -20,8 +20,8 @@ jobs:
     steps:
       - prepare
       - run:
-          name: Build
-          command: make build-dev
+          name: Test
+          command: make test
 
   build:
     executor: node
