@@ -36,7 +36,7 @@ const clickHandler = new ClickHandler(
 
 const loading = <HTMLElement>document.querySelector('#loading');
 const bm = <HTMLElement>document.querySelector('#bookmarks');
-const wrapper = <HTMLElement>document.querySelector('#bookmarks');
+const wrapper = <HTMLElement>document.querySelector('#wrapper');
 
 chrome.bookmarks.getTree((bookmarksTree) => {
   if (typeof bookmarksTree[0] === 'undefined') {
@@ -76,7 +76,7 @@ chrome.bookmarks.getTree((bookmarksTree) => {
   if (settings.isEnabled('remember_scroll_position')) {
     const scrolltop = localStorage.getItem('scrolltop');
     if (null !== scrolltop) {
-      setTimeout(() => { wrapper.scrollTop = parseInt(scrolltop, 10); }, 100);
+      setTimeout(() => { wrapper.scrollTop = parseInt(scrolltop, 10); }, 10);
     }
   }
 
@@ -94,6 +94,7 @@ initDragDrop(bm, wrapper);
 if (settings.isEnabled('remember_scroll_position')) {
   let scrollTimeout: number | undefined;
   wrapper.addEventListener('scroll', () => {
+    console.log('Scrolling!');
     clearTimeout(scrollTimeout);
     scrollTimeout = <number><any>setTimeout(() => { localStorage.setItem('scrolltop', String(wrapper.scrollTop)); }, 100);
   });
