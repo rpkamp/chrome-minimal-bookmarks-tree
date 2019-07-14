@@ -32,11 +32,6 @@ Encore
       includeSubdirectories: false
     },
     {
-      from: './src/background',
-      pattern: /\.html$/,
-      includeSubdirectories: false
-    },
-    {
       from: './src/browser_action',
       pattern: /\.html$/,
       includeSubdirectories: false
