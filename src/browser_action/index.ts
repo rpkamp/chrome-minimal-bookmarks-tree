@@ -94,7 +94,6 @@ initDragDrop(bm, wrapper);
 if (settings.isEnabled('remember_scroll_position')) {
   let scrollTimeout: number | undefined;
   wrapper.addEventListener('scroll', () => {
-    console.log('Scrolling!');
     clearTimeout(scrollTimeout);
     scrollTimeout = <number><any>setTimeout(() => { localStorage.setItem('scrolltop', String(wrapper.scrollTop)); }, 100);
   });
