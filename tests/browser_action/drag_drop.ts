@@ -1,4 +1,4 @@
-import {elementIndex} from "../../src/browser_action/functions";
+import {elementIndex} from "../../src/browser_action/drag_drop";
 
 function createNode() {
   const ul = document.createElement('ul');

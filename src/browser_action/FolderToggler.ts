@@ -1,8 +1,8 @@
-import {getElementData} from "./functions";
 import HeightAnimator from "./HeightAnimator";
 import PersistentSet from "./PersistentSet";
 import {TreeRenderer} from "./TreeRenderer";
 import {Settings} from "../common/Settings";
+import {Utils} from "../common/Utils";
 
 export class FolderToggler {
   private openFolders: PersistentSet<string>;
@@ -20,13 +20,13 @@ export class FolderToggler {
   }
 
   toggle(element: HTMLElement): void {
-    if (getElementData(element, 'loaded') === '1') {
+    if (Utils.getElementData(element, 'loaded') === '1') {
       this.folderLoaded(element);
 
       return;
     }
 
-    chrome.bookmarks.getSubTree(getElementData(element, 'itemId'), (data) => {
+    chrome.bookmarks.getSubTree(Utils.getElementData(element, 'itemId'), (data) => {
       const t = this.treeRenderer.renderTree(
         data[0],
         document,
@@ -66,7 +66,7 @@ export class FolderToggler {
       FolderToggler.slideUp(elementToToggle, animationDuration);
     }
 
-    const id = getElementData(<HTMLElement>elementToToggle.parentNode, 'itemId');
+    const id = Utils.getElementData(<HTMLElement>elementToToggle.parentNode, 'itemId');
     if (this.settings.isEnabled('close_old_folder')) {
       this.openFolders.clear();
       if (isOpen) {
@@ -74,7 +74,7 @@ export class FolderToggler {
       }
       const parents = FolderToggler.getAncestorsWithClass(element, 'open');
       parents.forEach((parent) => {
-        this.openFolders.add(getElementData(<HTMLElement>parent, 'itemId'));
+        this.openFolders.add(Utils.getElementData(<HTMLElement>parent, 'itemId'));
       });
 
       return;
@@ -88,7 +88,7 @@ export class FolderToggler {
 
     this.openFolders.remove(id);
     elementToToggle.querySelectorAll('li').forEach((folderToHide) => {
-      this.openFolders.remove(getElementData(folderToHide, 'itemId'));
+      this.openFolders.remove(Utils.getElementData(folderToHide, 'itemId'));
       folderToHide.classList.remove('open');
       folderToHide.querySelectorAll('.sub').forEach((sub: Element) => {
         FolderToggler.slideUp(<HTMLElement>sub, animationDuration);

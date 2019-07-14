@@ -3,8 +3,18 @@ import * as autoScroll from 'dom-autoscroller';
 // @ts-ignore
 import * as dragula from '../../node_modules/dragula/dragula';
 
-import {elementIndex, getElementData} from "./functions";
 import BookmarkDestinationArg = chrome.bookmarks.BookmarkDestinationArg;
+import {Utils} from "../common/Utils";
+
+export function elementIndex(element: Element): number {
+  if (!(element.parentNode instanceof Element)) {
+    return -1;
+  }
+
+  return <number>Array.from(element.parentNode.childNodes).filter(
+    (elem) => elem.nodeType !== Node.TEXT_NODE
+  ).indexOf(element);
+}
 
 export function initDragDrop(bookmaksElement: Element, wrapper: Element) {
   let initialIndexOfDraggable: number | null = null;
@@ -43,10 +53,10 @@ export function initDragDrop(bookmaksElement: Element, wrapper: Element) {
     if ((element.parentNode as Element).getAttribute('id') === 'bookmarks') {
       options.index--;
     } else {
-      (options as BookmarkDestinationArg).parentId = getElementData((element.parentNode as HTMLElement).parentNode as HTMLElement, 'itemId');
+      (options as BookmarkDestinationArg).parentId = Utils.getElementData((element.parentNode as HTMLElement).parentNode as HTMLElement, 'itemId');
     }
 
-    chrome.bookmarks.move(getElementData(element, 'itemId'), options);
+    chrome.bookmarks.move(Utils.getElementData(element, 'itemId'), options);
   });
 
   autoScroll(

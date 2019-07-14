@@ -2,12 +2,12 @@ import {ContextMenu} from "./ContextMenu";
 import {ContextMenuTextItem} from "./context_menu/ContextMenuTextItem";
 import {EditDialog} from "./dialog/EditDialog";
 import {ConfirmDialog} from "./dialog/ConfirmDialog";
-import {getElementData, openAllBookmarks} from "./functions";
 import {Translator} from "../common/Translator";
 import {DialogRenderer} from "./DialogRenderer";
 import {ContextMenuSeparator} from "./context_menu/ContextMenuSeparator";
 import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
 import {Settings} from "../common/Settings";
+import {Utils} from "../common/Utils";
 
 export class ContextMenuFactory {
   private translator: Translator;
@@ -21,8 +21,8 @@ export class ContextMenuFactory {
   }
 
   forBookmark(bookmark: HTMLElement) {
-    const url = getElementData(bookmark, 'url');
-    const itemId = getElementData(bookmark, 'itemId');
+    const url = Utils.getElementData(bookmark, 'url');
+    const itemId = Utils.getElementData(bookmark, 'itemId');
     const name = (bookmark.querySelector('span') as HTMLElement).innerText;
 
     return new ContextMenu(
@@ -103,7 +103,7 @@ export class ContextMenuFactory {
   }
 
   forFolder(folder: HTMLElement) {
-    const itemId = getElementData(folder, 'itemId');
+    const itemId = Utils.getElementData(folder, 'itemId');
     const name = (folder.querySelector('span') as HTMLElement).innerText;
 
     return new ContextMenu(
@@ -111,7 +111,7 @@ export class ContextMenuFactory {
         new ContextMenuTextItem(
           this.translator.translate('popupOpenAll'),
           () => {
-            openAllBookmarks(itemId);
+            Utils.openAllBookmarks(itemId);
             folder.classList.remove('selected');
           }
         ),
