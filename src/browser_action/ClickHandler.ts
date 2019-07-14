@@ -1,9 +1,10 @@
-import {getElementData, openAllBookmarks, toggleFolder} from "./functions";
+import {getElementData, openAllBookmarks} from "./functions";
 import {nothing} from "../common/functions";
 import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
 import {ContextMenuFactory} from "./ContextMenuFactory";
 import {ContextMenuRenderer} from "./ContextMenuRenderer";
 import {Settings} from "../common/Settings";
+import {FolderToggler} from "./FolderToggler";
 
 function openBookmark(url: string, where: string): void {
   let disposition: BookmarkOpeningDisposition;
@@ -38,11 +39,18 @@ export class ClickHandler {
   private settings: Settings;
   private contextMenuFactory: ContextMenuFactory;
   private contextMenuRenderer: ContextMenuRenderer;
+  private folderToggler: FolderToggler;
 
-  constructor(settings: Settings, contextMenuFactory: ContextMenuFactory, contextMenuRenderer: ContextMenuRenderer) {
+  constructor(
+    settings: Settings,
+    contextMenuFactory: ContextMenuFactory,
+    contextMenuRenderer: ContextMenuRenderer,
+    folderToggler: FolderToggler
+  ) {
     this.settings = settings;
     this.contextMenuFactory = contextMenuFactory;
     this.contextMenuRenderer = contextMenuRenderer;
+    this.folderToggler = folderToggler;
   }
 
   handleClick(event: MouseEvent) {
@@ -65,7 +73,7 @@ export class ClickHandler {
     });
 
     if (event.target.parentNode instanceof HTMLElement && event.target.parentNode.classList.contains('folder')) {
-      toggleFolder(event.target.parentNode);
+      this.folderToggler.toggle(event.target.parentNode);
 
       return false;
     }

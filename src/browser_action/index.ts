@@ -10,6 +10,7 @@ import {ContextMenuRenderer} from "./ContextMenuRenderer";
 import {WindowLocationCalculator} from "./location_calculator/WindowLocationCalculator";
 import {TreeRenderer} from "./TreeRenderer";
 import PersistentSet from "./PersistentSet";
+import {FolderToggler} from "./FolderToggler";
 
 const settings = SettingsFactory.create();
 
@@ -17,13 +18,21 @@ const translator = new ChromeTranslator();
 const dialogRenderer = new DialogRenderer(document, translator);
 const contextMenuFactory = new ContextMenuFactory(translator, dialogRenderer, settings);
 const contextMenuRenderer = new ContextMenuRenderer(document, new WindowLocationCalculator(window));
-const clickHandler = new ClickHandler(settings, contextMenuFactory, contextMenuRenderer);
 
 const openFolders: PersistentSet<string> = new PersistentSet('openfolders');
 const treeRenderer = new TreeRenderer(
   openFolders,
   settings.isEnabled('hide_empty_folders'),
   settings.isEnabled('start_with_all_folders_closed')
+);
+
+const folderToggler = new FolderToggler(openFolders, treeRenderer, settings);
+
+const clickHandler = new ClickHandler(
+  settings,
+  contextMenuFactory,
+  contextMenuRenderer,
+  folderToggler
 );
 
 const loading = <HTMLElement>document.querySelector('#loading');
