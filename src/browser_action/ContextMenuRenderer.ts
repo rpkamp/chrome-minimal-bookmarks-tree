@@ -33,6 +33,10 @@ export class ContextMenuRenderer {
     wrapper.style.top = `${coordinates.y}px`;
   }
 
+  isMenuOpen(): boolean {
+    return null !== this.wrapper;
+  }
+
   clear() {
     if (null === this.wrapper) {
       return;
