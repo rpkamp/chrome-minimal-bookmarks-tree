@@ -49,7 +49,6 @@ Encore
   ])
 
   .enableSassLoader()
-  .enableEslintLoader()
   .enableTypeScriptLoader()
 
   .enableSourceMaps(!Encore.isProduction())
