@@ -151,7 +151,7 @@ export class ClickHandler {
     }
 
     if (event.target.parentNode.classList.contains('folder')) {
-      openAllBookmarks(getElementData(event.target.parentNode, 'item-id'));
+      openAllBookmarks(getElementData(event.target.parentNode, 'itemId'));
       return nothing(event);
     }
 

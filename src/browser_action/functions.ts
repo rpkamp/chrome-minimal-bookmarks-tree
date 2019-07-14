@@ -3,9 +3,15 @@ import PersistentSet from './PersistentSet';
 import {SettingsFactory} from '../common/settings/SettingsFactory';
 import {BookmarkOpener} from '../common/BookmarkOpener';
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
+import {TreeRenderer} from "./TreeRenderer";
 
 const settings = SettingsFactory.create();
-const openFolders = new PersistentSet('openfolders');
+const openFolders: PersistentSet<string> = new PersistentSet('openfolders');
+const treeRenderer = new TreeRenderer(
+  openFolders,
+  settings.isEnabled('hide_empty_folders'),
+  settings.isEnabled('start_with_all_folders_closed')
+);
 
 // Not enforced by this extension, but hardcoded in chrome.
 // So we need to prevent creating a browser action bigger than that, because:
@@ -44,118 +50,13 @@ export function setElementDimensions(element: HTMLElement | null, preferredWidth
   element.style.maxHeight = `${height}px`;
 }
 
-function isFolderEmpty(folder: BookmarkTreeNode) {
-  if (typeof folder.children === 'undefined') {
-    return false;
-  }
-
-  const children: BookmarkTreeNode[] = folder.children;
-
-  if (children.length === 0) {
-    return true;
-  }
-
-  for (folder of children) {
-    if (!isFolderEmpty(folder)) {
-      return false;
-    }
-  }
-
-  // all children, plus their children are empty
-  return true;
-}
-
-export function getElementData(element: Element, key: string): string {
-  const data = element.getAttribute(`data-${key}`);
-  if (null === data) {
+export function getElementData(element: HTMLElement, key: string): string {
+  const data = element.dataset[key];
+  if (typeof data === 'undefined') {
     throw new Error('Element does not have data in key "' + key + '"');
   }
 
   return data;
-}
-
-export function setElementData(element: Element, key: string, value: string): void {
-  element.setAttribute(`data-${key}`, value);
-}
-
-export function buildTree(
-  treeNode: BookmarkTreeNode,
-  hideEmptyFolders: boolean,
-  allFoldersClosed: boolean,
-  topLevel: boolean = false,
-  visible: boolean = true,
-) {
-  let wrapper: HTMLElement | DocumentFragment;
-  let children: HTMLElement | DocumentFragment;
-  let d: HTMLLIElement;
-  let isOpen: boolean;
-
-  if (topLevel) {
-    wrapper = document.createDocumentFragment();
-  } else {
-    wrapper = document.createElement('ul');
-    wrapper.className = 'sub';
-    if (visible) {
-      wrapper.style.height = 'auto';
-    }
-  }
-
-  if (typeof treeNode.children === 'undefined') {
-    return wrapper;
-  }
-
-  treeNode.children.forEach((child: BookmarkTreeNode) => {
-    if (typeof child === 'undefined') {
-      return;
-    }
-    isOpen = !allFoldersClosed && openFolders.contains(child.id);
-    d = document.createElement('li');
-
-    if (child.url) { // bookmark
-      setElementData(d, 'url', child.url);
-      setElementData(d, 'item-id', child.id);
-
-      const bookmark = document.createElement('span');
-      if (!/^\s*$/.test(child.title)) {
-        bookmark.innerText = child.title;
-      } else {
-        bookmark.innerHTML = '&nbsp;';
-      }
-      bookmark.title = `${child.title} [${child.url}]`;
-      bookmark.style.backgroundImage = `url("chrome://favicon/${child.url}")`;
-      bookmark.className = 'bookmark';
-      d.appendChild(bookmark);
-    } else { // folder
-      d.classList.add('folder');
-      if (isOpen) {
-        d.classList.add('open');
-      }
-
-      const folder = document.createElement('span');
-      folder.innerText = child.title;
-      d.appendChild(folder);
-
-      if (hideEmptyFolders && isFolderEmpty(child)) {
-        // we need to add hidden nodes for these
-        // otherwise sorting doesn't work properly
-        d.classList.add('hidden');
-      } else {
-        setElementData(d, 'item-id', child.id);
-
-        if (child.children && child.children.length) {
-          if (isOpen) {
-            children = buildTree(child, hideEmptyFolders, allFoldersClosed, false, isOpen);
-            d.appendChild(children);
-          }
-          setElementData(d, 'loaded', isOpen ? '1' : '0');
-        }
-      }
-    }
-
-    wrapper.appendChild(d);
-  });
-
-  return wrapper;
 }
 
 export function slideUp(element: HTMLElement, duration: number): void {
@@ -209,7 +110,7 @@ function handleToggleFolder(element: HTMLElement): void {
     slideUp(elementToToggle, animationDuration);
   }
 
-  const id = getElementData(<HTMLElement>elementToToggle.parentNode, 'item-id');
+  const id = getElementData(<HTMLElement>elementToToggle.parentNode, 'itemId');
   if (settings.isEnabled('close_old_folder')) {
     openFolders.clear();
     if (isOpen) {
@@ -217,7 +118,7 @@ function handleToggleFolder(element: HTMLElement): void {
     }
     const parents = getAncestorsWithClass(element, 'open');
     parents.forEach((parent) => {
-      openFolders.add(getElementData(parent, 'item-id'));
+      openFolders.add(getElementData(<HTMLElement>parent, 'itemId'));
     });
 
     return;
@@ -231,7 +132,7 @@ function handleToggleFolder(element: HTMLElement): void {
 
   openFolders.remove(id);
   elementToToggle.querySelectorAll('li').forEach((folderToHide) => {
-    openFolders.remove(getElementData(folderToHide, 'item-id'));
+    openFolders.remove(getElementData(folderToHide, 'itemId'));
     folderToHide.classList.remove('open');
     folderToHide.querySelectorAll('.sub').forEach((sub: Element) => {
       slideUp(<HTMLElement>sub, animationDuration);
@@ -246,16 +147,15 @@ export function toggleFolder(element: HTMLElement): void {
     return;
   }
 
-  chrome.bookmarks.getSubTree(getElementData(element, 'item-id'), (data) => {
-    const t = buildTree(
+  chrome.bookmarks.getSubTree(getElementData(element, 'itemId'), (data) => {
+    const t = treeRenderer.renderTree(
       data[0],
-      settings.isEnabled('hide_empty_folders'),
-      settings.isEnabled('start_with_all_folders_closed'),
+      document,
       false,
       false,
     );
     element.appendChild(t);
-    setElementData(element, 'loaded', '1');
+    element.dataset.loaded = '1';
     handleToggleFolder(element);
   });
 }

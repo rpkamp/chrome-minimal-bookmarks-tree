@@ -1,5 +1,5 @@
 import {translateDocument} from '../common/functions';
-import {buildTree, setElementDimensions} from './functions';
+import {setElementDimensions} from './functions';
 import {SettingsFactory} from '../common/settings/SettingsFactory';
 import {initDragDrop} from "./drag_drop";
 import {ClickHandler} from "./ClickHandler";
@@ -8,16 +8,23 @@ import {ChromeTranslator} from "../common/translator/ChromeTranslator";
 import {DialogRenderer} from "./DialogRenderer";
 import {ContextMenuRenderer} from "./ContextMenuRenderer";
 import {WindowLocationCalculator} from "./location_calculator/WindowLocationCalculator";
+import {TreeRenderer} from "./TreeRenderer";
+import PersistentSet from "./PersistentSet";
 
 const settings = SettingsFactory.create();
-const hideEmptyFolders= settings.isEnabled('hide_empty_folders');
-const startWithAllFoldersClosed = settings.isEnabled('start_with_all_folders_closed');
 
 const translator = new ChromeTranslator();
 const dialogRenderer = new DialogRenderer(document, translator);
 const contextMenuFactory = new ContextMenuFactory(translator, dialogRenderer, settings);
 const contextMenuRenderer = new ContextMenuRenderer(document, new WindowLocationCalculator(window));
 const clickHandler = new ClickHandler(settings, contextMenuFactory, contextMenuRenderer);
+
+const openFolders: PersistentSet<string> = new PersistentSet('openfolders');
+const treeRenderer = new TreeRenderer(
+  openFolders,
+  settings.isEnabled('hide_empty_folders'),
+  settings.isEnabled('start_with_all_folders_closed')
+);
 
 const loading = <HTMLElement>document.querySelector('#loading');
 const bm = <HTMLElement>document.querySelector('#bookmarks');
@@ -32,19 +39,17 @@ chrome.bookmarks.getTree((bookmarksTree) => {
     return;
   }
 
-  const otherBookmarks = buildTree(
+  const otherBookmarks = treeRenderer.renderTree(
     bookmarksTree[0].children[1],
-    hideEmptyFolders,
-    startWithAllFoldersClosed,
-    true,
+    document,
+    true
   );
 
   delete bookmarksTree[0].children[1];
-  const bookmarksFolder = buildTree(
+  const bookmarksFolder = treeRenderer.renderTree(
     bookmarksTree[0],
-    hideEmptyFolders,
-    startWithAllFoldersClosed,
-    true,
+    document,
+    true
   );
 
   if (bookmarksFolder) {

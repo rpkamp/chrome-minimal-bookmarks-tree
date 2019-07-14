@@ -2,7 +2,7 @@ import {ContextMenu} from "./ContextMenu";
 import {ContextMenuTextItem} from "./context_menu/ContextMenuTextItem";
 import {EditDialog} from "./dialog/EditDialog";
 import {ConfirmDialog} from "./dialog/ConfirmDialog";
-import {getElementData, openAllBookmarks, setElementData} from "./functions";
+import {getElementData, openAllBookmarks} from "./functions";
 import {Translator} from "../common/Translator";
 import {DialogRenderer} from "./DialogRenderer";
 import {ContextMenuSeparator} from "./context_menu/ContextMenuSeparator";
@@ -22,7 +22,7 @@ export class ContextMenuFactory {
 
   forBookmark(bookmark: HTMLElement) {
     const url = getElementData(bookmark, 'url');
-    const itemId = getElementData(bookmark, 'item-id');
+    const itemId = getElementData(bookmark, 'itemId');
     const name = (bookmark.querySelector('span') as HTMLElement).innerText;
 
     return new ContextMenu(
@@ -47,7 +47,7 @@ export class ContextMenuFactory {
                 (data: { [s: string]: string }) => {
                   chrome.bookmarks.update(itemId, {title: data.name, url: data.url}, () => {
                     (bookmark.querySelector('span') as HTMLElement).innerText = data.name;
-                    setElementData(bookmark, 'url', data.url);
+                    bookmark.dataset.url = data.url;
                   });
                   bookmark.classList.remove('selected');
                 }
@@ -103,7 +103,7 @@ export class ContextMenuFactory {
   }
 
   forFolder(folder: HTMLElement) {
-    const itemId = getElementData(folder, 'item-id');
+    const itemId = getElementData(folder, 'itemId');
     const name = (folder.querySelector('span') as HTMLElement).innerText;
 
     return new ContextMenu(

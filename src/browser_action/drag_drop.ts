@@ -22,7 +22,7 @@ export function initDragDrop(bookmaksElement: Element, wrapper: Element) {
     revertOnSpill: true,
   }).on('drag', (element: Element) => {
     initialIndexOfDraggable = elementIndex(element);
-  }).on('drop', (element: Element) => {
+  }).on('drop', (element: HTMLElement) => {
     const index = <number>elementIndex(element);
     if (-1 === index) {
       return;
@@ -43,10 +43,10 @@ export function initDragDrop(bookmaksElement: Element, wrapper: Element) {
     if ((element.parentNode as Element).getAttribute('id') === 'bookmarks') {
       options.index--;
     } else {
-      (options as BookmarkDestinationArg).parentId = getElementData((element.parentNode as Element).parentNode as Element, 'item-id');
+      (options as BookmarkDestinationArg).parentId = getElementData((element.parentNode as HTMLElement).parentNode as HTMLElement, 'itemId');
     }
 
-    chrome.bookmarks.move(getElementData(element, 'item-id'), options);
+    chrome.bookmarks.move(getElementData(element, 'itemId'), options);
   });
 
   autoScroll(
