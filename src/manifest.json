@@ -6,7 +6,9 @@
 	"version": "5.0.0",
 	"minimum_chrome_version": "70",
 	"background": {
-		"page": "background.html",
+		"scripts": [
+			"background.js"
+		],
 		"persistent": false
 	},
 	"omnibox": {
