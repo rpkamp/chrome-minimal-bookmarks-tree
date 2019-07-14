@@ -30,19 +30,11 @@ tick "Developer mode" and click "Load unpacked extension...". In the file window
 If you want to build for production mode and pack it up into a zip file run `make build` instead.
 
 ## Running tests locally
-To run the tests locally, first run
+To run the tests locally, run
 
 ```bash
-make build-dev
+make test
 ```
-
-and then point your browser to
-
-```bash
-file:///path/to/minimal-bookmarks-tree/tests/index.html
-```
-
-The tests will run on that webpage.
 
 ## Translations
 
