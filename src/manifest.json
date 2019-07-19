@@ -21,7 +21,13 @@
 	"permissions": [
 		"bookmarks",
 		"chrome://favicon/",
-		"fontSettings"
+		"fontSettings",
+		"activeTab"
+	],
+	"optional_permissions": [
+		"http://*/",
+		"https://*/",
+		"file://*/"
 	],
 	"browser_action": {
 	    "default_title": "Minimal Bookmarks Tree",
