@@ -90,7 +90,7 @@ li {
     }
 
     & > .sub {
-      padding: 0 0 0.2rem 2rem;
+      padding: 0 0 0.2rem 1.2rem;
     }
   }
 }
@@ -106,7 +106,7 @@ li {
 }
 
 .sub {
-  padding: 0 0 0 2rem;
+  padding: 0 0 0 1.2rem;
   height: 0;
   overflow: hidden;
 }
@@ -143,7 +143,7 @@ li {
 }
 
 ::-webkit-scrollbar {
-  width: 0.75rem;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -152,7 +152,7 @@ li {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1);
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 #dialog {
