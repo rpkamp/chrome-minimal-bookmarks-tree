@@ -159,10 +159,10 @@ export class ClickHandler {
         disposition = BookmarkOpeningDisposition.activeTab;
     }
 
-    BookmarkOpener.open(url, disposition);
-
-    if (closeWindow) {
-      window.close();
-    }
+    BookmarkOpener.open(url, disposition).then(() => {
+      if (closeWindow) {
+        window.close();
+      }
+    });
   }
 }
