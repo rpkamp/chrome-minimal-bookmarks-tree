@@ -8,13 +8,21 @@ import {ContextMenuSeparator} from "./context_menu/ContextMenuSeparator";
 import {BookmarkOpener, BookmarkOpeningDisposition} from "../common/BookmarkOpener";
 import {Settings} from "../common/Settings";
 import {Utils} from "../common/Utils";
+import {BookmarkManager} from "./BookmarkManager";
 
 export class ContextMenuFactory {
+  private bookmarkManager: BookmarkManager;
   private translator: Translator;
   private dialogRenderer: DialogRenderer;
   private settings: Settings;
 
-  constructor(translator: Translator, dialogRenderer: DialogRenderer, settings: Settings) {
+  constructor(
+    bookmarkManager: BookmarkManager,
+    translator: Translator,
+    dialogRenderer: DialogRenderer,
+    settings: Settings
+  ) {
+    this.bookmarkManager = bookmarkManager;
     this.translator = translator;
     this.dialogRenderer = dialogRenderer;
     this.settings = settings;
@@ -58,22 +66,7 @@ export class ContextMenuFactory {
         new ContextMenuTextItem(
           this.translator.translate('popupDeleteBookmark'),
           () => {
-            const deleteBookmark = () => {
-              chrome.bookmarks.remove(itemId, () => {
-                (bookmark.parentNode as HTMLElement).removeChild(bookmark);
-              });
-            };
-            if (this.settings.isEnabled('confirm_bookmark_deletion')) {
-              this.dialogRenderer.render(
-                new ConfirmDialog(
-                  `${this.translator.translate('deleteBookmark')}<br /><br />${name}`,
-                  deleteBookmark
-                )
-              );
-            } else {
-              deleteBookmark();
-            }
-            bookmark.classList.remove('selected');
+            this.bookmarkManager.deleteBookmark(bookmark);
           }
         ),
         new ContextMenuSeparator(),

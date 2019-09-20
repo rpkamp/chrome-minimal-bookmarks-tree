@@ -21,15 +21,15 @@ build: ## Build and package as mbt.zip for Chrome Web Store
 	rm -f dist/webpack-manifest.json dist/entrypoints.json dist/tests.js
 	(cd dist/ && zip -r ../mbt.zip *)
 
-test:
+test: ## Run tests
 	node_modules/.bin/jest --config=./jest.config.js
 
-translations-download:
+translations-download: ## Download translation files from OneSky
 	bash scripts/translations-download.sh ${ONESKY_PROJECT_ID} nl messages.json src/_locales/nl/messages.json
 	bash scripts/translations-download.sh ${ONESKY_PROJECT_ID} de messages.json src/_locales/de/messages.json
 	bash scripts/translations-download.sh ${ONESKY_PROJECT_ID} en messages.json src/_locales/en/messages.json
 
-translations-upload:
+translations-upload: ## Upload English translation file to OneSky
 	bash scripts/translations-upload.sh ${ONESKY_PROJECT_ID} en src/_locales/en/messages.json
 
 .PHONY: install build-dev build test translations-download translations-upload

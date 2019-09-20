@@ -181,5 +181,8 @@
     },
     "deleteBookmarkFolder": {
         "message": "Are you sure you want to delete this bookmark folder?"
+    },
+    "optionKeyboardSupport": {
+        "message": "Enable keyboard support (experimental)"
     }
 }
