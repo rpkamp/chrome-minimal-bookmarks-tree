@@ -181,5 +181,8 @@
     },
     "deleteBookmarkFolder": {
         "message": "Weet u zeker dat u deze map wilt verwijderen?"
+    },
+    "optionKeyboardSupport": {
+        "message": "Toetsenbordondersteuning (experimenteel)"
     }
 }

@@ -181,5 +181,8 @@
     },
     "deleteBookmarkFolder": {
         "message": "Wollen Sie diesen Ordner wirklich l\u00f6schen?"
+    },
+    "optionKeyboardSupport": {
+        "message": "Tastaturunterst\u00fctzung (experimentell)"
     }
 }

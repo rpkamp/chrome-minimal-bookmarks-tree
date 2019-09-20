@@ -10,12 +10,15 @@ import {TreeRenderer} from "./TreeRenderer";
 import PersistentSet from "./PersistentSet";
 import {FolderToggler} from "./FolderToggler";
 import {Utils} from "../common/Utils";
+import {KeyHandler} from "./KeyHandler";
+import {BookmarkManager} from "./BookmarkManager";
 
 const settings = SettingsFactory.create();
 
 const translator = new ChromeTranslator();
 const dialogRenderer = new DialogRenderer(document, translator);
-const contextMenuFactory = new ContextMenuFactory(translator, dialogRenderer, settings);
+const bookmarkManager = new BookmarkManager(translator, dialogRenderer, settings);
+const contextMenuFactory = new ContextMenuFactory(bookmarkManager, translator, dialogRenderer, settings);
 const contextMenuRenderer = new ContextMenuRenderer(document, new WindowLocationCalculator(window));
 
 const openFolders: PersistentSet<string> = new PersistentSet('openfolders');
@@ -33,6 +36,8 @@ const clickHandler = new ClickHandler(
   contextMenuRenderer,
   folderToggler
 );
+
+const keyHandler = new KeyHandler(bookmarkManager);
 
 const loading = <HTMLElement>document.querySelector('#loading');
 const bm = <HTMLElement>document.querySelector('#bookmarks');
@@ -87,6 +92,11 @@ chrome.bookmarks.getTree((bookmarksTree) => {
 bm.addEventListener('click', (event) => { clickHandler.handleClick(event); });
 bm.addEventListener('contextmenu', (event) => { clickHandler.handleRightClick(event); });
 bm.addEventListener('mousedown', (event) => { clickHandler.handleMouseDown(event); });
+
+if (settings.isEnabled('keyboard_support')) {
+  window.addEventListener('keyup', (event) => { keyHandler.handleKeyUp(event); });
+}
+
 document.addEventListener('contextmenu', () => false);
 
 initDragDrop(bm, wrapper);
@@ -107,7 +117,7 @@ Utils.translateDocument(window.document);
 //   1. When height > 800 it will cause duplicate vertical scrollbars
 //   2. When width > 600 it will cause
 //      a) the vertical scrollbar to be out of view
-//      b) a horizonal scrollbar to be shown
+//      b) a horizontal scrollbar to be shown
 //
 // Also see https://stackoverflow.com/questions/6904755/is-there-a-hardcoded-maximum-height-for-chrome-browseraction-popups
 const browserActionMaxHeight: number = 600;
