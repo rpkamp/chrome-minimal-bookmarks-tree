@@ -112,6 +112,8 @@ export class ClickHandler {
   }
 
   handleMouseDown(event: MouseEvent) {
+    event.preventDefault();
+
     if (!(event.target instanceof HTMLElement)) {
       return false;
     }
