@@ -16,20 +16,20 @@
     "url": "https://github.com/rpkamp/chrome-minimal-bookmarks-tree/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
-    "@symfony/webpack-encore": "^0.27.0",
-    "@types/chrome": "0.0.86",
-    "@types/jest": "^24.0.23",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@symfony/webpack-encore": "^0.29.1",
+    "@types/chrome": "0.0.107",
+    "@types/jest": "^25.2.1",
     "babel": "^6.5.2",
     "babel-core": "^6.17.0",
-    "jest": "^24.9.0",
-    "node-sass": "^4.13.0",
+    "jest": "^26.0.1",
+    "node-sass": "^4.14.1",
     "sass-loader": "^7.3.1",
-    "ts-jest": "^24.2.0",
+    "ts-jest": "^25.5.1",
     "ts-loader": "^5.4.5",
     "ts-mockito": "^2.5.0",
-    "typescript": "^3.7.3"
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "constitute": "^1.6.2",
