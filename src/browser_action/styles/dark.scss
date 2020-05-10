@@ -6,13 +6,17 @@ body.theme--dark {
   background: #111;
 
   .selected > span {
-    background-color: #ccc;
+    color: #fff;
+    background-color: #333;
   }
 
   .folder {
     & > span {
+      color: #999;
+
       &:hover {
-        background-color: #ccc;
+        color: #fff;
+        background-color: #333;
       }
     }
   }
@@ -23,7 +27,8 @@ body.theme--dark {
 
   .bookmark {
     &:hover {
-      background-color: #ccc;
+      color: #fff;
+      background-color: #333;
     }
   }
 
