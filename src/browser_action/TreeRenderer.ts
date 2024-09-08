@@ -118,11 +118,18 @@ export class TreeRenderer {
       bookmark.innerHTML = '&nbsp;';
     }
     bookmark.title = `${child.title} [${child.url}]`;
-    bookmark.style.backgroundImage = `url("chrome://favicon/${child.url}")`;
+    bookmark.style.backgroundImage = `url("${this.getFaviconUrl(child.url)}")`;
     bookmark.className = 'bookmark';
     d.appendChild(bookmark);
 
     return d;
+  }
+
+  private getFaviconUrl(url: string): string {
+    const urlObj = new URL(chrome.runtime.getURL('/_favicon/'));
+    urlObj.searchParams.set('pageUrl', url);
+    urlObj.searchParams.set('size', '32');
+    return urlObj.toString();
   }
 
   isFolderEmpty(folder: BookmarkTreeNode): boolean {

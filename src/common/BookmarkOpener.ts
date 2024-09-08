@@ -1,5 +1,4 @@
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
-import Tab = chrome.tabs.Tab;
 
 export enum BookmarkOpeningDisposition {
   activeTab,
@@ -34,32 +33,8 @@ export class BookmarkOpener {
         case BookmarkOpeningDisposition.activeTab:
           const bookmarklet = /^javascript:(.*)/i.exec(url);
           if (bookmarklet && bookmarklet[1]) {
-            const origins = {
-              origins: ['http://*/', 'https://*/', 'file://*/']
-            };
-            chrome.permissions.request(
-              origins,
-              function (granted: boolean) {
-                if (!granted) {
-                  reject();
-                  return;
-                }
-
-                const execScript = `(code) => {
-                const script = document.createElement('script');
-                script.textContent = code;
-                document.head.appendChild(script).remove();
-              }`;
-                chrome.tabs.query({ active: true }, (tabs: Tab[]) => {
-                  chrome.tabs.executeScript(<number>tabs[0].id, {
-                    code: `(${execScript})(${
-                      JSON.stringify(decodeURIComponent(bookmarklet[1]))
-                      })`,
-                  });
-                  resolve();
-                });
-              }
-            );
+            alert('Unfortunately there seems to be no way to run bookmarklets in Chrome with Manifest V3. If anyone has any advice, please contact me.');
+            reject();
           } else {
             chrome.tabs.update({url, active: true});
             resolve();

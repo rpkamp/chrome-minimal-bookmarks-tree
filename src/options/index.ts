@@ -1,7 +1,7 @@
 import {SettingsFactory} from "../common/settings/SettingsFactory";
 import {Utils} from "../common/Utils";
 
-const settings = SettingsFactory.create();
+const settings = await SettingsFactory.create();
 
 const initDropDowns = () => {
   const dropdowns = window.document.querySelectorAll('select');
