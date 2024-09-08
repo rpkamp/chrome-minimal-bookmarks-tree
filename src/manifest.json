@@ -1,35 +1,35 @@
 {
 	"name": "Minimal Bookmarks Tree",
-	"manifest_version": 2,
-	"content_security_policy": "script-src 'self'; object-src 'self'",
+	"manifest_version": 3,
+	"content_security_policy": {
+		"extension_pages": "script-src 'self'; object-src 'self'"
+	},
 	"description": "Display a tree of bookmarks under a toolbar button, and search your bookmarks in the omnibox using the keyword 'bm'.",
-	"version": "5.3.1",
-	"minimum_chrome_version": "70",
+	"version": "5.4.0",
+	"minimum_chrome_version": "111",
 	"background": {
-		"scripts": [
-			"background.js"
-		],
-		"persistent": false
+		"service_worker": "background.js"
 	},
 	"omnibox": {
 		"keyword": "bm"
 	},
 	"options_ui": {
-		"page": "options.html",
-		"chrome_style": true
+		"page": "options.html"
 	},
 	"permissions": [
 		"bookmarks",
-		"chrome://favicon/",
+		"favicon",
 		"fontSettings",
-		"activeTab"
+		"scripting",
+		"activeTab",
+		"storage"
 	],
-	"optional_permissions": [
+	"optional_host_permissions": [
 		"http://*/",
 		"https://*/",
 		"file://*/"
 	],
-	"browser_action": {
+	"action": {
 	    "default_title": "Minimal Bookmarks Tree",
 	    "default_popup": "browser_action.html",
 		"default_icon": "icons/bookmark32.png"

@@ -43,7 +43,7 @@ export class Utils {
       return;
     }
 
-    chrome.browserAction.setIcon({
+    chrome.action.setIcon({
       path: iconPaths[icon],
     });
   }

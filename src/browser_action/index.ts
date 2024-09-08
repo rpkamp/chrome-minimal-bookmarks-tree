@@ -13,7 +13,7 @@ import {Utils} from "../common/Utils";
 import {KeyHandler} from "./KeyHandler";
 import {BookmarkManager} from "./BookmarkManager";
 
-const settings = SettingsFactory.create();
+const settings = await SettingsFactory.create();
 
 const translator = new ChromeTranslator();
 const dialogRenderer = new DialogRenderer(document, translator);
