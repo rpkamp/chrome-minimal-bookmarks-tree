@@ -7,8 +7,10 @@ import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 const translator = new ChromeTranslator();
 const suggester = new OmniboxSuggester(translator);
 
-const settings = await SettingsFactory.create();
-Utils.setBrowserActionIcon(settings.getString('icon'));
+chrome.runtime.onStartup.addListener(async () => {
+  const settings = await SettingsFactory.create();
+  Utils.setBrowserActionIcon(settings.getString('icon'));
+});
 
 chrome.omnibox.onInputChanged.addListener((input: string, callback: Function) => {
   chrome.bookmarks.search(input, (bookmarksAndFolders: BookmarkTreeNode[]) => {
