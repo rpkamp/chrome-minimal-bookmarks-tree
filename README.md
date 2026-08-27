@@ -50,11 +50,11 @@ Translations for minimal bookmarks tree are managed using [OneSky][oneskyapp]. P
 
 White star and white open star are custom edits of the "Star" and "Open star" icons listed above.
 
-## Donations
+## Support
 
 Like this extension? Buy me a coffee 🙂
 
-[![Donate with PayPal](https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg)][donate]
+[Send a tip via Revolut][donate]
 
 [NPM]: https://www.npmjs.com/
 [chrome-extensions]: chrome://extensions/
@@ -63,4 +63,4 @@ Like this extension? Buy me a coffee 🙂
 [main-icon]: https://www.iconfinder.com/icons/40698/bookmark_icon#size=128
 [star]: https://www.iconfinder.com/icons/326703/favorite_rate_star_icon#size=128
 [open-star]: https://www.iconfinder.com/icons/326487/rate_star_icon#size=128
-[donate]: https://paypal.me/rpkamp
+[donate]: https://revolut.me/rpkamp
